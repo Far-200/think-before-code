@@ -9,7 +9,11 @@
 <h1 align="center">Think Before Code</h1>
 
 <p align="center">
-  <strong>A Socratic DSA tutor that protects productive struggle instead of handing you the answer.</strong>
+  <strong>Featuring Quackrates — your mildly disappointed Socratic debugging duck.</strong>
+</p>
+
+<p align="center">
+  A Socratic DSA tutor that protects productive struggle instead of handing you the answer.
 </p>
 
 ## Why this exists
