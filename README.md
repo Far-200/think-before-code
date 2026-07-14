@@ -60,7 +60,8 @@ A session generally moves through:
 5. Construct the algorithm
 6. Dry-run it manually — the full methodology lives in `dry-run-coach`
 7. Attempt implementation
-8. Debug without replacing the learner's code
+8. Debug without replacing the learner's code — the full
+   bug-isolation pipeline lives in `debug-coach`
 9. Verify correctness and complexity — a complexity-only deep dive
    lives in `complexity-coach`
 10. Transfer the idea to a cousin problem
@@ -70,31 +71,113 @@ the learner's actual understanding.
 
 ## Quick start
 
-Clone the repository:
+1. **Clone the repository:**
 
-```bash
-git clone https://github.com/Far-200/think-before-code.git
-cd think-before-code
-```
+   ```bash
+   git clone https://github.com/Far-200/think-before-code.git
+   cd think-before-code
+   ```
 
-The core skill lives at
-[`skills/dsa-tutor/SKILL.md`](./skills/dsa-tutor/SKILL.md). Four
-complementary skills live alongside it — see
-[Skills in this repository](#skills-in-this-repository) below.
+2. **Choose a skill.** The core skill lives at
+   [`skills/dsa-tutor/SKILL.md`](./skills/dsa-tutor/SKILL.md). Five
+   complementary skills live alongside it — see
+   [Skills in this repository](#skills-in-this-repository) below.
 
-Add or paste the skill (or skills) you need into an AI tool that
-supports custom instructions, skills, projects, agents, or system
-prompts.
+3. **Copy it where your agent looks for skills.** `skills/` in this
+   repository is the canonical source; copy or symlink the specific
+   skill directory you want into your tool's discovery directory —
+   see [Installation](#installation) below for the common paths.
 
-Then begin a session by sharing:
+4. **Invoke it naturally.** Start a session by sharing the problem
+   statement, what you currently understand, what you have tried, and
+   where your reasoning breaks. For example:
 
-- the problem statement,
-- what you currently understand,
-- what you have tried,
-- and where your reasoning breaks.
+   ```text
+   Help me solve this problem, but do not give me the solution.
+   Ask me one question at a time and make me explain my reasoning.
+   ```
+
+5. **Know what to expect.** One focused question per response, no
+   stacked hints, no complete code until you've done the reasoning —
+   see [What dsa-tutor will not do](#what-dsa-tutor-will-not-do) and
+   [What dsa-tutor can do](#what-dsa-tutor-can-do) below.
 
 A wrong attempt is useful. A copied answer wearing formal language is
 less useful.
+
+## Installation
+
+`skills/` in this repository is the canonical source directory. Each
+subdirectory is a self-contained
+[Agent Skill](#skills-in-this-repository): a folder named after the
+skill, containing one `SKILL.md` with `name` and `description`
+frontmatter that tells a compatible agent when to use it.
+
+To use a skill, copy (or symlink) its directory into the discovery
+path your tool expects. The exact path — and whether it's a
+per-project or per-user location — depends on the tool, its version,
+and its configuration; the following are the common conventions at
+the time of writing:
+
+```text
+Claude Code project
+.claude/skills/<skill-name>/SKILL.md
+
+Claude Code personal
+~/.claude/skills/<skill-name>/SKILL.md
+
+GitHub Copilot / VS Code project
+.github/skills/<skill-name>/SKILL.md
+.claude/skills/<skill-name>/SKILL.md
+.agents/skills/<skill-name>/SKILL.md
+
+Codex project
+.agents/skills/<skill-name>/SKILL.md
+
+Codex personal
+~/.agents/skills/<skill-name>/SKILL.md
+```
+
+This repository doesn't try to claim universal support — exact
+support may depend on the tool version and configuration, so check
+your specific tool's current documentation for its skill-discovery
+path before assuming one of the above is correct for your setup.
+
+The examples below assume you're running the command from the root of
+this cloned repository (`think-before-code/`), so the source path is
+just `skills/dsa-tutor`, not `think-before-code/skills/dsa-tutor`.
+
+### Bash — personal Claude Code installation
+
+```bash
+mkdir -p ~/.claude/skills
+cp -R skills/dsa-tutor ~/.claude/skills/dsa-tutor
+```
+
+### PowerShell — personal Claude Code installation
+
+```powershell
+New-Item -ItemType Directory -Force "$HOME\.claude\skills" | Out-Null
+Copy-Item -Recurse -Force ".\skills\dsa-tutor" "$HOME\.claude\skills\dsa-tutor"
+```
+
+A symlink keeps the copy in sync with this repository instead, which
+is convenient while iterating on a skill locally:
+
+```bash
+mkdir -p ~/.claude/skills
+ln -s "$(pwd)/skills/dsa-tutor" ~/.claude/skills/dsa-tutor
+```
+
+On Windows, symbolic links may require Developer Mode or elevated
+permissions, so copying (the PowerShell example above) is the
+simpler default there rather than a symlink.
+
+If your tool doesn't use a `skills/` discovery directory at all,
+you can usually paste the contents of a `SKILL.md` directly into a
+custom-instructions, project-instructions, or system-prompt field
+instead — the file is written to work as plain instructions either
+way.
 
 ## Skills in this repository
 
@@ -103,16 +186,17 @@ the standard Agent Skills format: a directory named after the skill,
 containing a single `SKILL.md` with frontmatter (`name`,
 `description`) that tells an agent when to use it.
 
-| Skill | Use it when |
-| --- | --- |
-| [`dsa-tutor`](./skills/dsa-tutor/SKILL.md) | You want the full Socratic walkthrough of a DSA problem, start to finish, with hints released one at a time. |
-| [`problem-decoder`](./skills/problem-decoder/SKILL.md) | You have a raw problem statement and need to pin down inputs, outputs, constraints, and edge cases before solving anything. |
-| [`dry-run-coach`](./skills/dry-run-coach/SKILL.md) | You already have an approach and need to manually trace it on a concrete input to verify or debug it. |
-| [`complexity-coach`](./skills/complexity-coach/SKILL.md) | You have working code or an approach and need to derive, not recall, its time and space complexity. |
-| [`mock-interviewer`](./skills/mock-interviewer/SKILL.md) | You want timed, realistic interview practice, with minimal hints during the attempt and feedback only at the end. |
+| Skill                                                    | Use it when                                                                                                                                                       |
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`dsa-tutor`](./skills/dsa-tutor/SKILL.md)               | You want the full Socratic walkthrough of a DSA problem, start to finish, with hints released one at a time.                                                      |
+| [`problem-decoder`](./skills/problem-decoder/SKILL.md)   | You have a raw problem statement and need to pin down inputs, outputs, constraints, and edge cases before solving anything.                                       |
+| [`dry-run-coach`](./skills/dry-run-coach/SKILL.md)       | You already have an approach and need to manually trace it on a concrete input to verify or debug it.                                                             |
+| [`complexity-coach`](./skills/complexity-coach/SKILL.md) | You have working code or an approach and need to derive, not recall, its time and space complexity.                                                               |
+| [`mock-interviewer`](./skills/mock-interviewer/SKILL.md) | You want timed, realistic interview practice, with minimal hints during the attempt and feedback only at the end.                                                 |
+| [`debug-coach`](./skills/debug-coach/SKILL.md)           | You already have code with an observed failure and need the bug isolated — expected vs. actual, first divergence, smallest repair — without a rewritten function. |
 
 These are complementary, not redundant. `dsa-tutor` is the default,
-full-session skill. The other three learning skills are narrower,
+full-session skill. The other four learning skills are narrower,
 standalone drills for a single stage of the process, meant to be used
 on their own or as a deeper follow-up when one stage of a `dsa-tutor`
 session needs more than a single question. `mock-interviewer`
@@ -228,14 +312,25 @@ a reference implementation.
 
 ```text
 think-before-code/
+├── .github/
+│   └── workflows/
+│       └── validate-skills.yml
+├── evals/
+│   ├── README.md
+│   ├── activation-prompts.csv
+│   └── behavior-cases.md
 ├── examples/
 │   └── tutoring-session.md
 ├── mistake-logs/
 │   └── README.md
 ├── public/
 │   └── logo.png
+├── scripts/
+│   └── validate_skills.py
 ├── skills/
 │   ├── complexity-coach/
+│   │   └── SKILL.md
+│   ├── debug-coach/
 │   │   └── SKILL.md
 │   ├── dry-run-coach/
 │   │   └── SKILL.md
@@ -246,38 +341,98 @@ think-before-code/
 │   └── problem-decoder/
 │       └── SKILL.md
 ├── .gitignore
+├── CHANGELOG.md
 ├── LICENSE
 └── README.md
 ```
 
+- [`.github/workflows/validate-skills.yml`](./.github/workflows/validate-skills.yml) —
+  CI that runs the structural validator and a CSV sanity check on
+  pushes and pull requests
+- [`evals/`](./evals/) — activation and behavior specifications for
+  every skill; see [Testing and validation](#testing-and-validation)
 - [`examples/tutoring-session.md`](./examples/tutoring-session.md) —
-  reserved for complete tutoring transcripts; currently empty, see
-  Roadmap
+  a complete, realistic `dsa-tutor` transcript from problem statement
+  to a cousin problem
 - [`mistake-logs/README.md`](./mistake-logs/README.md) — where
-  learner-confirmed mistake-log entries accumulate; currently empty
+  learner-confirmed mistake-log entries accumulate; currently empty,
+  see Roadmap
 - [`public/logo.png`](./public/logo.png) — Quackrates, the project mascot
+- [`scripts/validate_skills.py`](./scripts/validate_skills.py) — the
+  structural validator; see
+  [Testing and validation](#testing-and-validation)
 - [`skills/`](./skills/) — one self-contained Agent Skill per
   directory, each with its own `SKILL.md`; see
   [Skills in this repository](#skills-in-this-repository)
 - [`.gitignore`](./.gitignore) — files Git should ignore
+- [`CHANGELOG.md`](./CHANGELOG.md) — notable changes per version
 - [`LICENSE`](./LICENSE) — repository license
 - `README.md` — project overview and usage guide
 
+## Testing and validation
+
+Two things protect the repository's structure and behavior:
+
+- **`scripts/validate_skills.py`** checks that every skill under
+  `skills/` has a `SKILL.md` with valid frontmatter, that its `name`
+  matches its directory and uses lowercase letters, digits, and
+  hyphens, that no two skills share a name, that no obsolete flat
+  `skills/*.md` files exist, that all expected skill directories are
+  present, that files are valid UTF-8, and that relative Markdown
+  links across the repository resolve. Run it locally with:
+
+  ```bash
+  python scripts/validate_skills.py
+  ```
+
+- **`.github/workflows/validate-skills.yml`** runs that same script,
+  plus a basic parse check on `evals/activation-prompts.csv`, on every
+  push and pull request.
+
+- **`evals/`** documents, per skill, which prompts should and
+  shouldn't activate it (`activation-prompts.csv`) and what behavior
+  is expected or forbidden once it has (`behavior-cases.md`). This is
+  currently a human-readable specification, not an automated grader —
+  see [`evals/README.md`](./evals/README.md) for exactly what that
+  means today and what a future automated runner could do with it.
+
+## Release
+
+The current release is `v1.1.0`. See
+[`CHANGELOG.md`](./CHANGELOG.md) for the complete release notes.
+
 ## Roadmap
 
-- [x] Package each specialist skill in its own directory
-- [ ] Add complete example tutoring transcripts
-- [ ] Add learner-confirmed mistake-log samples
-- [x] Add a problem-statement parsing skill
-- [x] Add a manual dry-run coaching skill
-- [ ] Add a debug-without-rewriting skill
-- [x] Add a complexity-analysis coaching skill
-- [x] Add a mock-interviewer skill
+### Completed
+
+- [x] Package each skill in the Agent Skills directory format
+- [x] Add the core Socratic DSA tutor
+- [x] Add problem-statement decoding
+- [x] Add manual dry-run coaching
+- [x] Add complexity-analysis coaching
+- [x] Add realistic mock-interview mode
+- [x] Add learner-confirmed mistake logging
+- [x] Add a debug-without-rewriting skill (`debug-coach`)
+- [x] Add a complete example tutoring transcript
+- [x] Add activation and behavior eval specifications
+- [x] Add structural validation for skill packaging (script + CI)
+- [x] Add cross-agent installation guidance
+
+### Next
+
+- [ ] Add learner-confirmed mistake-log samples (`mistake-logs/` is
+      still empty — real sessions need to produce these)
+- [ ] Expand the example transcript collection beyond one session
+- [ ] Add cross-agent installation helper scripts, not just
+      documented paths
+- [ ] Add automated behavior eval execution — `evals/` is currently a
+      specification, not a runner
 - [ ] Add session-state templates for unfinished problems
 - [ ] Add progress tracking across patterns
-- [ ] Add spaced-revision prompts
-- [ ] Add cousin-problem mappings
-- [ ] Document integrations with additional AI tools and IDEs
+- [ ] Add spaced-revision prompts and cousin-problem mappings beyond
+      the single suggestion given at the end of a session
+- [ ] Document integrations with additional AI tools and IDEs beyond
+      the initial three covered in Installation
 
 ## Contributing
 

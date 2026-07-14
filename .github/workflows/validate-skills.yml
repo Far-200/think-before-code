@@ -1,0 +1,68 @@
+name: Validate skills
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile check
+        run: python -m py_compile scripts/validate_skills.py
+
+      - name: Validate skill structure and Markdown links
+        run: python scripts/validate_skills.py --root .
+
+      - name: Check activation-prompts.csv parses
+        run: |
+          python - <<'PY'
+          import csv
+          import os
+          import sys
+
+          path = "evals/activation-prompts.csv"
+          with open(path, newline="", encoding="utf-8") as f:
+              rows = list(csv.reader(f))
+
+          expected_header = ["id", "target_skill", "should_activate", "prompt", "reason"]
+          if not rows:
+              sys.exit(f"{path}: file is empty")
+          if rows[0] != expected_header:
+              sys.exit(f"{path}: unexpected header {rows[0]!r}, expected {expected_header!r}")
+
+          valid_skills = {"none"}
+          skills_root = "skills"
+          if os.path.isdir(skills_root):
+              for entry in os.listdir(skills_root):
+                  entry_path = os.path.join(skills_root, entry)
+                  if os.path.isdir(entry_path) and os.path.isfile(os.path.join(entry_path, "SKILL.md")):
+                      valid_skills.add(entry)
+
+          seen_ids = set()
+          for i, row in enumerate(rows[1:], start=2):
+              if len(row) != len(expected_header):
+                  sys.exit(f"{path}: line {i} has {len(row)} columns, expected {len(expected_header)}")
+              row_id, target_skill, should_activate, prompt, reason = row
+              if row_id in seen_ids:
+                  sys.exit(f"{path}: duplicate id '{row_id}' at line {i}")
+              seen_ids.add(row_id)
+              if target_skill not in valid_skills:
+                  sys.exit(f"{path}: line {i} has target_skill {target_skill!r}, which is not a skill directory under '{skills_root}/' and is not 'none'")
+              if should_activate not in ("true", "false"):
+                  sys.exit(f"{path}: line {i} has invalid should_activate value {should_activate!r}")
+              if not prompt.strip():
+                  sys.exit(f"{path}: line {i} has an empty prompt")
+              if not reason.strip():
+                  sys.exit(f"{path}: line {i} has an empty reason")
+
+          print(f"OK: {len(rows) - 1} activation-prompt rows validated.")
+          PY
