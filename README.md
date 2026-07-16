@@ -30,7 +30,10 @@ focused question at a time, reveals only the smallest useful hint,
 requires manual reasoning, and treats getting stuck as part of the
 learning process rather than something to bypass.
 
-## See it in action
+## Watch Quackrates refuse to spoil the solution
+
+Instead of solving the problem for you,
+Quackrates asks one question at a time until **you** discover the idea.
 
 [![Think Before Code demo](public/demo.gif)](https://far-200.github.io/think-before-code/demo/)
 
