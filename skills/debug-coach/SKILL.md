@@ -169,9 +169,15 @@ Done when:
   the learner's own trace, not your assertion,
 - and a regression input has been named.
 
-At that point, hand off: if complexity wasn't part of this session,
-point to `complexity-coach`; otherwise the debugging session is
-closed.
+At that point, hand off: if the learner wants broader coverage than
+the single regression input — a systematic suite around the now-fixed
+code — point to `test-case-coach`, and make sure the smallest failing
+input from this session goes into that suite as a permanent
+regression case. If complexity wasn't part of this session, point to
+`complexity-coach`. Otherwise the debugging session is closed. None
+of this replaces the smallest-failing-input discipline above — a
+suite is what comes *after* the bug is isolated and fixed, not a
+substitute for isolating it.
 
 ## What good looks like
 

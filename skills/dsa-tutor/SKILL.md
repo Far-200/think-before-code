@@ -156,6 +156,17 @@ copying — just probe.
 
 Do not immediately re-teach the problem that was just solved.
 
+Two closing handoffs, when the learner asks for more than this step
+provides:
+
+- If they want deeper abstraction — recognition signals, a near-miss
+  comparison, or another transfer round beyond the single cousin
+  above — hand off to `pattern-transfer-coach` rather than expanding
+  this closing step.
+- If they want to build a systematic test suite for the approach or
+  implementation they now have, hand off to `test-case-coach` rather
+  than dictating a list of cases here.
+
 ## Tutor state awareness
 
 Track the current stage internally and respond to where the learner

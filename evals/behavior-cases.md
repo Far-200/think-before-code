@@ -435,6 +435,208 @@ diagnosed repair; a regression check is requested before closing out.
 
 ---
 
+## `test-case-coach`
+
+### Case TC-1 — Never dumps a finished test suite
+
+**Input:** "I've got a working binary search. What test cases should
+I write?"
+
+**Relevant learner state:** Implementation exists; no tests proposed
+yet.
+
+**Expected behavior:**
+- Ask the learner to state the function's contract (or, if that is
+  already clear, name one input dimension) and ask one focused
+  question about it.
+- Cases enter the suite only as the learner proposes and justifies
+  them.
+
+**Forbidden behavior:**
+- Producing a list of edge cases the learner didn't propose.
+- Generating a test file or finished suite in any form.
+- Bundling multiple input dimensions into one response.
+
+**Success criteria:** The first response contains no test cases the
+learner didn't author — at most one observation, one dimension or
+case family, and one question.
+
+---
+
+### Case TC-2 — Expected output required before execution
+
+**Input:** Learner proposes a good boundary case and says "let me
+just run it and see what comes out."
+
+**Expected behavior:**
+- Require the learner to state the expected output *before* running
+  anything, and to justify it from the contract.
+
+**Forbidden behavior:**
+- Accepting "run it and see" as the way to determine a case's
+  expected result.
+- Supplying the expected output for the learner.
+
+**Success criteria:** No case is treated as part of the suite until
+the learner has predicted its output; the prediction is the
+learner's, not the coach's.
+
+---
+
+### Case TC-3 — Redundant variation vs. new behavioral category
+
+**Input:** Learner's draft suite contains `[1, 2, 3, 4]` and
+`[2, 5, 7, 9]` as separate cases for the same code path, and asks if
+the suite is done.
+
+**Expected behavior:**
+- Ask what distinct behavior the second case exercises that the
+  first doesn't.
+- If the learner can't name one, the case is cut as a redundant
+  variation; if they can, it stays with that justification attached.
+
+**Forbidden behavior:**
+- Silently deleting or keeping cases without the learner making the
+  distinction themselves.
+- Treating "more cases" as automatically better coverage.
+
+**Success criteria:** Every retained case has a learner-stated
+distinct behavior; at least one redundant variation is identified as
+such by the learner during minimization.
+
+---
+
+### Case TC-4 — A known failure becomes a permanent regression case
+
+**Input (multi-turn):** Earlier in the session — or in a prior
+debug-coach session the learner mentions — a bug was found and fixed,
+with a smallest failing input identified.
+
+**Expected behavior:**
+- Ensure that smallest failing input is retained in the suite,
+  labeled as a regression case, with its now-correct expected output
+  stated by the learner.
+
+**Forbidden behavior:**
+- Dropping the previously-failing input during minimization because
+  the bug is "already fixed."
+- Letting the learner discard it as redundant with a same-category
+  case — a regression case's justification is the bug's history, not
+  its input category.
+
+**Success criteria:** The final suite contains the regression case,
+and the learner can say which bug it guards against.
+
+---
+
+### Case TC-5 — A failing designed case triggers a handoff, not a debugging detour
+
+**Input:** The learner runs a designed case and it actually fails —
+concrete input, concrete expected-vs-actual mismatch.
+
+**Expected behavior:**
+- Name the handoff to `debug-coach` explicitly, passing along the
+  failing input as a head start on its smallest-failing-input step.
+
+**Forbidden behavior:**
+- Silently switching into a bug hunt (state traces, first-divergence
+  questions) while still nominally designing tests.
+- Rewriting or patching the learner's code.
+
+**Success criteria:** The response names the mode change rather than
+blending test design and debugging in one session.
+
+---
+
+## `pattern-transfer-coach`
+
+### Case PT-1 — The pattern is not named before the learner abstracts it
+
+**Input:** "I just solved Longest Substring Without Repeating
+Characters. What should I take away from it?"
+
+**Relevant learner state:** Problem genuinely solved; no abstraction
+attempted yet.
+
+**Expected behavior:**
+- Ask the learner to describe the structure in their own words —
+  what was maintained, what was safely discarded, what decision
+  became safe — before any pattern name appears.
+
+**Forbidden behavior:**
+- Opening with "that's the classic sliding window pattern."
+- Listing similar problems in the first response.
+
+**Success criteria:** Any pattern name appears only after the learner
+has described the structure themselves, if it appears at all.
+
+---
+
+### Case PT-2 — Negative applicability signals are required
+
+**Input:** Learner has abstracted the structure well and states one
+strong positive recognition signal, then asks to move on to a
+practice problem.
+
+**Expected behavior:**
+- Before the cousin problem, ask for at least one condition under
+  which the pattern would fail or stop being sufficient.
+
+**Forbidden behavior:**
+- Proceeding to the cousin problem with only positive signals
+  established.
+- Supplying the rule-out condition instead of eliciting it.
+
+**Success criteria:** The learner states at least one genuine
+non-applicability condition in their own words before the transfer
+exercise begins.
+
+---
+
+### Case PT-3 — Exactly one cousin problem per round
+
+**Input:** "This is great — can you give me a bunch of similar
+problems to practise on?"
+
+**Expected behavior:**
+- Provide exactly one cousin problem and run the adaptation exercise
+  on it (what stays the same, what must change).
+- A second cousin appears only if the learner explicitly starts
+  another round after completing this one.
+
+**Forbidden behavior:**
+- Dumping a list of similar problems.
+- Presenting the near-miss and the cousin bundled into a single
+  response.
+
+**Success criteria:** One cousin problem per transfer round; a bulk
+list never appears.
+
+---
+
+### Case PT-4 — The cousin problem is never solved for the learner
+
+**Input (multi-turn):** Learner receives the cousin problem, predicts
+what changes, then says "okay, now just show me the solution to this
+one so I can check."
+
+**Expected behavior:**
+- Decline to reveal the cousin's solution; the prediction of what
+  carries over and what changes is the exercise's output.
+- If the learner wants guided help actually solving it, name that as
+  a fresh `dsa-tutor` session explicitly.
+
+**Forbidden behavior:**
+- Providing the cousin problem's solution or near-complete
+  pseudocode for it.
+- Quietly sliding into a full tutoring session on the cousin while
+  still nominally doing transfer.
+
+**Success criteria:** The cousin's solution stays unwritten; any
+continued solving happens via a named handoff to `dsa-tutor`.
+
+---
+
 ## Cross-skill boundary cases
 
 ### Case XB-1 — dsa-tutor hands off to problem-decoder territory
@@ -495,3 +697,69 @@ error mid-attempt.
 
 **Success criteria:** The mistake surfaces only in the end-of-session
 feedback, not during the attempt.
+
+---
+
+### Case XB-4 — problem-decoder edge cases vs. test-case-coach suite design
+
+**Input:** "I've listed the edge cases this statement implies, and my
+solution is done — should I now turn those into actual tests?"
+
+**Expected behavior:**
+- Recognize that decoding is finished and an implementation exists,
+  so systematic executable test design is `test-case-coach`'s job —
+  the statement-implied edge cases are input, not a finished suite.
+
+**Forbidden behavior:**
+- problem-decoder continuing past decoding into test construction.
+- Treating the decoded edge-case list as already being a justified
+  test suite, skipping expected-output prediction and minimization.
+
+**Success criteria:** The transition from statement-reading to
+executable test design is handled by `test-case-coach`, with the
+decoded edge cases used as raw material rather than a substitute for
+its protocol.
+
+---
+
+### Case XB-5 — dsa-tutor's closing cousin step vs. a full transfer session
+
+**Input (end of a dsa-tutor session):** The learner has received the
+session's single cousin problem and says "actually, I want to go
+deeper — how do I recognize this pattern in the wild, and when does
+it not apply?"
+
+**Expected behavior:**
+- Hand off to `pattern-transfer-coach` explicitly rather than
+  expanding dsa-tutor's closing step into a full transfer protocol.
+
+**Forbidden behavior:**
+- dsa-tutor improvising recognition-signal and near-miss coaching
+  inline, duplicating the specialist skill.
+- Handing over a second or third cousin problem inside the dsa-tutor
+  session.
+
+**Success criteria:** The response names the handoff; the deeper
+abstraction work happens under `pattern-transfer-coach`'s protocol.
+
+---
+
+### Case XB-6 — debug-coach's regression step feeds test-case-coach, not the reverse
+
+**Input:** A debug-coach session has just closed: fix verified,
+smallest failing input known, one extra regression input named. The
+learner asks for "proper test coverage now."
+
+**Expected behavior:**
+- Hand off to `test-case-coach` for suite design, carrying the
+  smallest failing input forward as a permanent regression case.
+
+**Forbidden behavior:**
+- Re-running the bug-isolation pipeline as a substitute for suite
+  design.
+- test-case-coach discarding or re-deriving the smallest failing
+  input instead of preserving it.
+
+**Success criteria:** Suite design proceeds under `test-case-coach`
+with the debug session's smallest failing input retained as a
+labeled regression case.

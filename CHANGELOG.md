@@ -7,6 +7,87 @@ The format is loosely based on
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-07-17
+
+### Added
+
+- `test-case-coach`, a specialist skill for designing a compact,
+  justified test suite for an approach or implementation the learner
+  already has — input-space partitioning, boundary representatives,
+  one adversarial case per fragile assumption, learner-predicted
+  expected outputs before execution, suite minimization, and
+  permanent regression cases for previously-found bugs.
+- `pattern-transfer-coach`, a specialist skill for turning a solved
+  problem into transferable knowledge — stripping the story from the
+  structure, naming the maintained state or invariant, positive and
+  negative recognition signals, one near-miss comparison, and exactly
+  one cousin problem per round, whose solution is never revealed.
+- Activation-prompt rows (`A049`–`A072`) covering both new skills —
+  at least four positive and four negative/boundary cases each — plus
+  new negative rows for `dsa-tutor`, `dry-run-coach`, `debug-coach`,
+  `mock-interviewer`, and `problem-decoder` at their boundaries with
+  the new skills.
+- Behavior cases for both new skills (`TC-1`–`TC-5`, `PT-1`–`PT-4`)
+  and three new cross-skill boundary cases (`XB-4`–`XB-6`) covering
+  decoder-vs-test-design, tutor-vs-transfer, and
+  debug-vs-regression-suite handoffs.
+- Two example transcripts: `examples/test-case-session.md` and
+  `examples/pattern-transfer-session.md`.
+- A "Which skill should I use?" decision guide in the README.
+
+### Changed
+
+- The README's tutoring-flow section now describes the full eight-stage
+  learning lifecycle (decode → approach → dry run → implement → debug
+  → verify → test → transfer), with pointers to the specialist skill
+  for each stage and an explicit note that no session must invoke
+  every specialist.
+- The README skills table, boundary explanation, quick start,
+  repository tree, testing/validation section, release section,
+  roadmap, and contributing suggestions now reflect the eight-skill
+  suite.
+- `dsa-tutor` now names explicit closing handoffs to
+  `pattern-transfer-coach` (deeper abstraction beyond its single
+  cousin problem) and `test-case-coach` (systematic suite design),
+  without absorbing either specialist protocol.
+- `problem-decoder` clarifies that statement-implied edge cases before
+  solving belong to it, while executable test-suite construction for
+  an existing approach belongs to `test-case-coach`.
+- `dry-run-coach` clarifies that it traces exactly one concrete input;
+  deciding which broader set of inputs to test is `test-case-coach`'s
+  job.
+- `debug-coach`'s completion now allows a handoff to `test-case-coach`
+  for broader regression coverage after a fix is verified, explicitly
+  preserving the smallest failing input as a permanent regression case
+  and keeping the smallest-failing-input discipline intact.
+- `scripts/validate_skills.py`'s expected-skill set now includes
+  `test-case-coach` and `pattern-transfer-coach` (eight skills total).
+- The CI activation-CSV check now also requires every skill directory
+  to have at least one `should_activate = true` row and at least one
+  `should_activate = false` row, failing with a clear per-skill
+  message when either is missing; `target_skill = none` rows remain
+  allowed.
+- `evals/README.md` documents the new per-skill coverage requirement
+  and the deliberate reuse of similar prompts as a positive case for
+  one skill and a negative case for its neighbor.
+- Activation row `A047`'s reason updated: standalone cousin-problem
+  adaptation after a solve now routes to `pattern-transfer-coach`
+  instead of being an unresolved boundary.
+
+### Fixed
+
+- Stale skill counts in the README ("Five complementary skills",
+  "The other four learning skills") replaced with wording accurate
+  for the eight-skill suite.
+- The README repository tree, which omitted existing files:
+  `demo/index.html` and `public/demo.gif` are now listed, alongside
+  the new skill directories and example transcripts.
+- The roadmap item about cousin-problem mappings, which read as if no
+  transfer support existed; it now describes the still-missing curated
+  mapping dataset, since per-session transfer coaching now exists.
+- Normalized stray CRLF line endings in tracked text files back to
+  LF, matching the repository's committed content.
+
 ## [1.1.0] - 2026-07-14
 
 ### Added

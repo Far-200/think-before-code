@@ -75,6 +75,8 @@ EXPECTED_SKILLS = {
     "complexity-coach",
     "mock-interviewer",
     "debug-coach",
+    "test-case-coach",
+    "pattern-transfer-coach",
 }
 
 MAX_NAME_LENGTH = 64

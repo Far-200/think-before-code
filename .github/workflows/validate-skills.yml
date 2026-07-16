@@ -22,7 +22,7 @@ jobs:
       - name: Validate skill structure and Markdown links
         run: python scripts/validate_skills.py --root .
 
-      - name: Check activation-prompts.csv parses
+      - name: Check activation-prompts.csv parses and covers every skill
         run: |
           python - <<'PY'
           import csv
@@ -48,6 +48,7 @@ jobs:
                       valid_skills.add(entry)
 
           seen_ids = set()
+          coverage = {}  # skill -> set of should_activate values seen
           for i, row in enumerate(rows[1:], start=2):
               if len(row) != len(expected_header):
                   sys.exit(f"{path}: line {i} has {len(row)} columns, expected {len(expected_header)}")
@@ -63,6 +64,22 @@ jobs:
                   sys.exit(f"{path}: line {i} has an empty prompt")
               if not reason.strip():
                   sys.exit(f"{path}: line {i} has an empty reason")
+              if target_skill != "none":
+                  coverage.setdefault(target_skill, set()).add(should_activate)
 
-          print(f"OK: {len(rows) - 1} activation-prompt rows validated.")
+          # Every real skill directory must have at least one positive
+          # (should_activate = true) and one negative (should_activate =
+          # false) activation row. 'none' rows remain allowed but don't
+          # count toward any skill's coverage.
+          coverage_errors = []
+          for skill in sorted(valid_skills - {"none"}):
+              seen = coverage.get(skill, set())
+              if "true" not in seen:
+                  coverage_errors.append(f"{path}: skill '{skill}' has no should_activate = true row")
+              if "false" not in seen:
+                  coverage_errors.append(f"{path}: skill '{skill}' has no should_activate = false row")
+          if coverage_errors:
+              sys.exit("\n".join(coverage_errors))
+
+          print(f"OK: {len(rows) - 1} activation-prompt rows validated; every skill has positive and negative activation coverage.")
           PY

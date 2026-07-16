@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  A Socratic DSA tutor that protects productive struggle instead of handing you the answer.
+  A portable suite of Socratic Agent Skills for learning DSA — protecting productive struggle instead of handing you the answer. Not a hosted app: copy a skill into a compatible agent, or paste it as project instructions.
 </p>
 
 ## Why this exists
@@ -58,23 +58,29 @@ Quackrates asks one question at a time until **you** discover the idea.
 
 ## How the tutoring flow works
 
-A session generally moves through:
+The full learning lifecycle the suite covers looks like this:
 
-1. Understand the problem — a deeper pass lives in `problem-decoder`
-2. Build a brute-force model
-3. Explore concrete examples
-4. Discover the pattern or invariant
-5. Construct the algorithm
-6. Dry-run it manually — the full methodology lives in `dry-run-coach`
-7. Attempt implementation
-8. Debug without replacing the learner's code — the full
-   bug-isolation pipeline lives in `debug-coach`
-9. Verify correctness and complexity — a complexity-only deep dive
+1. Decode the problem — a deeper pass lives in `problem-decoder`
+2. Build and examine an approach — brute force first, then the
+   pattern or invariant, then the algorithm
+3. Dry-run it manually — the full methodology lives in
+   `dry-run-coach`
+4. Attempt implementation
+5. Debug concrete failures without replacing the learner's code —
+   the full bug-isolation pipeline lives in `debug-coach`
+6. Verify correctness and complexity — a complexity-only deep dive
    lives in `complexity-coach`
-10. Transfer the idea to a cousin problem
+7. Design a compact, justified test suite — the full methodology
+   lives in `test-case-coach`
+8. Transfer the learned structure — `dsa-tutor` closes with one
+   cousin problem; the full abstraction-and-transfer protocol lives
+   in `pattern-transfer-coach`
 
-The tutor may move backward when an explanation sounds stronger than
-the learner's actual understanding.
+`dsa-tutor` coordinates the core learning path one question at a time
+and can hand off when one stage deserves a dedicated specialist
+session. No session is required to invoke every specialist, and most
+won't. The tutor may also move backward when an explanation sounds
+stronger than the learner's actual understanding.
 
 ## Quick start
 
@@ -86,9 +92,12 @@ the learner's actual understanding.
    ```
 
 2. **Choose a skill.** The core skill lives at
-   [`skills/dsa-tutor/SKILL.md`](./skills/dsa-tutor/SKILL.md). Five
-   complementary skills live alongside it — see
-   [Skills in this repository](#skills-in-this-repository) below.
+   [`skills/dsa-tutor/SKILL.md`](./skills/dsa-tutor/SKILL.md). Seven
+   more skills live alongside it — see
+   [Which skill should I use?](#which-skill-should-i-use) for a quick
+   decision guide, and
+   [Skills in this repository](#skills-in-this-repository) for the
+   full table.
 
 3. **Copy it where your agent looks for skills.** `skills/` in this
    repository is the canonical source; copy or symlink the specific
@@ -111,6 +120,26 @@ the learner's actual understanding.
 
 A wrong attempt is useful. A copied answer wearing formal language is
 less useful.
+
+## Which skill should I use?
+
+Match where you actually are, not where you'd like to be:
+
+- **Unsolved problem, want to learn it end to end** → `dsa-tutor`
+  (the default; when in doubt, start here)
+- **Haven't even understood the statement yet** → `problem-decoder`
+- **Have an approach, want to trace it on one concrete input** →
+  `dry-run-coach`
+- **Have code, and it's observably doing the wrong thing** →
+  `debug-coach`
+- **Have working code, want its Big-O derived, not recalled** →
+  `complexity-coach`
+- **Have an approach or implementation, want a real test suite** →
+  `test-case-coach`
+- **Solved it, want the reusable pattern out of it** →
+  `pattern-transfer-coach`
+- **Want timed interview pressure instead of coaching** →
+  `mock-interviewer`
 
 ## Installation
 
@@ -193,24 +222,27 @@ the standard Agent Skills format: a directory named after the skill,
 containing a single `SKILL.md` with frontmatter (`name`,
 `description`) that tells an agent when to use it.
 
-| Skill                                                    | Use it when                                                                                                                                                       |
-| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`dsa-tutor`](./skills/dsa-tutor/SKILL.md)               | You want the full Socratic walkthrough of a DSA problem, start to finish, with hints released one at a time.                                                      |
-| [`problem-decoder`](./skills/problem-decoder/SKILL.md)   | You have a raw problem statement and need to pin down inputs, outputs, constraints, and edge cases before solving anything.                                       |
-| [`dry-run-coach`](./skills/dry-run-coach/SKILL.md)       | You already have an approach and need to manually trace it on a concrete input to verify or debug it.                                                             |
-| [`complexity-coach`](./skills/complexity-coach/SKILL.md) | You have working code or an approach and need to derive, not recall, its time and space complexity.                                                               |
-| [`mock-interviewer`](./skills/mock-interviewer/SKILL.md) | You want timed, realistic interview practice, with minimal hints during the attempt and feedback only at the end.                                                 |
-| [`debug-coach`](./skills/debug-coach/SKILL.md)           | You already have code with an observed failure and need the bug isolated — expected vs. actual, first divergence, smallest repair — without a rewritten function. |
+| Skill                                                                | Use it when                                                                                                                                                                               |
+| -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`dsa-tutor`](./skills/dsa-tutor/SKILL.md)                           | You want the full Socratic walkthrough of a DSA problem, start to finish, with hints released one at a time.                                                                              |
+| [`problem-decoder`](./skills/problem-decoder/SKILL.md)               | You have a raw problem statement and need to pin down inputs, outputs, constraints, and edge cases before solving anything.                                                               |
+| [`dry-run-coach`](./skills/dry-run-coach/SKILL.md)                   | You already have an approach and need to manually trace it on a concrete input to verify or debug it.                                                                                     |
+| [`complexity-coach`](./skills/complexity-coach/SKILL.md)             | You have working code or an approach and need to derive, not recall, its time and space complexity.                                                                                       |
+| [`mock-interviewer`](./skills/mock-interviewer/SKILL.md)             | You want timed, realistic interview practice, with minimal hints during the attempt and feedback only at the end.                                                                         |
+| [`debug-coach`](./skills/debug-coach/SKILL.md)                       | You already have code with an observed failure and need the bug isolated — expected vs. actual, first divergence, smallest repair — without a rewritten function.                         |
+| [`test-case-coach`](./skills/test-case-coach/SKILL.md)               | You already have an approach or implementation and want to design a compact, justified test suite — boundaries, adversarial inputs, expected outputs — yourself, one dimension at a time. |
+| [`pattern-transfer-coach`](./skills/pattern-transfer-coach/SKILL.md) | You've solved a problem and want to turn it into a transferable pattern — strip the story, name recognition and rule-out signals, and adapt it to exactly one cousin problem.             |
 
-These are complementary, not redundant. `dsa-tutor` is the default,
-full-session skill. The other four learning skills are narrower,
-standalone drills for a single stage of the process, meant to be used
-on their own or as a deeper follow-up when one stage of a `dsa-tutor`
-session needs more than a single question. `mock-interviewer`
-intentionally runs the opposite interaction mode — scarce hints
-during the attempt, full feedback only afterward — rather than
-protecting productive struggle throughout, and should not be blended
-with `dsa-tutor` in the same session.
+These are complementary, not redundant. `dsa-tutor` is the default
+skill that coordinates a complete learning session. The six
+specialist skills are narrower, standalone drills that each deepen
+one stage of that lifecycle, meant to be used on their own or as a
+follow-up when one stage of a `dsa-tutor` session needs more than a
+single question. `mock-interviewer` intentionally runs the opposite
+interaction mode — scarce hints during the attempt, full feedback
+only afterward — rather than protecting productive struggle
+throughout, and should not be blended with the coaching skills in the
+same session.
 
 ## Recommended learner prompt
 
@@ -311,6 +343,12 @@ see [Skills in this repository](#skills-in-this-repository).
 - Generate one structurally similar cousin problem
 - Maintain a meaningful mistake log
 
+It names testing and transfer as stages, but it doesn't contain the
+specialist protocols internally — when a stage deserves a whole
+session (a systematic test suite, a full transfer exercise, a deep
+complexity derivation), `dsa-tutor` hands off to the matching
+specialist skill rather than improvising its protocol inline.
+
 Complete code is not forbidden forever. It becomes appropriate after
 the learner has completed the reasoning process and explicitly requests
 a reference implementation.
@@ -322,15 +360,20 @@ think-before-code/
 ├── .github/
 │   └── workflows/
 │       └── validate-skills.yml
+├── demo/
+│   └── index.html
 ├── evals/
 │   ├── README.md
 │   ├── activation-prompts.csv
 │   └── behavior-cases.md
 ├── examples/
+│   ├── pattern-transfer-session.md
+│   ├── test-case-session.md
 │   └── tutoring-session.md
 ├── mistake-logs/
 │   └── README.md
 ├── public/
+│   ├── demo.gif
 │   └── logo.png
 ├── scripts/
 │   └── validate_skills.py
@@ -345,7 +388,11 @@ think-before-code/
 │   │   └── SKILL.md
 │   ├── mock-interviewer/
 │   │   └── SKILL.md
-│   └── problem-decoder/
+│   ├── pattern-transfer-coach/
+│   │   └── SKILL.md
+│   ├── problem-decoder/
+│   │   └── SKILL.md
+│   └── test-case-coach/
 │       └── SKILL.md
 ├── .gitignore
 ├── CHANGELOG.md
@@ -354,17 +401,28 @@ think-before-code/
 ```
 
 - [`.github/workflows/validate-skills.yml`](./.github/workflows/validate-skills.yml) —
-  CI that runs the structural validator and a CSV sanity check on
-  pushes and pull requests
+  CI that runs the structural validator and the activation-CSV
+  checks (parsing plus per-skill coverage) on pushes and pull
+  requests
+- [`demo/index.html`](./demo/index.html) — the page the demo GIF was
+  recorded from, also hosted via GitHub Pages
 - [`evals/`](./evals/) — activation and behavior specifications for
   every skill; see [Testing and validation](#testing-and-validation)
 - [`examples/tutoring-session.md`](./examples/tutoring-session.md) —
   a complete, realistic `dsa-tutor` transcript from problem statement
   to a cousin problem
+- [`examples/test-case-session.md`](./examples/test-case-session.md) —
+  a `test-case-coach` transcript: one input dimension at a time,
+  predicted outputs, an adversarial case, and a redundant case cut
+- [`examples/pattern-transfer-session.md`](./examples/pattern-transfer-session.md) —
+  a `pattern-transfer-coach` transcript: story stripped off a solved
+  problem, a near-miss, and exactly one (unsolved) cousin problem
 - [`mistake-logs/README.md`](./mistake-logs/README.md) — where
   learner-confirmed mistake-log entries accumulate; currently empty,
   see Roadmap
 - [`public/logo.png`](./public/logo.png) — Quackrates, the project mascot
+- [`public/demo.gif`](./public/demo.gif) — the demo recording embedded
+  at the top of this README
 - [`scripts/validate_skills.py`](./scripts/validate_skills.py) — the
   structural validator; see
   [Testing and validation](#testing-and-validation)
@@ -378,7 +436,7 @@ think-before-code/
 
 ## Testing and validation
 
-Two things protect the repository's structure and behavior:
+Three layers protect the repository's structure and behavior:
 
 - **`scripts/validate_skills.py`** checks that every skill under
   `skills/` has a `SKILL.md` with valid frontmatter, that its `name`
@@ -392,9 +450,15 @@ Two things protect the repository's structure and behavior:
   python scripts/validate_skills.py
   ```
 
-- **`.github/workflows/validate-skills.yml`** runs that same script,
-  plus a basic parse check on `evals/activation-prompts.csv`, on every
-  push and pull request.
+- **`.github/workflows/validate-skills.yml`** runs that same script
+  on every push and pull request, plus checks on
+  `evals/activation-prompts.csv`: it must parse with the expected
+  columns, IDs must be unique, every `target_skill` must be a real
+  skill directory (or `none`), prompts and reasons must be non-empty
+  — and every skill directory must have at least one
+  `should_activate = true` row and at least one
+  `should_activate = false` row, so no skill ships without both a
+  positive and a negative activation case.
 
 - **`evals/`** documents, per skill, which prompts should and
   shouldn't activate it (`activation-prompts.csv`) and what behavior
@@ -405,7 +469,7 @@ Two things protect the repository's structure and behavior:
 
 ## Release
 
-The current release is `v1.1.0`. See
+The current release is `v1.2.0`. See
 [`CHANGELOG.md`](./CHANGELOG.md) for the complete release notes.
 
 ## Roadmap
@@ -424,20 +488,32 @@ The current release is `v1.1.0`. See
 - [x] Add activation and behavior eval specifications
 - [x] Add structural validation for skill packaging (script + CI)
 - [x] Add cross-agent installation guidance
+- [x] Add a test-design coaching skill (`test-case-coach`)
+- [x] Add a pattern-abstraction and transfer skill
+      (`pattern-transfer-coach`)
+- [x] Expand the example transcripts beyond one session (test-case
+      and pattern-transfer sessions)
+- [x] Expand activation and behavior coverage to all eight skills,
+      including cross-skill boundary cases
+- [x] Strengthen eval validation — CI now requires positive and
+      negative activation cases for every skill
 
 ### Next
 
 - [ ] Add learner-confirmed mistake-log samples (`mistake-logs/` is
       still empty — real sessions need to produce these)
-- [ ] Expand the example transcript collection beyond one session
 - [ ] Add cross-agent installation helper scripts, not just
       documented paths
 - [ ] Add automated behavior eval execution — `evals/` is currently a
       specification, not a runner
 - [ ] Add session-state templates for unfinished problems
 - [ ] Add progress tracking across patterns
-- [ ] Add spaced-revision prompts and cousin-problem mappings beyond
-      the single suggestion given at the end of a session
+- [ ] Add spaced-revision prompts, building on top of the per-session
+      transfer coaching that now exists
+- [ ] Build a curated cousin-problem mapping dataset —
+      `pattern-transfer-coach` picks one cousin per session, but
+      there's no shared, reviewed mapping of patterns to cousin and
+      near-miss problems yet
 - [ ] Document integrations with additional AI tools and IDEs beyond
       the initial three covered in Installation
 
@@ -446,7 +522,10 @@ The current release is `v1.1.0`. See
 Contributions are welcome, especially those that:
 
 - improve tutoring behavior,
-- add high-quality example sessions,
+- add activation-boundary cases to `evals/` — realistic prompts where
+  two skills could plausibly collide,
+- add test-design scenarios and transfer exercises,
+- add high-quality example transcripts,
 - expand cousin-problem mappings,
 - improve mistake classification,
 - or identify places where the tutor reveals too much too early.

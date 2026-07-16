@@ -35,6 +35,20 @@ question, for instance). These rows exist specifically to catch
 over-eager activation, which is just as much a defect as a skill
 failing to activate when it should.
 
+The same (or a very similar) user prompt may legitimately appear
+twice: once as a positive row for the skill that should handle it,
+and once as a negative row for a neighboring skill that shouldn't —
+that pairing is what makes a routing boundary testable.
+
+## Coverage requirement
+
+CI enforces that every skill directory under `skills/` has at least
+one `should_activate = true` row and at least one
+`should_activate = false` row in `activation-prompts.csv` — a skill
+with no negative cases has an untested activation boundary. Rows
+with `target_skill = none` remain allowed (they test that *no* skill
+engages) but don't count toward any skill's coverage.
+
 ## Behavior constraints
 
 Each case in `behavior-cases.md` assumes the correct skill has already

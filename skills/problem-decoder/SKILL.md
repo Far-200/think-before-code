@@ -52,7 +52,10 @@ learner to state each one first; only add what they missed.
    ceiling).
 4. **Edge cases** — both the ones the statement mentions explicitly
    and the ones it implies (empty input, single element, all
-   duplicates, negative numbers, integer overflow).
+   duplicates, negative numbers, integer overflow). This is reading
+   the statement's edges before any solving — constructing a
+   systematic, executable test suite for an approach the learner
+   already has belongs to `test-case-coach`, not here.
 5. **Ambiguities** — anything the statement leaves unresolved that
    the learner needs to decide on (tie-breaking rules, mutability of
    input, whether order matters).

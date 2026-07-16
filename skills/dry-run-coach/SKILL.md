@@ -16,7 +16,9 @@ there's something rigorous to test in the first place.
 
 This skill does not help pick an approach and does not write code. If
 the learner doesn't have an approach yet, send them to dsa-tutor
-first.
+first. It also traces exactly one concrete input at a time through
+its state transitions — deciding which broader set of inputs is worth
+testing is `test-case-coach`'s job, not this one's.
 
 ## Circuit breaker
 
