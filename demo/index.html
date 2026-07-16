@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Think Before Code — Recording Rig</title>
+    <title>Think Before Code — Interactive Demo</title>
     <style>
       :root {
         --ink: #10121a;
@@ -438,17 +438,17 @@
   </head>
   <body>
     <div class="chrome">
-      <h1>Think Before Code — recording rig</h1>
+      <h1>Think Before Code — Interactive Demo</h1>
       <p>
-        Pick a reel, hit play, then screen-record just the dashed box below
-        (crop tightly — nothing outside it is meant to appear in your GIF/MP4).
-        Each reel is self-contained and loops back to a blank frame when done,
-        so re-recording is just hit play again.
+        Choose a scenario and press Play to see how Quackrates coaches without
+        spoiling the solution.
       </p>
       <div class="controls">
-        <button data-reel="gif1" class="active">▶ GIF #1 — The refusal</button>
-        <button data-reel="gif2">▶ GIF #2 — Mistake logging</button>
-        <button data-reel="gif3">▶ GIF #3 — Skills folder</button>
+        <button data-reel="gif1" class="active">
+          Scenario 1 — The refusal
+        </button>
+        <button data-reel="gif2">Scenario 2 — Mistake logging</button>
+        <button data-reel="gif3">Scenario 3 — Skills folder</button>
         <div class="sep"></div>
         <button id="playBtn">Play</button>
         <button id="restartBtn">Restart</button>
@@ -456,9 +456,8 @@
       </div>
       <div id="stage"></div>
       <p class="hint">
-        Suggested capture: <b>1280×720</b> crop of the box, <b>15 fps</b>,
-        export GIF for GitHub / MP4 for LinkedIn &amp; X — matches the settings
-        in your script.
+        Each scenario is self-contained. Use <b>Restart</b> to replay it or
+        <b>Fullscreen stage</b> for a closer look.
       </p>
     </div>
 
@@ -619,7 +618,7 @@
           const layer = el("div", "layer");
           const { win, body } = makeWindow(
             "Think Before Code",
-            "thinkbeforecode.dev",
+            "github.com/Far-200/think-before-code",
           );
           layer.appendChild(win);
           await fadeIn(layer, 200);
@@ -683,7 +682,7 @@
         const layer = el("div", "layer");
         const { win, body } = makeWindow(
           "Think Before Code",
-          "thinkbeforecode.dev",
+          "github.com/Far-200/think-before-code",
         );
         layer.appendChild(win);
         await fadeIn(layer, 200);
@@ -706,7 +705,7 @@
         const layer = el("div", "layer");
         const { win, body } = makeWindow(
           "Think Before Code",
-          "thinkbeforecode.dev",
+          "github.com/Far-200/think-before-code",
         );
         layer.appendChild(win);
         await fadeIn(layer, 200);
@@ -765,10 +764,12 @@
           { cls: "folder", label: "📁 skills/" },
           { cls: "file", label: "problem-decoder/" },
           { cls: "file", label: "dsa-tutor/" },
-          { cls: "file", label: "complexity-coach/" },
           { cls: "file", label: "dry-run-coach/" },
+          { cls: "file", label: "complexity-coach/" },
+          { cls: "file", label: "debug-coach/" },
+          { cls: "file", label: "test-case-coach/" },
+          { cls: "file", label: "pattern-transfer-coach/" },
           { cls: "file", label: "mock-interviewer/" },
-          { cls: "file", label: "mistake-logs/" },
         ];
         const nodes = [];
         for (const it of items) {

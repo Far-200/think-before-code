@@ -73,6 +73,10 @@ The format is loosely based on
 - Activation row `A047`'s reason updated: standalone cousin-problem
   adaptation after a solve now routes to `pattern-transfer-coach`
   instead of being an unresolved boundary.
+- Polished the interactive demo for public visitors and refreshed its
+  displayed skills list.
+- Updated the GitHub Actions checkout and Python setup steps to
+  Node 24-compatible major versions.
 
 ### Fixed
 
