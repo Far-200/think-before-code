@@ -1,0 +1,848 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Think Before Code — Recording Rig</title>
+    <style>
+      :root {
+        --ink: #10121a;
+        --panel: #171a24;
+        --panel-2: #1d2130;
+        --cream: #edeae0;
+        --slate: #8b93a6;
+        --duck: #f2b705;
+        --duck-dim: #8a6608;
+        --cut: #e2542d;
+        --log: #5fb3a3;
+        --mono:
+          ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas,
+          "Liberation Mono", monospace;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.001ms !important;
+          transition-duration: 0.001ms !important;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #05060a;
+        color: var(--cream);
+        font-family: var(--mono);
+      }
+      .chrome {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 22px 20px 40px;
+      }
+      .chrome h1 {
+        font-size: 15px;
+        letter-spacing: 0.02em;
+        color: var(--duck);
+        margin: 0 0 4px;
+        text-transform: uppercase;
+      }
+      .chrome p {
+        color: var(--slate);
+        font-size: 13px;
+        margin: 0 0 18px;
+        line-height: 1.5;
+      }
+      .controls {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+      }
+      .controls button {
+        font-family: var(--mono);
+        font-size: 12px;
+        letter-spacing: 0.02em;
+        background: var(--panel);
+        color: var(--cream);
+        border: 1px solid #2a2f42;
+        padding: 9px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      .controls button:hover {
+        border-color: var(--duck);
+      }
+      .controls button:focus-visible {
+        outline: 2px solid var(--duck);
+        outline-offset: 2px;
+      }
+      .controls button.active {
+        border-color: var(--duck);
+        color: var(--duck);
+      }
+      .controls .sep {
+        width: 1px;
+        background: #2a2f42;
+        margin: 4px 6px;
+      }
+
+      #stage {
+        width: min(100%, 1280px);
+        aspect-ratio: 16/9;
+        background: var(--ink);
+        border-radius: 10px;
+        position: relative;
+        overflow: hidden;
+        outline: 2px dashed #2a2f42;
+        outline-offset: 6px;
+        margin: 0 auto;
+      }
+      .hint {
+        color: var(--slate);
+        font-size: 11px;
+        margin-top: 10px;
+      }
+      .hint b {
+        color: var(--cream);
+      }
+
+      /* ---- generic layers ---- */
+      .layer {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.25s ease;
+      }
+      .layer.on {
+        opacity: 1;
+      }
+
+      .card {
+        text-align: center;
+        padding: 0 60px;
+      }
+      .card .big {
+        font-size: 34px;
+        font-weight: 700;
+        color: var(--cream);
+        line-height: 1.35;
+      }
+      .card .small {
+        margin-top: 14px;
+        font-size: 15px;
+        color: var(--slate);
+      }
+      .card .brand {
+        font-size: 16px;
+        color: var(--duck);
+        letter-spacing: 0.04em;
+        margin-bottom: 10px;
+      }
+      .card .url {
+        margin-top: 18px;
+        font-size: 14px;
+        color: var(--duck);
+      }
+
+      /* ---- app window chrome ---- */
+      .win {
+        width: 90%;
+        height: 86%;
+        background: var(--panel);
+        border-radius: 10px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .titlebar {
+        height: 34px;
+        background: var(--panel-2);
+        display: flex;
+        align-items: center;
+        padding: 0 12px;
+        gap: 8px;
+        flex: 0 0 auto;
+        border-bottom: 1px solid #262b3d;
+      }
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+      .dot.r {
+        background: #e2542d;
+      }
+      .dot.y {
+        background: #f2b705;
+      }
+      .dot.g {
+        background: #5fb3a3;
+      }
+      .urlbar {
+        margin-left: 12px;
+        font-size: 11px;
+        color: var(--slate);
+        background: var(--ink);
+        padding: 4px 10px;
+        border-radius: 5px;
+        flex: 1 1 auto;
+        max-width: 340px;
+      }
+      .apptag {
+        margin-left: auto;
+        font-size: 11px;
+        color: var(--slate);
+      }
+      .apptag b {
+        color: var(--duck);
+      }
+
+      .body {
+        flex: 1 1 auto;
+        padding: 20px 26px 54px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        font-size: 14px;
+        line-height: 1.5;
+        scroll-behavior: smooth;
+        scrollbar-width: none;
+      }
+      .body::-webkit-scrollbar {
+        display: none;
+      }
+
+      .msg {
+        max-width: 78%;
+        white-space: pre-wrap;
+        flex: 0 0 auto;
+      }
+      .msg.user {
+        align-self: flex-end;
+        color: var(--cream);
+        text-align: right;
+      }
+      .msg.user .who {
+        color: var(--slate);
+        font-size: 11px;
+      }
+      .msg.assistant {
+        align-self: flex-start;
+        color: var(--cream);
+      }
+      .msg.assistant .who {
+        color: var(--duck);
+        font-size: 11px;
+      }
+      .msg.assistant.generic .who {
+        color: var(--cut);
+      }
+      .msg .who {
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 4px;
+      }
+      .msg .txt::after {
+        content: "";
+        display: inline-block;
+        width: 7px;
+        height: 15px;
+        background: var(--cream);
+        margin-left: 2px;
+        vertical-align: -2px;
+        animation: blink 1s steps(1) infinite;
+      }
+      .msg .txt.done::after {
+        display: none;
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+
+      .dots {
+        display: flex;
+        gap: 4px;
+        align-self: flex-start;
+        padding: 2px 0;
+      }
+      .dots span {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--slate);
+        animation: pulse 1s ease-in-out infinite;
+      }
+      .dots span:nth-child(2) {
+        animation-delay: 0.15s;
+      }
+      .dots span:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.25;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      .codeblock {
+        background: var(--ink);
+        border: 1px solid #262b3d;
+        border-radius: 6px;
+        padding: 10px 14px;
+        font-size: 13px;
+        color: var(--slate);
+        white-space: pre;
+      }
+
+      .logcard {
+        align-self: flex-start;
+        border: 1px solid var(--log);
+        border-radius: 8px;
+        padding: 12px 16px;
+        background: rgba(95, 179, 163, 0.08);
+        max-width: 82%;
+        transform: translateY(6px);
+        opacity: 0;
+        transition: all 0.35s ease;
+      }
+      .logcard.on {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      .logcard .tag {
+        font-size: 10px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--log);
+        margin-bottom: 6px;
+      }
+      .logcard .txt {
+        font-style: italic;
+        color: var(--cream);
+        font-size: 14px;
+      }
+
+      .cutflash {
+        position: absolute;
+        inset: 0;
+        background: var(--cream);
+        opacity: 0;
+        pointer-events: none;
+      }
+      .cutflash.on {
+        opacity: 0.9;
+        transition: opacity 0.06s linear;
+      }
+
+      /* file tree */
+      .tree {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+      }
+      .sidebar {
+        width: 230px;
+        background: var(--panel-2);
+        border-right: 1px solid #262b3d;
+        padding: 10px 0;
+        font-size: 13px;
+      }
+      .sidebar .item {
+        padding: 5px 16px;
+        color: var(--slate);
+        opacity: 0;
+        transform: translateX(-6px);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .sidebar .item.on {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      .sidebar .item.folder {
+        color: var(--cream);
+      }
+      .sidebar .item.file {
+        padding-left: 34px;
+        color: var(--duck);
+      }
+      .sidebar .item.selected {
+        background: #262b3d;
+      }
+      .editor {
+        flex: 1;
+        padding: 18px 22px;
+        font-size: 13px;
+        color: var(--slate);
+        overflow: hidden;
+      }
+      .editor .fname {
+        color: var(--duck);
+        font-size: 12px;
+        margin-bottom: 12px;
+      }
+      .editor .line {
+        opacity: 0;
+        transform: translateY(4px);
+        transition: all 0.3s ease;
+        margin-bottom: 6px;
+      }
+      .editor .line.on {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .editor .h {
+        color: var(--cream);
+        font-weight: 700;
+      }
+      .editor .k {
+        color: var(--duck);
+      }
+
+      .caption {
+        position: absolute;
+        bottom: 14px;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        font-size: 12px;
+        color: var(--slate);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        background: rgba(16, 18, 26, 0.88);
+        border: 1px solid #2a2f42;
+        padding: 7px 12px;
+        border-radius: 999px;
+        pointer-events: none;
+        white-space: nowrap;
+      }
+      .caption.on {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chrome">
+      <h1>Think Before Code — recording rig</h1>
+      <p>
+        Pick a reel, hit play, then screen-record just the dashed box below
+        (crop tightly — nothing outside it is meant to appear in your GIF/MP4).
+        Each reel is self-contained and loops back to a blank frame when done,
+        so re-recording is just hit play again.
+      </p>
+      <div class="controls">
+        <button data-reel="gif1" class="active">▶ GIF #1 — The refusal</button>
+        <button data-reel="gif2">▶ GIF #2 — Mistake logging</button>
+        <button data-reel="gif3">▶ GIF #3 — Skills folder</button>
+        <div class="sep"></div>
+        <button id="playBtn">Play</button>
+        <button id="restartBtn">Restart</button>
+        <button id="fullscreenBtn">Fullscreen stage</button>
+      </div>
+      <div id="stage"></div>
+      <p class="hint">
+        Suggested capture: <b>1280×720</b> crop of the box, <b>15 fps</b>,
+        export GIF for GitHub / MP4 for LinkedIn &amp; X — matches the settings
+        in your script.
+      </p>
+    </div>
+
+    <script>
+      const stage = document.getElementById("stage");
+      const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+      function sleep(ms) {
+        return new Promise((r) => setTimeout(r, reducedMotion ? 1 : ms));
+      }
+
+      function clearStage() {
+        stage.innerHTML = "";
+      }
+
+      function scrollChat(body, behavior = "smooth") {
+        if (!body) return;
+        requestAnimationFrame(() => {
+          body.scrollTo({ top: body.scrollHeight, behavior });
+        });
+      }
+
+      function keepVisible(node) {
+        const body = node?.closest?.(".body");
+        if (body) scrollChat(body, "smooth");
+      }
+
+      function el(tag, cls, parent) {
+        const e = document.createElement(tag);
+        if (cls) e.className = cls;
+        (parent || stage).appendChild(e);
+        return e;
+      }
+
+      async function fadeIn(node, dur = 250) {
+        node.classList.add("layer");
+        await sleep(20);
+        node.classList.add("on");
+        await sleep(dur);
+      }
+      async function fadeOut(node, dur = 250) {
+        node.classList.remove("on");
+        await sleep(dur);
+        node.remove();
+      }
+
+      async function typeInto(node, text, cps = 26) {
+        const per = 1000 / cps;
+        node.classList.add("txt");
+        for (let i = 0; i <= text.length; i++) {
+          node.textContent = text.slice(0, i);
+          if (i % 4 === 0 || i === text.length) keepVisible(node);
+          await sleep(per);
+        }
+        node.classList.add("done");
+        keepVisible(node);
+      }
+
+      function makeWindow(appLabel, url) {
+        const win = el("div", "win");
+        const bar = el("div", "titlebar", win);
+        el("span", "dot r", bar);
+        el("span", "dot y", bar);
+        el("span", "dot g", bar);
+        const u = el("div", "urlbar", bar);
+        u.textContent = url;
+        const tag = el("div", "apptag", bar);
+        tag.innerHTML = "app: <b>" + appLabel + "</b>";
+        const body = el("div", "body", win);
+        return { win, body };
+      }
+
+      async function userMsg(body, text, cps) {
+        const m = el("div", "msg user", body);
+        const who = el("div", "who", m);
+        who.textContent = "you";
+        const txt = el("div", "", m);
+        await typeInto(txt, text, cps || 30);
+        scrollChat(body);
+        return m;
+      }
+
+      async function thinking(body, ms) {
+        const d = el("div", "dots", body);
+        d.innerHTML = "<span></span><span></span><span></span>";
+        scrollChat(body);
+        await sleep(ms);
+        d.remove();
+      }
+
+      async function assistantMsg(body, who, text, cps, generic) {
+        const m = el(
+          "div",
+          "msg assistant" + (generic ? " generic" : ""),
+          body,
+        );
+        const w = el("div", "who", m);
+        w.textContent = who;
+        const txt = el("div", "", m);
+        await typeInto(txt, text, cps || 22);
+        scrollChat(body);
+        return m;
+      }
+
+      function centerCard() {
+        const layer = el("div", "layer");
+        const card = el("div", "card", layer);
+        return { layer, card };
+      }
+
+      /* ============ REEL: GIF 1 ============ */
+      async function playGif1() {
+        clearStage();
+
+        // outside-GIF title card
+        {
+          const { layer, card } = centerCard();
+          card.innerHTML =
+            '<div class="big">AI shouldn\'t solve DSA for you.</div>';
+          await fadeIn(layer, 300);
+          await sleep(1600);
+          await fadeOut(layer, 250);
+        }
+
+        // Frame 1: generic AI, instant dump, hard cut
+        {
+          const layer = el("div", "layer");
+          const { win, body } = makeWindow(
+            "generic assistant",
+            "chat.example.com",
+          );
+          layer.appendChild(win);
+          await fadeIn(layer, 200);
+          await userMsg(body, "Solve Two Sum.", 34);
+          await sleep(150);
+          await thinking(body, 260);
+          await assistantMsg(
+            body,
+            "assistant",
+            "Sure! Here's the code...",
+            55,
+            true,
+          );
+          const cb = el("div", "codeblock", body);
+          cb.textContent = "def twoSum(nums, target):\n    seen = {}\n    ...";
+          scrollChat(body);
+          await sleep(500);
+          const flash = el("div", "cutflash on");
+          await sleep(70);
+          flash.remove();
+          await fadeOut(layer, 120);
+        }
+
+        // Frame 2/3: Think Before Code, Socratic dialogue
+        {
+          const layer = el("div", "layer");
+          const { win, body } = makeWindow(
+            "Think Before Code",
+            "thinkbeforecode.dev",
+          );
+          layer.appendChild(win);
+          await fadeIn(layer, 200);
+
+          await userMsg(body, "Solve Two Sum.", 30);
+          await thinking(body, 700);
+          await assistantMsg(
+            body,
+            "quackrates 🦆",
+            "No.\n\nLet's think first.\n\nWhat information do you need to remember\nwhile scanning the array once?",
+            24,
+          );
+          await sleep(300);
+
+          await userMsg(body, "Previous numbers?", 28);
+          await thinking(body, 500);
+          await assistantMsg(
+            body,
+            "quackrates 🦆",
+            "Closer.\n\nDo you need ALL previous numbers?\n\nOr only something that helps\nfind the missing value?",
+            24,
+          );
+          await sleep(300);
+
+          await userMsg(body, "Maybe...\n\nvalue -> index?", 26);
+          await thinking(body, 500);
+          await assistantMsg(
+            body,
+            "quackrates 🦆",
+            "Exactly.\n\nWhy would a hash map help here?",
+            24,
+          );
+
+          const cap = el(
+            "div",
+            "caption",
+            win.parentElement === layer ? layer : layer,
+          );
+          cap.textContent = "No solution shown. Only curiosity.";
+          await sleep(400);
+          cap.classList.add("on");
+          await sleep(1400);
+          await fadeOut(layer, 300);
+        }
+
+        // End card
+        {
+          const { layer, card } = centerCard();
+          card.innerHTML =
+            '<div class="brand">Think Before Code</div>' +
+            '<div class="big" style="font-size:26px;">Learn algorithms.<br>Don\'t outsource thinking.</div>' +
+            '<div class="url">github.com/Far-200/think-before-code</div>';
+          await fadeIn(layer, 300);
+          await sleep(2200);
+        }
+      }
+
+      /* ============ Bonus beat: the refusal, on its own ============ */
+      async function playRefusal() {
+        clearStage();
+        const layer = el("div", "layer");
+        const { win, body } = makeWindow(
+          "Think Before Code",
+          "thinkbeforecode.dev",
+        );
+        layer.appendChild(win);
+        await fadeIn(layer, 200);
+        await userMsg(body, "Give me the code.", 30);
+        await thinking(body, 600);
+        await assistantMsg(body, "quackrates 🦆", "No.", 20);
+        await sleep(1000);
+        await assistantMsg(
+          body,
+          "quackrates 🦆",
+          "I won't solve this for you.\n\nI'll help you solve it.",
+          22,
+        );
+        await sleep(2200);
+      }
+
+      /* ============ REEL: GIF 2 — mistake logging ============ */
+      async function playGif2() {
+        clearStage();
+        const layer = el("div", "layer");
+        const { win, body } = makeWindow(
+          "Think Before Code",
+          "thinkbeforecode.dev",
+        );
+        layer.appendChild(win);
+        await fadeIn(layer, 200);
+
+        await userMsg(body, "Sliding Window?", 28);
+        await thinking(body, 500);
+        await assistantMsg(body, "quackrates 🦆", "Why Sliding Window?", 24);
+        await sleep(300);
+
+        await userMsg(
+          body,
+          "...\n\nActually...\n\nWindow size isn't fixed.",
+          26,
+        );
+        await thinking(body, 500);
+        await assistantMsg(
+          body,
+          "quackrates 🦆",
+          "Good catch.\n\nMistake logged:",
+          24,
+        );
+
+        const card = el("div", "logcard", body);
+        const tag = el("div", "tag", card);
+        tag.textContent = "mistake log";
+        const txt = el("div", "txt", card);
+        txt.textContent =
+          '"I assumed Sliding Window before checking constraints."';
+        await sleep(150);
+        card.classList.add("on");
+        scrollChat(body);
+        await sleep(2400);
+      }
+
+      /* ============ REEL: GIF 3 — skills folder ============ */
+      async function playGif3() {
+        clearStage();
+        const layer = el("div", "layer");
+        const win = el("div", "win");
+        layer.appendChild(win);
+        const bar = el("div", "titlebar", win);
+        el("span", "dot r", bar);
+        el("span", "dot y", bar);
+        el("span", "dot g", bar);
+        const u = el("div", "urlbar", bar);
+        u.textContent = "think-before-code";
+        const tag = el("div", "apptag", bar);
+        tag.innerHTML = "app: <b>editor</b>";
+        const tree = el("div", "tree", win);
+        const sidebar = el("div", "sidebar", tree);
+        const editor = el("div", "editor", tree);
+
+        await fadeIn(layer, 200);
+
+        const items = [
+          { cls: "folder", label: "📁 skills/" },
+          { cls: "file", label: "problem-decoder/" },
+          { cls: "file", label: "dsa-tutor/" },
+          { cls: "file", label: "complexity-coach/" },
+          { cls: "file", label: "dry-run-coach/" },
+          { cls: "file", label: "mock-interviewer/" },
+          { cls: "file", label: "mistake-logs/" },
+        ];
+        const nodes = [];
+        for (const it of items) {
+          const n = el("div", "item " + it.cls, sidebar);
+          n.textContent = it.label;
+          nodes.push(n);
+          await sleep(220);
+          n.classList.add("on");
+        }
+
+        await sleep(500);
+        nodes[1].classList.add("selected");
+
+        const fname = el("div", "fname", editor);
+        fname.textContent = "skills/problem-decoder/SKILL.md";
+        const lines = [
+          ["h", "# Problem Decoder"],
+          ["", "Breaks a problem statement into constraints,"],
+          ["", "edge cases, and the real question being asked —"],
+          ["", "before any approach is chosen."],
+          ["k", "## When to use"],
+          ["", "Any time a prompt names a technique before"],
+          ["", "the constraints have been checked."],
+          ["k", "## Output"],
+          ["", "Questions. Never a solution."],
+        ];
+        for (const [k, text] of lines) {
+          const l = el("div", "line" + (k ? " " + k : ""), editor);
+          l.textContent = text;
+          await sleep(260);
+          l.classList.add("on");
+        }
+
+        const cap = el("div", "caption on", win.parentElement);
+        cap.textContent = "Reusable AI tutors.";
+        await sleep(2000);
+      }
+
+      /* ============ controller ============ */
+      const reels = { gif1: playGif1, gif2: playGif2, gif3: playGif3 };
+      let currentReel = "gif1";
+      let playing = false;
+
+      document.querySelectorAll("[data-reel]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document
+            .querySelectorAll("[data-reel]")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          currentReel = btn.dataset.reel;
+          clearStage();
+        });
+      });
+
+      document.getElementById("playBtn").addEventListener("click", async () => {
+        if (playing) return;
+        playing = true;
+        await reels[currentReel]();
+        playing = false;
+      });
+      document
+        .getElementById("restartBtn")
+        .addEventListener("click", async () => {
+          if (playing) return;
+          playing = true;
+          await reels[currentReel]();
+          playing = false;
+        });
+
+      document
+        .getElementById("fullscreenBtn")
+        .addEventListener("click", async () => {
+          if (stage.requestFullscreen) await stage.requestFullscreen();
+        });
+    </script>
+  </body>
+</html>

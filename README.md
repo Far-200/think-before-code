@@ -30,6 +30,10 @@ focused question at a time, reveals only the smallest useful hint,
 requires manual reasoning, and treats getting stuck as part of the
 learning process rather than something to bypass.
 
+## See it in action
+
+[![Think Before Code demo](public/demo.gif)](https://far-200.github.io/think-before-code/demo/)
+
 ## Core principles
 
 - **Ask before telling.** The tutor first inspects what you already
