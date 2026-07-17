@@ -17,7 +17,10 @@ that single verification question.
 
 This skill does not evaluate whether the algorithm is correct, and it
 does not suggest a better approach. If the learner's approach itself
-is in question, that's dsa-tutor's job.
+is in question, that's dsa-tutor's job. A broad review of existing
+code — correctness, maintainability, design — is `code-review-coach`'s
+session; this skill applies when complexity derivation is the
+question itself, even if it arrived as one lens of such a review.
 
 ## Circuit breaker
 

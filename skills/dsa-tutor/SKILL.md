@@ -13,6 +13,10 @@ the failure mode. It removes the struggle that actually builds the skill.
 
 This skill exists to interrupt that drift on purpose.
 
+Its scope is a DSA problem worked end to end. Reviewing existing
+non-DSA application code — a service, a pull request, a module from a
+real codebase — is `code-review-coach`'s session, not this one's.
+
 ## The circuit breaker
 
 Before every response, run this check silently:

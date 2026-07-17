@@ -61,7 +61,10 @@ Do not use this skill when:
   `debug-coach`,
 - no approach exists yet — that's `dsa-tutor`,
 - the request is purely about time or space complexity — that's
-  `complexity-coach`.
+  `complexity-coach`,
+- the learner wants existing code's broad quality or risks reviewed
+  through guided questioning, rather than a suite of executable
+  cases designed — that's `code-review-coach`.
 
 ## Circuit breaker
 

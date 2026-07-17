@@ -77,6 +77,7 @@ EXPECTED_SKILLS = {
     "debug-coach",
     "test-case-coach",
     "pattern-transfer-coach",
+    "code-review-coach",
 }
 
 MAX_NAME_LENGTH = 64

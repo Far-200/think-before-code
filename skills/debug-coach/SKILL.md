@@ -53,7 +53,11 @@ Do not use this skill when:
   a repair — that's outside every tutoring skill in this repository
   and should be named as such rather than quietly delivered,
 - the question is purely about syntax or language mechanics with no
-  actual failing behavior involved.
+  actual failing behavior involved,
+- the learner wants a broad guided inspection of existing code with
+  no observed failure — reviewing for risks that *could* go wrong is
+  `code-review-coach`'s territory; this skill starts only once
+  something concretely has.
 
 ## Circuit breaker
 

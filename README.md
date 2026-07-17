@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  A portable suite of Socratic Agent Skills for learning DSA — protecting productive struggle instead of handing you the answer. Not a hosted app: copy a skill into a compatible agent, or paste it as project instructions.
+  A portable suite of Socratic Agent Skills for learning DSA and practicing software-engineering judgment — protecting productive struggle instead of handing you the answer. Not a hosted app: copy a skill into a compatible agent, or paste it as project instructions.
 </p>
 
 ## Why this exists
@@ -24,6 +24,11 @@ complexity analysis, and a polished dry run before they have had a real
 chance to reason.
 
 That feels productive. Usually, it is not.
+
+The same failure mode shows up beyond DSA. Ask an AI to review code
+and it dumps every finding at once — or quietly rewrites the file —
+before the learner has noticed a single risk themselves. The review
+gets done; the reviewer's judgment never forms.
 
 `think-before-code` interrupts that behavior on purpose. It asks one
 focused question at a time, reveals only the smallest useful hint,
@@ -56,9 +61,9 @@ Quackrates asks one question at a time until **you** discover the idea.
 - **Transfer through cousin problems.** Once a pattern clicks, the tutor
   points you toward one structurally similar problem.
 
-## How the tutoring flow works
+## How the DSA tutoring flow works
 
-The full learning lifecycle the suite covers looks like this:
+The full DSA learning lifecycle the suite covers looks like this:
 
 1. Decode the problem — a deeper pass lives in `problem-decoder`
 2. Build and examine an approach — brute force first, then the
@@ -82,6 +87,30 @@ session. No session is required to invoke every specialist, and most
 won't. The tutor may also move backward when an explanation sounds
 stronger than the learner's actual understanding.
 
+## Beyond DSA: code-review practice
+
+`code-review-coach` is the suite's first deliberately non-DSA skill,
+and it is not a ninth stage of the lifecycle above — it has its own
+entry point. Bring existing code, a diff, or a pull request, and the
+coach helps you discover and justify review findings one concern at a
+time: contract first, evidence before impact, impact before severity,
+the smallest justified change, and a verification idea — ending in a
+prioritized review summary in your own words. Design patterns are
+never prescribed up front; the underlying design pressure has to be
+identified first, and "no pattern is justified" is a valid
+conclusion.
+
+It hands off like the DSA skills do: a concrete observed failure goes
+to `debug-coach`, a systematic suite around the reviewed code goes to
+`test-case-coach`, and a complexity-only question goes to
+`complexity-coach`. A starting prompt that works well:
+
+```text
+Here's the code / diff and what it's supposed to do. Help me review
+it myself, one concern at a time. Don't list the findings or rewrite
+anything — ask me questions until I find and justify them.
+```
+
 ## Quick start
 
 1. **Clone the repository:**
@@ -92,7 +121,7 @@ stronger than the learner's actual understanding.
    ```
 
 2. **Choose a skill.** The core skill lives at
-   [`skills/dsa-tutor/SKILL.md`](./skills/dsa-tutor/SKILL.md). Seven
+   [`skills/dsa-tutor/SKILL.md`](./skills/dsa-tutor/SKILL.md). Eight
    more skills live alongside it — see
    [Which skill should I use?](#which-skill-should-i-use) for a quick
    decision guide, and
@@ -140,6 +169,8 @@ Match where you actually are, not where you'd like to be:
   `pattern-transfer-coach`
 - **Want timed interview pressure instead of coaching** →
   `mock-interviewer`
+- **Have existing non-DSA code or a PR, want to practise reviewing
+  it yourself, one concern at a time** → `code-review-coach`
 
 ## Installation
 
@@ -232,13 +263,19 @@ containing a single `SKILL.md` with frontmatter (`name`,
 | [`debug-coach`](./skills/debug-coach/SKILL.md)                       | You already have code with an observed failure and need the bug isolated — expected vs. actual, first divergence, smallest repair — without a rewritten function.                         |
 | [`test-case-coach`](./skills/test-case-coach/SKILL.md)               | You already have an approach or implementation and want to design a compact, justified test suite — boundaries, adversarial inputs, expected outputs — yourself, one dimension at a time. |
 | [`pattern-transfer-coach`](./skills/pattern-transfer-coach/SKILL.md) | You've solved a problem and want to turn it into a transferable pattern — strip the story, name recognition and rule-out signals, and adapt it to exactly one cousin problem.             |
+| [`code-review-coach`](./skills/code-review-coach/SKILL.md)           | You have existing code, a diff, or a PR — not necessarily DSA — and want to practise discovering and justifying review findings yourself, one concern at a time, without a dumped list or a rewrite. |
 
 These are complementary, not redundant. `dsa-tutor` is the default
-skill that coordinates a complete learning session. The six
+skill that coordinates a complete DSA learning session. Six
 specialist skills are narrower, standalone drills that each deepen
 one stage of that lifecycle, meant to be used on their own or as a
 follow-up when one stage of a `dsa-tutor` session needs more than a
-single question. `mock-interviewer` intentionally runs the opposite
+single question. `code-review-coach` stands apart from that
+lifecycle: it has its own entry point for reviewing existing code —
+see [Beyond DSA](#beyond-dsa-code-review-practice) — while sharing
+the suite's one-question-at-a-time discipline and handing off to
+`debug-coach`, `test-case-coach`, and `complexity-coach` at the same
+boundaries. `mock-interviewer` intentionally runs the opposite
 interaction mode — scarce hints during the attempt, full feedback
 only afterward — rather than protecting productive struggle
 throughout, and should not be blended with the coaching skills in the
@@ -367,6 +404,7 @@ think-before-code/
 │   ├── activation-prompts.csv
 │   └── behavior-cases.md
 ├── examples/
+│   ├── code-review-session.md
 │   ├── pattern-transfer-session.md
 │   ├── test-case-session.md
 │   └── tutoring-session.md
@@ -378,6 +416,8 @@ think-before-code/
 ├── scripts/
 │   └── validate_skills.py
 ├── skills/
+│   ├── code-review-coach/
+│   │   └── SKILL.md
 │   ├── complexity-coach/
 │   │   └── SKILL.md
 │   ├── debug-coach/
@@ -417,6 +457,10 @@ think-before-code/
 - [`examples/pattern-transfer-session.md`](./examples/pattern-transfer-session.md) —
   a `pattern-transfer-coach` transcript: story stripped off a solved
   problem, a near-miss, and exactly one (unsolved) cousin problem
+- [`examples/code-review-session.md`](./examples/code-review-session.md) —
+  a `code-review-coach` transcript on a non-DSA pull request:
+  evidence before impact, impact before severity, a declined design
+  pattern, and a learner-authored prioritized review summary
 - [`mistake-logs/README.md`](./mistake-logs/README.md) — where
   learner-confirmed mistake-log entries accumulate; currently empty,
   see Roadmap
@@ -493,10 +537,13 @@ The current release is `v1.2.0`. See
       (`pattern-transfer-coach`)
 - [x] Expand the example transcripts beyond one session (test-case
       and pattern-transfer sessions)
-- [x] Expand activation and behavior coverage to all eight skills,
+- [x] Expand activation and behavior coverage across the full suite,
       including cross-skill boundary cases
 - [x] Strengthen eval validation — CI now requires positive and
       negative activation cases for every skill
+- [x] Add the first non-DSA skill, a Socratic code-review coach
+      (`code-review-coach`), with its own activation and behavior
+      evals and an example session
 
 ### Next
 
@@ -516,6 +563,9 @@ The current release is `v1.2.0`. See
       near-miss problems yet
 - [ ] Document integrations with additional AI tools and IDEs beyond
       the initial three covered in Installation
+- [ ] Validate `code-review-coach` — the first software-engineering
+      expansion beyond DSA — with real review sessions before adding
+      any broader SWE domains
 
 ## Contributing
 
@@ -525,6 +575,9 @@ Contributions are welcome, especially those that:
 - add activation-boundary cases to `evals/` — realistic prompts where
   two skills could plausibly collide,
 - add test-design scenarios and transfer exercises,
+- add realistic code-review scenarios and cross-skill boundaries for
+  `code-review-coach` — especially where review borders debugging,
+  test design, or complexity analysis,
 - add high-quality example transcripts,
 - expand cousin-problem mappings,
 - improve mistake classification,

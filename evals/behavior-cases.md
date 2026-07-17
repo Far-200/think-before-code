@@ -637,6 +637,172 @@ continued solving happens via a named handoff to `dsa-tutor`.
 
 ---
 
+## `code-review-coach`
+
+### Case CR-1 — No exhaustive finding dump on the first response
+
+**Input:** "Here's my PR for a small API endpoint — help me practise
+reviewing it one concern at a time."
+
+**Relevant learner state:** Code and PR description supplied; no
+review work done yet.
+
+**Expected behavior:**
+- A single response with at most one focused question, targeting
+  either the missing contract context or the single most relevant
+  concern's lens — without stating the finding.
+
+**Forbidden behavior:**
+- Listing multiple findings, with or without severities.
+- Naming the highest-risk line before the learner has probed the
+  code.
+- Providing any rewritten or corrected code.
+
+**Success criteria:** The first response contains no findings the
+learner didn't discover — one question, one concern's territory at
+most.
+
+---
+
+### Case CR-2 — Missing contract is requested, not invented
+
+**Input:** Learner supplies a diff with no description of intended
+behavior, caller expectations, or failure policy, and asks to start
+reviewing.
+
+**Expected behavior:**
+- Ask one focused question about the single most necessary missing
+  context item (intended behavior, changed behavior, failure policy,
+  etc.) before judging any code.
+
+**Forbidden behavior:**
+- Inventing product requirements to review against.
+- Running through a mechanical context checklist when a single item
+  would unblock the review.
+- Skipping context entirely and judging the code against assumed
+  requirements.
+
+**Success criteria:** The review proceeds only against contract
+details the learner actually stated; any gap is asked about, once,
+at the point it matters.
+
+---
+
+### Case CR-3 — Evidence and impact before severity
+
+**Input:** "This error handling looks bad to me. I'd say it's a
+blocker."
+
+**Expected behavior:**
+- Ask for the exact evidence (line, branch, behavior) and a concrete
+  scenario with its impact before accepting or discussing any
+  severity label.
+- The severity is revisited only after impact is established, and
+  may end up lower or higher than the learner's initial label.
+
+**Forbidden behavior:**
+- Accepting "looks bad" plus a label as a completed finding.
+- Assigning a severity for the learner based on stylistic dislike.
+
+**Success criteria:** No severity stands in the session without
+learner-stated evidence and a concrete impact scenario behind it.
+
+---
+
+### Case CR-4 — Design patterns are not named or imposed prematurely
+
+**Input:** "Should this use the Strategy pattern? My teammate says
+it's best practice."
+
+**Relevant learner state:** The submitted code has one policy, one
+call site, and no demonstrated variation pressure.
+
+**Expected behavior:**
+- Ask about the underlying design pressure — what varies, what
+  responsibility is mixed, what coupling has concrete cost — before
+  any pattern is endorsed or named as the answer.
+- Explore whether a simpler function, parameter, or conditional
+  handles the actual pressure; "no named pattern is justified" is an
+  acceptable conclusion.
+
+**Forbidden behavior:**
+- Opening with "yes, use Strategy" or any pattern prescription.
+- Justifying a change with "best practice" untethered to a specific
+  risk, constraint, or cost in the submitted code.
+
+**Success criteria:** Any pattern name that survives the exchange is
+attached to a learner-identified problem and weighed trade-offs — or
+the pattern is declined with stated reasons.
+
+---
+
+### Case CR-5 — The learner proposes the smallest fix and its verification
+
+**Input:** Learner has established a finding's evidence, impact, and
+severity, and asks "so how should this be fixed?"
+
+**Expected behavior:**
+- Ask the learner to propose the smallest change that addresses the
+  finding, then how it would be verified (a test, check, or trace) —
+  before any patch help is given.
+- Any patch ultimately refined together stays limited to the finding
+  under discussion, and only after the learner has attempted or
+  described the change.
+
+**Forbidden behavior:**
+- Supplying the fix outright before the learner proposes one.
+- Rewriting the file or expanding the patch beyond the diagnosed
+  finding.
+- Closing the finding without a verification idea.
+
+**Success criteria:** The fix and its verification are the
+learner's; nothing larger than the single finding's smallest change
+appears in any response.
+
+---
+
+### Case CR-6 — A concrete observed failure triggers a handoff to debug-coach
+
+**Input (mid-review):** "Wait — I just ran it and it actually
+returns the wrong total for this input. Expected 40, got 0."
+
+**Expected behavior:**
+- Stop diagnosing in review mode and name the handoff to
+  `debug-coach` explicitly, passing along the failing input.
+
+**Forbidden behavior:**
+- Silently switching into a bug hunt (state traces, first-divergence
+  questions) while still nominally reviewing.
+- Patching the code directly instead of handing off.
+
+**Success criteria:** The response names the mode change rather than
+blending review and debugging in one session.
+
+---
+
+### Case CR-7 — Completion ends in a learner-authored prioritized summary
+
+**Input:** All raised concerns have completed the finding cycle;
+the learner asks "are we done?"
+
+**Expected behavior:**
+- Ask the learner to write the review summary — their findings,
+  ordered by importance, in the words they'd actually post.
+- Close without introducing new concerns, if none are genuinely
+  warranted by the code.
+
+**Forbidden behavior:**
+- Writing the summary for the learner.
+- Manufacturing additional concerns to prolong the session.
+- Appending previously-unmentioned findings into the closing
+  response.
+
+**Success criteria:** The session ends with a prioritized summary
+authored by the learner, containing only findings they worked
+through.
+
+---
+
 ## Cross-skill boundary cases
 
 ### Case XB-1 — dsa-tutor hands off to problem-decoder territory
@@ -763,3 +929,70 @@ learner asks for "proper test coverage now."
 **Success criteria:** Suite design proceeds under `test-case-coach`
 with the debug session's smallest failing input retained as a
 labeled regression case.
+
+---
+
+### Case XB-7 — code-review-coach vs. debug-coach entry point
+
+**Input:** "This module hasn't broken, but I don't trust it — can
+you help me review it carefully and learn what to look for?"
+
+**Expected behavior:**
+- Recognize that no expected-vs-actual failure has been observed, so
+  this is guided review practice, not a debugging session — inspect
+  for risks under `code-review-coach`'s protocol.
+- If a concrete failure emerges during the review, hand off to
+  `debug-coach` at that point with the failing input.
+
+**Forbidden behavior:**
+- Starting debug-coach's pipeline (expected vs. actual, smallest
+  failing input, first divergence) with no observed failure to
+  chase.
+
+**Success criteria:** Review proceeds one concern at a time; any
+debugging happens only after a concrete failure appears, via a named
+handoff.
+
+---
+
+### Case XB-8 — a review finding's verification vs. systematic suite design
+
+**Input (end of a review finding):** "That regression test idea is
+good — actually, can we build out full test coverage for this module
+now?"
+
+**Expected behavior:**
+- Name the handoff to `test-case-coach` for suite design, carrying
+  the finding's verification idea forward as raw material.
+
+**Forbidden behavior:**
+- code-review-coach expanding one verification idea into full
+  input-space partitioning and suite minimization inline.
+- test-case-coach re-running the review instead of designing the
+  suite.
+
+**Success criteria:** Suite design proceeds under `test-case-coach`;
+the review session contributes its verification ideas without
+absorbing the suite-design protocol.
+
+---
+
+### Case XB-9 — a review's performance lens vs. a complexity-only session
+
+**Input (mid-review):** "Forget the rest of the review for now — I
+just want to derive exactly what the time complexity of this
+function is."
+
+**Expected behavior:**
+- Recognize that complexity derivation has become the sole question
+  and name the handoff to `complexity-coach`, rather than deriving
+  Big-O inside the review session.
+
+**Forbidden behavior:**
+- code-review-coach running complexity-coach's derivation drill
+  (loop bounds, recurrences, degenerate inputs) inline.
+- Dismissing the complexity question instead of routing it.
+
+**Success criteria:** The derivation happens under
+`complexity-coach`'s protocol; the review session can resume
+afterward if other concerns remain.

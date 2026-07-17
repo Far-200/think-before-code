@@ -7,8 +7,56 @@ The format is loosely based on
 
 ## [Unreleased]
 
+### Added
+
+- `code-review-coach`, the suite's first deliberately non-DSA skill —
+  a Socratic training mode for code-review judgment on existing code,
+  diffs, or pull requests: contract established first, one concern
+  per exchange, concrete evidence before impact, impact before
+  severity, the smallest justified change with a verification idea,
+  design patterns never prescribed before the underlying design
+  pressure is identified, and completion via a learner-authored
+  prioritized review summary. No dumped findings lists, no rewritten
+  implementations.
+- Activation-prompt rows (`A073`–`A087`) for `code-review-coach` —
+  four positive and seven negative/boundary cases — plus reciprocal
+  negative rows for `debug-coach`, `test-case-coach`,
+  `complexity-coach`, and `dsa-tutor` at their boundaries with the
+  new skill.
+- Behavior cases for `code-review-coach` (`CR-1`–`CR-7`) and three
+  new cross-skill boundary cases (`XB-7`–`XB-9`) covering
+  review-vs-debugging, review-vs-systematic-test-design, and
+  review-vs-complexity-only handoffs.
+- An example transcript, `examples/code-review-session.md` — a
+  non-DSA pull-request review including a design pattern weighed and
+  declined, linked from the README.
+
 ### Changed
 
+- The README hero and "Why this exists" now position the suite as
+  covering DSA learning and software-engineering judgment, name the
+  finding-dump/rewrite failure mode in AI code review, and add a
+  "Beyond DSA: code-review practice" section with its own entry point,
+  handoffs, and a recommended review prompt — while keeping the
+  existing eight-stage DSA lifecycle intact under a "How the DSA
+  tutoring flow works" heading, without inserting review as a ninth
+  linear stage.
+- The README decision guide, skills table, repository tree, roadmap,
+  and contributing suggestions now reflect the nine-skill suite
+  (`dsa-tutor` plus eight more).
+- `scripts/validate_skills.py`'s expected-skill set now includes
+  `code-review-coach` (nine skills total).
+- `debug-coach`, `test-case-coach`, `complexity-coach`, and
+  `dsa-tutor` gained small reciprocal boundary clarifications:
+  a broad inspection with no observed failure, a guided code-quality
+  review, and reviewing existing non-DSA application code all route
+  to `code-review-coach` rather than those skills.
+- The demo source's skills-folder scenario (`demo/index.html`) now
+  lists `code-review-coach/`; the recorded `public/demo.gif` is
+  intentionally unchanged and would need a separate re-recording to
+  show it.
+- `evals/README.md` notes that both eval files now cover all nine
+  skills, including the non-DSA `code-review-coach` boundaries.
 - Polished the interactive demo for public visitors and refreshed its
   displayed skills list.
 - Updated the GitHub Actions checkout and Python setup steps to
