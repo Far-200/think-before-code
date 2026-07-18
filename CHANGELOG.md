@@ -7,6 +7,8 @@ The format is loosely based on
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-07-18
+
 ### Added
 
 - `code-review-coach`, the suite's first deliberately non-DSA skill —
