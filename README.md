@@ -9,7 +9,7 @@
 <h1 align="center">Think Before Code</h1>
 
 <p align="center">
-  <strong>Featuring Quackrates — your mildly disappointed Socratic debugging duck.</strong>
+  <strong>Featuring Quackrates — your mildly disappointed Socratic coaching duck.</strong>
 </p>
 
 <p align="center">
@@ -25,20 +25,23 @@ chance to reason.
 
 That feels productive. Usually, it is not.
 
-The same failure mode shows up beyond DSA. Ask an AI to review code
-and it dumps every finding at once — or quietly rewrites the file —
-before the learner has noticed a single risk themselves. The review
-gets done; the reviewer's judgment never forms.
+The same failure mode shows up on both sides of implementation.
+Before it, an agent handed a vague request infers the missing
+requirements and starts coding against a product nobody specified.
+After it, an agent asked to review dumps every finding at once — or
+quietly rewrites the file — before the learner has noticed a single
+risk themselves. The work gets done; the specification judgment and
+the review judgment never form.
 
 `think-before-code` interrupts that behavior on purpose. It asks one
 focused question at a time, reveals only the smallest useful hint,
 requires manual reasoning, and treats getting stuck as part of the
 learning process rather than something to bypass.
 
-## Watch Quackrates refuse to spoil the solution
+## Same prompt. Different behaviour.
 
-Instead of solving the problem for you,
-Quackrates asks one question at a time until **you** discover the idea.
+A default assistant dumps the artifact — the solution, the findings,
+the specification. Quackrates makes the learner author the reasoning.
 
 [![Think Before Code demo](public/demo.gif)](https://far-200.github.io/think-before-code/demo/)
 
@@ -87,29 +90,53 @@ session. No session is required to invoke every specialist, and most
 won't. The tutor may also move backward when an explanation sounds
 stronger than the learner's actual understanding.
 
-## Beyond DSA: code-review practice
+## Beyond DSA: before and after implementation
 
-`code-review-coach` is the suite's first deliberately non-DSA skill,
-and it is not a ninth stage of the lifecycle above — it has its own
-entry point. Bring existing code, a diff, or a pull request, and the
-coach helps you discover and justify review findings one concern at a
-time: contract first, evidence before impact, impact before severity,
-the smallest justified change, and a verification idea — ending in a
-prioritized review summary in your own words. Design patterns are
-never prescribed up front; the underlying design pressure has to be
-identified first, and "no pattern is justified" is a valid
+Two skills sit outside the DSA lifecycle entirely, on either side of
+the code being written:
+
+```text
+vague request
+    ↓
+specification-coach
+    ↓
+implementation
+    ↓
+code-review-coach
+```
+
+`specification-coach` runs **before** implementation. Bring a vague
+feature request, issue, or change request, and it resolves one
+ambiguity at a time until observable behaviour, scope, non-goals,
+constraints, failure behaviour, and acceptance criteria are all
+decisions *you* made — ending in a specification an implementation
+agent can act on. It never invents requirements and never writes the
+code.
+
+```text
+Here's the feature request. Help me define it well enough to verify
+before I hand it to an agent — one question at a time, and don't
+write the spec for me.
+```
+
+`code-review-coach` runs **after** code exists. Bring a diff or a
+pull request, and it helps you discover and justify findings one
+concern at a time: contract first, evidence before impact, impact
+before severity, the smallest justified change, and a verification
+idea — ending in a prioritized review summary in your own words.
+Design patterns are never prescribed up front; the design pressure
+has to be identified first, and "no pattern is justified" is a valid
 conclusion.
-
-It hands off like the DSA skills do: a concrete observed failure goes
-to `debug-coach`, a systematic suite around the reviewed code goes to
-`test-case-coach`, and a complexity-only question goes to
-`complexity-coach`. A starting prompt that works well:
 
 ```text
 Here's the code / diff and what it's supposed to do. Help me review
 it myself, one concern at a time. Don't list the findings or rewrite
 anything — ask me questions until I find and justify them.
 ```
+
+Both hand off like the DSA skills do: a concrete observed failure
+goes to `debug-coach`, a systematic suite goes to `test-case-coach`,
+and a complexity-only question goes to `complexity-coach`.
 
 ## Quick start
 
@@ -121,8 +148,8 @@ anything — ask me questions until I find and justify them.
    ```
 
 2. **Choose a skill.** The core skill lives at
-   [`skills/dsa-tutor/SKILL.md`](./skills/dsa-tutor/SKILL.md). Eight
-   more skills live alongside it — see
+   [`skills/dsa-tutor/SKILL.md`](./skills/dsa-tutor/SKILL.md). Nine
+   more skills live alongside it, ten in total — see
    [Which skill should I use?](#which-skill-should-i-use) for a quick
    decision guide, and
    [Skills in this repository](#skills-in-this-repository) for the
@@ -156,6 +183,8 @@ Match where you actually are, not where you'd like to be:
 
 - **Unsolved problem, want to learn it end to end** → `dsa-tutor`
   (the default; when in doubt, start here)
+- **Have a vague feature, issue, or change request and need to
+  define it before an agent codes** → `specification-coach`
 - **Haven't even understood the statement yet** → `problem-decoder`
 - **Have an approach, want to trace it on one concrete input** →
   `dry-run-coach`
@@ -263,6 +292,7 @@ containing a single `SKILL.md` with frontmatter (`name`,
 | [`debug-coach`](./skills/debug-coach/SKILL.md)                       | You already have code with an observed failure and need the bug isolated — expected vs. actual, first divergence, smallest repair — without a rewritten function.                                    |
 | [`test-case-coach`](./skills/test-case-coach/SKILL.md)               | You already have an approach or implementation and want to design a compact, justified test suite — boundaries, adversarial inputs, expected outputs — yourself, one dimension at a time.            |
 | [`pattern-transfer-coach`](./skills/pattern-transfer-coach/SKILL.md) | You've solved a problem and want to turn it into a transferable pattern — strip the story, name recognition and rule-out signals, and adapt it to exactly one cousin problem.                        |
+| [`specification-coach`](./skills/specification-coach/SKILL.md)       | You have a vague feature request, issue, or change request and need observable behaviour, scope, non-goals, constraints, failure behaviour, and acceptance criteria defined — a learner-authored implementation handoff, with no invented requirements and no implementation written for you. |
 | [`code-review-coach`](./skills/code-review-coach/SKILL.md)           | You have existing code, a diff, or a PR — not necessarily DSA — and want to practise discovering and justifying review findings yourself, one concern at a time, without a dumped list or a rewrite. |
 
 These are complementary, not redundant. `dsa-tutor` is the default
@@ -270,10 +300,12 @@ skill that coordinates a complete DSA learning session. Six
 specialist skills are narrower, standalone drills that each deepen
 one stage of that lifecycle, meant to be used on their own or as a
 follow-up when one stage of a `dsa-tutor` session needs more than a
-single question. `code-review-coach` stands apart from that
-lifecycle: it has its own entry point for reviewing existing code —
-see [Beyond DSA](#beyond-dsa-code-review-practice) — while sharing
-the suite's one-question-at-a-time discipline and handing off to
+single question. `specification-coach` and `code-review-coach` stand apart from that
+lifecycle: they are separate software-engineering entry points on
+either side of implementation — defining behaviour before code
+exists, and building review judgment once it does — see
+[Beyond DSA](#beyond-dsa-before-and-after-implementation). Both share
+the suite's one-question-at-a-time discipline and hand off to
 `debug-coach`, `test-case-coach`, and `complexity-coach` at the same
 boundaries. `mock-interviewer` intentionally runs the opposite
 interaction mode — scarce hints during the attempt, full feedback
@@ -406,6 +438,7 @@ think-before-code/
 ├── examples/
 │   ├── code-review-session.md
 │   ├── pattern-transfer-session.md
+│   ├── specification-session.md
 │   ├── test-case-session.md
 │   └── tutoring-session.md
 ├── mistake-logs/
@@ -431,6 +464,8 @@ think-before-code/
 │   ├── pattern-transfer-coach/
 │   │   └── SKILL.md
 │   ├── problem-decoder/
+│   │   └── SKILL.md
+│   ├── specification-coach/
 │   │   └── SKILL.md
 │   └── test-case-coach/
 │       └── SKILL.md
@@ -461,6 +496,11 @@ think-before-code/
   a `code-review-coach` transcript on a non-DSA pull request:
   evidence before impact, impact before severity, a declined design
   pattern, and a learner-authored prioritized review summary
+- [`examples/specification-session.md`](./examples/specification-session.md) —
+  a `specification-coach` transcript on a vague non-DSA feature
+  request: one ambiguity at a time, a vague adjective challenged, a
+  deliberate non-goal, and a learner-authored specification with an
+  implementation handoff
 - [`mistake-logs/README.md`](./mistake-logs/README.md) — where
   learner-confirmed mistake-log entries accumulate; currently empty,
   see Roadmap
@@ -513,7 +553,7 @@ Three layers protect the repository's structure and behavior:
 
 ## Release
 
-The current release is `v1.3.0`. See
+The current release is `v1.4.0`. See
 [`CHANGELOG.md`](./CHANGELOG.md) for the complete release notes.
 
 ## Roadmap
@@ -544,6 +584,9 @@ The current release is `v1.3.0`. See
 - [x] Add the first non-DSA skill, a Socratic code-review coach
       (`code-review-coach`), with its own activation and behavior
       evals and an example session
+- [x] Add a pre-implementation specification coach
+      (`specification-coach`), with its own activation and behavior
+      evals, reciprocal boundaries, and an example session
 
 ### Next
 
@@ -563,9 +606,9 @@ The current release is `v1.3.0`. See
       near-miss problems yet
 - [ ] Document integrations with additional AI tools and IDEs beyond
       the initial three covered in Installation
-- [ ] Validate `code-review-coach` — the first software-engineering
-      expansion beyond DSA — with real review sessions before adding
-      any broader SWE domains
+- [ ] Validate `code-review-coach` and `specification-coach` with
+      real SWE sessions and use the findings to refine their
+      boundaries before adding a third broader SWE domain
 
 ## Contributing
 
@@ -578,6 +621,9 @@ Contributions are welcome, especially those that:
 - add realistic code-review scenarios and cross-skill boundaries for
   `code-review-coach` — especially where review borders debugging,
   test design, or complexity analysis,
+- add ambiguous feature requests, specification boundary cases, and
+  realistic acceptance-criteria sessions — especially collisions
+  between specification, review, testing, and debugging,
 - add high-quality example transcripts,
 - expand cousin-problem mappings,
 - improve mistake classification,

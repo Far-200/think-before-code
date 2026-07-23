@@ -73,6 +73,10 @@ learner to state each one first; only add what they missed.
   resolve, say so plainly and ask the learner to pick a reasonable
   interpretation and state it explicitly, rather than silently
   assuming one.
+- This skill reads DSA or LeetCode-style problem statements. A
+  real-world feature request, issue, or change request is not a
+  problem statement in that sense — defining one before
+  implementation belongs to `specification-coach`.
 
 ## What good looks like
 

@@ -32,6 +32,12 @@ drift and make the learner find the bug themselves.
   `dry-run-coach`'s tracing discipline first — there may be nothing
   to debug until a real input produces a real wrong output.
 
+- **vs. `specification-coach`** — this skill requires a stated
+  expectation to diverge from. If the learner and their team haven't
+  agreed what the code is *supposed* to do, there is no
+  expected-vs-actual mismatch yet, only an undefined requirement;
+  that's `specification-coach`.
+
 ## Activation
 
 Use this skill when the learner:
@@ -54,6 +60,9 @@ Do not use this skill when:
   and should be named as such rather than quietly delivered,
 - the question is purely about syntax or language mechanics with no
   actual failing behavior involved,
+- the desired behaviour itself is undefined or disputed, so no
+  expected-vs-actual failure can exist yet — that's
+  `specification-coach`,
 - the learner wants a broad guided inspection of existing code with
   no observed failure — reviewing for risks that *could* go wrong is
   `code-review-coach`'s territory; this skill starts only once

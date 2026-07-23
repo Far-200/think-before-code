@@ -18,11 +18,14 @@ checks by hand today.
   expected behavior, forbidden behavior, and success criteria once a
   skill has activated. Used for behavior-constraint testing.
 
-Both files cover all nine skills, including `code-review-coach` —
-the suite's first non-DSA skill — whose activation boundaries against
-`debug-coach`, `test-case-coach`, `complexity-coach`, and `dsa-tutor`
-are tested in the same positive/negative pairing style as the DSA
-skills' boundaries.
+Both files cover all ten skills, including the two
+software-engineering skills that sit outside the DSA lifecycle:
+`specification-coach` before implementation, when the desired
+behaviour isn't defined yet, and `code-review-coach` after code
+exists. Their boundaries against each other and against
+`debug-coach`, `test-case-coach`, `complexity-coach`,
+`problem-decoder`, and `dsa-tutor` are tested in the same
+positive/negative pairing style as the DSA skills' boundaries.
 
 ## Activation testing
 

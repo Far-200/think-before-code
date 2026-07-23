@@ -7,6 +7,78 @@ The format is loosely based on
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-07-23
+
+### Added
+
+- `specification-coach`, the suite's second software-engineering
+  skill and the first that runs *before* implementation — a Socratic
+  training mode for turning a vague feature request, issue, or change
+  request into an implementation-ready specification: one ambiguity
+  resolved per exchange, vague adjectives challenged rather than
+  interpreted, contradictions surfaced instead of silently resolved,
+  implementation choices kept out of the behavioural specification,
+  acceptance criteria authored from learner decisions, a smallest
+  independently verifiable slice, and a learner-authored artifact with
+  explicit handoffs. No invented requirements, no generated PRD, no
+  implementation code.
+- Activation-prompt rows (`A088`–`A106`) for `specification-coach` —
+  six positive and nine negative/boundary cases — plus reciprocal
+  negative rows for `code-review-coach`, `test-case-coach`,
+  `debug-coach`, and `problem-decoder` at their boundaries with the
+  new skill.
+- Behavior cases for `specification-coach` (`SP-1`–`SP-9`) and four
+  new cross-skill boundary cases (`XB-10`–`XB-13`) covering
+  specification-vs-review, acceptance-criteria-vs-systematic-test-
+  design, unresolved-behaviour-vs-concrete-debugging, and
+  feature-request-vs-DSA-decoding.
+- An example transcript, `examples/specification-session.md` — a
+  vague non-DSA feature request coached into a learner-authored
+  specification, including a challenged vague adjective, a
+  deliberately excluded non-goal, and an implementation handoff.
+  Linked from the README.
+
+### Changed
+
+- The README hero, "Why this exists", and demo section now position
+  the suite around both sides of implementation, and the demo heading
+  contrasts default assistant behaviour with Think Before Code. The
+  code-review-only "Beyond DSA" section is replaced by a compact
+  before-and-after-implementation section covering both SWE skills
+  with a recommended starting prompt for each. The existing
+  eight-stage DSA lifecycle is unchanged, with neither SWE skill
+  inserted into it.
+- The README quick start, decision guide, skills table,
+  complementary-skill explanation, repository tree, testing and
+  validation section, release version, roadmap, and contributing
+  suggestions now reflect the ten-skill suite (`dsa-tutor` plus nine
+  more).
+- `scripts/validate_skills.py`'s expected-skill set now includes
+  `specification-coach` (ten skills total).
+- `code-review-coach`, `test-case-coach`, `debug-coach`, and
+  `problem-decoder` gained small reciprocal boundary
+  clarifications: a vague pre-implementation feature request,
+  acceptance criteria with no implementation behind them, undefined
+  or disputed desired behaviour, and a non-DSA product change request
+  all route to `specification-coach` rather than those skills. Their
+  core protocols are unchanged.
+- `evals/README.md` notes that both eval files now cover all ten
+  skills, and names the key boundary between the two SWE skills —
+  `specification-coach` before implementation, `code-review-coach`
+  after code exists.
+- The demo source (`demo/index.html`) now states ten portable skills
+  on its closing card and skills-folder poster, lists all ten skills
+  in the skills-folder scenario with `specification-coach/` and
+  `code-review-coach/` grouped under software-engineering judgment in
+  pre- then post-implementation order, and selects
+  `specification-coach/` in that scenario. The main reel is unchanged.
+  The recorded `public/demo.gif` is intentionally untouched and still
+  reflects the previous release; it needs a separate re-recording
+  from the updated source.
+- The roadmap's SWE validation item is now an honest forward-looking
+  item covering both `code-review-coach` and `specification-coach`;
+  no real-session validation is claimed as complete.
+
 ## [1.3.0] - 2026-07-18
 
 ### Added

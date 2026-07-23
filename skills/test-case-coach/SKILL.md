@@ -37,6 +37,11 @@ time, with a justification attached to every case that survives.
   failing input, which belongs in the suite as a regression case.
 - **vs. `dsa-tutor`** — no approach yet means nothing to test yet.
   Send the learner to dsa-tutor first.
+- **vs. `specification-coach`** — observable acceptance criteria for
+  a feature that hasn't been built are part of defining it, not a
+  test suite. This skill needs an approach or implementation to
+  design executable cases against; before that exists, the criteria
+  belong to `specification-coach`.
 - **vs. `complexity-coach`** — a degenerate input chosen to check
   Big-O behavior is complexity-coach's stress test, not a
   correctness test in this suite.
@@ -64,7 +69,10 @@ Do not use this skill when:
   `complexity-coach`,
 - the learner wants existing code's broad quality or risks reviewed
   through guided questioning, rather than a suite of executable
-  cases designed — that's `code-review-coach`.
+  cases designed — that's `code-review-coach`,
+- nothing has been built yet and the need is observable acceptance
+  criteria for a feature still being defined — that's
+  `specification-coach`.
 
 ## Circuit breaker
 

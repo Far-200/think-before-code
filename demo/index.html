@@ -2,8 +2,12 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Think Before Code — Interactive Demo</title>
     <style>
+      /* ============================================================
+         1. TOKENS AND GLOBAL LAYOUT
+         ============================================================ */
       :root {
         --ink: #10121a;
         --panel: #171a24;
@@ -53,6 +57,10 @@
         margin: 0 0 18px;
         line-height: 1.5;
       }
+
+      /* ============================================================
+         2. CONTROLS AND STAGE
+         ============================================================ */
       .controls {
         display: flex;
         gap: 8px;
@@ -81,6 +89,16 @@
         border-color: var(--duck);
         color: var(--duck);
       }
+      .controls button#recordBtn {
+        border-color: var(--cut);
+        color: var(--cut);
+      }
+      .controls button#recordBtn:hover {
+        background: rgba(226, 84, 45, 0.08);
+      }
+      .controls button#recordBtn::before {
+        content: "● ";
+      }
       .controls .sep {
         width: 1px;
         background: #2a2f42;
@@ -89,8 +107,8 @@
 
       #stage {
         width: min(100%, 1280px);
-        aspect-ratio: 16/9;
-        background: var(--ink);
+        aspect-ratio: 16 / 9;
+        background: #000;
         border-radius: 10px;
         position: relative;
         overflow: hidden;
@@ -98,6 +116,37 @@
         outline-offset: 6px;
         margin: 0 auto;
       }
+      .stage-canvas {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background: var(--ink);
+        overflow: hidden;
+        border-radius: inherit;
+      }
+      #stage:fullscreen,
+      #stage:-webkit-full-screen {
+        width: 100vw;
+        height: 100vh;
+        max-width: none;
+        aspect-ratio: auto;
+        border-radius: 0;
+        outline: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #stage:fullscreen .stage-canvas,
+      #stage:-webkit-full-screen .stage-canvas {
+        width: min(100vw, 100vh * 16 / 9);
+        height: min(100vh, 100vw * 9 / 16);
+        flex: none;
+      }
+      #stage.cursor-hidden,
+      #stage.cursor-hidden * {
+        cursor: none;
+      }
+
       .hint {
         color: var(--slate);
         font-size: 11px;
@@ -106,8 +155,26 @@
       .hint b {
         color: var(--cream);
       }
+      .shortcuts {
+        color: var(--slate);
+        font-size: 10.5px;
+        margin-top: 6px;
+        letter-spacing: 0.02em;
+      }
+      .shortcuts kbd {
+        font-family: var(--mono);
+        font-size: 10px;
+        color: var(--cream);
+        background: var(--panel);
+        border: 1px solid #2a2f42;
+        border-radius: 4px;
+        padding: 1px 5px;
+        margin: 0 1px;
+      }
 
-      /* ---- generic layers ---- */
+      /* ============================================================
+         3. REUSABLE CARDS / WINDOWS / MESSAGES
+         ============================================================ */
       .layer {
         position: absolute;
         inset: 0;
@@ -125,8 +192,15 @@
         text-align: center;
         padding: 0 60px;
       }
+      .card .kicker {
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--duck);
+        margin-bottom: 14px;
+      }
       .card .big {
-        font-size: 34px;
+        font-size: 33px;
         font-weight: 700;
         color: var(--cream);
         line-height: 1.35;
@@ -135,6 +209,13 @@
         margin-top: 14px;
         font-size: 15px;
         color: var(--slate);
+      }
+      .card .small.delayed {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .card .small.delayed.on {
+        opacity: 1;
       }
       .card .brand {
         font-size: 16px;
@@ -147,11 +228,194 @@
         font-size: 14px;
         color: var(--duck);
       }
+      .card .poster-footer {
+        margin-top: 24px;
+        font-size: 11px;
+        color: var(--slate);
+        letter-spacing: 0.04em;
+      }
+      .countdown-card {
+        font-size: 64px;
+        font-weight: 700;
+        color: var(--duck);
+      }
+      .countdown-card.pulse {
+        animation: countdownPulse 0.7s ease-out;
+      }
+      @keyframes countdownPulse {
+        0% {
+          opacity: 0;
+          transform: scale(0.92);
+        }
+        30% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
 
-      /* ---- app window chrome ---- */
+      /* comparison montage: "without the skills" baseline shown once,
+         at the very start of the main reel, before Quackrates appears */
+      .comparison-shell {
+        width: 92%;
+        max-width: 960px;
+        text-align: center;
+      }
+      .comparison-badge {
+        display: inline-block;
+        font-size: 10px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--cut);
+        border: 1px solid var(--cut);
+        background: rgba(226, 84, 45, 0.08);
+        padding: 3px 10px;
+        border-radius: 999px;
+        margin-bottom: 10px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .comparison-badge.on {
+        opacity: 1;
+      }
+      .comparison-heading {
+        font-size: 21px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--cream);
+        margin-bottom: 16px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .comparison-heading.on {
+        opacity: 1;
+      }
+      .comparison-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        text-align: left;
+      }
+      .comparison-panel {
+        border: 1px solid var(--cut);
+        border-radius: 8px;
+        background: rgba(226, 84, 45, 0.05);
+        padding: 13px 15px;
+        opacity: 0;
+        transform: translateY(6px);
+        transition: all 0.3s ease;
+      }
+      .comparison-panel.on {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .comparison-label {
+        font-size: 10.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--cut);
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .comparison-prompt {
+        font-size: 13.5px;
+        color: var(--slate);
+        margin-bottom: 6px;
+      }
+      .comparison-prompt::before {
+        content: "you: ";
+        color: var(--slate);
+      }
+      .default-response {
+        font-size: 13.5px;
+        color: var(--cream);
+        margin-bottom: 10px;
+      }
+      .default-response::before {
+        content: "assistant: ";
+        color: var(--cut);
+      }
+      .artifact-block {
+        background: var(--ink);
+        border: 1px solid #262b3d;
+        border-radius: 6px;
+        padding: 8px 10px;
+        margin-bottom: 10px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .artifact-block.on {
+        opacity: 1;
+      }
+      .artifact-line {
+        font-size: 12.5px;
+        color: var(--slate);
+        white-space: pre;
+        line-height: 1.55;
+      }
+      .artifact-line .n {
+        color: #454b60;
+        margin-right: 8px;
+      }
+      .default-status {
+        font-size: 10.5px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--cut);
+        font-weight: 700;
+      }
+      .comparison-footer {
+        margin-top: 16px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .comparison-footer.on {
+        opacity: 1;
+      }
+      .comparison-footer .cf-line1 {
+        font-size: 15px;
+        color: var(--cream);
+        font-weight: 700;
+      }
+      .comparison-footer .cf-line2 {
+        margin-top: 6px;
+        font-size: 12px;
+        color: var(--slate);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .comparison-footer .cf-line2.on {
+        opacity: 1;
+      }
+
+      /* chapter label: reusable, works standalone (inline in a card)
+         or as the .chapter-strip window header */
+      .chapter-label {
+        font-size: 10.5px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--slate);
+      }
+      .chapter-label .num {
+        color: var(--duck);
+        font-weight: 700;
+      }
+      .card .chapter-label {
+        margin-top: 16px;
+      }
+      .chapter-strip {
+        flex: 0 0 auto;
+        padding: 8px 20px 2px;
+      }
+
+      /* app window chrome */
       .win {
-        width: 90%;
-        height: 86%;
+        width: 93%;
+        height: 89%;
         background: var(--panel);
         border-radius: 10px;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
@@ -191,26 +455,34 @@
         padding: 4px 10px;
         border-radius: 5px;
         flex: 1 1 auto;
-        max-width: 340px;
+        max-width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
-      .apptag {
+      .skill-badge {
         margin-left: auto;
-        font-size: 11px;
-        color: var(--slate);
-      }
-      .apptag b {
+        flex: 0 0 auto;
+        font-size: 10.5px;
+        letter-spacing: 0.02em;
         color: var(--duck);
+        border: 1px solid var(--duck-dim);
+        background: rgba(242, 183, 5, 0.08);
+        padding: 3px 9px;
+        border-radius: 999px;
+        white-space: nowrap;
       }
 
       .body {
         flex: 1 1 auto;
-        padding: 20px 26px 54px;
+        min-height: 0;
+        padding: 18px 24px 20px;
         overflow-y: auto;
         overflow-x: hidden;
         display: flex;
         flex-direction: column;
-        gap: 12px;
-        font-size: 14px;
+        gap: 11px;
+        font-size: 14.5px;
         line-height: 1.5;
         scroll-behavior: smooth;
         scrollbar-width: none;
@@ -220,7 +492,7 @@
       }
 
       .msg {
-        max-width: 78%;
+        max-width: 82%;
         white-space: pre-wrap;
         flex: 0 0 auto;
       }
@@ -240,9 +512,6 @@
       .msg.assistant .who {
         color: var(--duck);
         font-size: 11px;
-      }
-      .msg.assistant.generic .who {
-        color: var(--cut);
       }
       .msg .who {
         text-transform: uppercase;
@@ -297,16 +566,56 @@
         }
       }
 
-      .codeblock {
-        background: var(--ink);
-        border: 1px solid #262b3d;
-        border-radius: 6px;
-        padding: 10px 14px;
+      /* learner-authored card: the ONLY component that carries the
+         learner's own words (an approach, a finding). Right-aligned
+         like the learner's chat bubbles, but structurally distinct —
+         bordered, labelled, never mistaken for Quackrates' output. */
+      .learner-card {
+        align-self: flex-end;
+        border: 1px solid var(--duck-dim);
+        background: rgba(242, 183, 5, 0.06);
+        border-radius: 8px 4px 8px 8px;
+        padding: 12px 16px;
+        max-width: 86%;
+        text-align: left;
+        opacity: 0;
+        transform: translateY(6px);
+        transition: all 0.4s ease;
+      }
+      .learner-card.on {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .learner-card .lc-tag {
+        font-size: 10px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--duck);
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .learner-card .lc-row {
         font-size: 13px;
-        color: var(--slate);
-        white-space: pre;
+        line-height: 1.5;
+        margin-bottom: 6px;
+      }
+      .learner-card .lc-row:last-child {
+        margin-bottom: 0;
+      }
+      .learner-card .lc-label {
+        color: var(--duck-dim);
+        font-weight: 700;
+      }
+      .learner-card code,
+      .findingtext code {
+        color: var(--cream);
+        background: rgba(255, 255, 255, 0.07);
+        padding: 1px 4px;
+        border-radius: 3px;
       }
 
+      /* mistake log: system-confirmed entry, distinct from a
+         learner-authored card — teal, italic, single line */
       .logcard {
         align-self: flex-start;
         border: 1px solid var(--log);
@@ -335,22 +644,108 @@
         font-size: 14px;
       }
 
-      .cutflash {
-        position: absolute;
-        inset: 0;
-        background: var(--cream);
-        opacity: 0;
-        pointer-events: none;
+      /* ============================================================
+         4. REVIEW WORKSPACE (pinned code pane + coaching pane)
+         ============================================================ */
+      .review-split {
+        flex: 1 1 auto;
+        min-height: 0;
+        display: flex;
+        overflow: hidden;
       }
-      .cutflash.on {
-        opacity: 0.9;
-        transition: opacity 0.06s linear;
+      .code-pane {
+        flex: 0 0 44%;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        background: var(--ink);
+        border-right: 1px solid #262b3d;
+        opacity: 0;
+        transition: opacity 0.35s ease;
+      }
+      .code-pane.on {
+        opacity: 1;
+      }
+      .code-pane .rp-file {
+        flex: 0 0 auto;
+        font-size: 11px;
+        color: var(--slate);
+        background: var(--panel-2);
+        padding: 7px 12px;
+        border-bottom: 1px solid #262b3d;
+        letter-spacing: 0.02em;
+      }
+      .code-pane .rp-code {
+        flex: 1 1 auto;
+        padding: 12px 0;
+        font-size: 13.5px;
+        line-height: 1.7;
+        overflow: hidden;
+      }
+      .code-pane .rline {
+        display: flex;
+        align-items: baseline;
+        padding: 1px 14px 1px 4px;
+        white-space: pre;
+        opacity: 1;
+        transition:
+          opacity 0.3s ease,
+          background-color 0.3s ease;
+      }
+      .code-pane .rline .marker {
+        width: 12px;
+        flex: 0 0 auto;
+        color: var(--duck);
+        font-weight: 700;
+      }
+      .code-pane .rline .marker::before {
+        content: "";
+      }
+      .code-pane .rline.focus .marker::before {
+        content: "›";
+      }
+      .code-pane .rline .ln {
+        width: 18px;
+        flex: 0 0 auto;
+        color: #454b60;
+        text-align: right;
+        margin-right: 12px;
+        user-select: none;
+      }
+      .code-pane .rline .code {
+        color: var(--cream);
+      }
+      .code-pane .rline.dim {
+        opacity: 0.4;
+      }
+      .code-pane .rline.focus {
+        opacity: 1;
+        background: rgba(242, 183, 5, 0.08);
+        border-radius: 4px;
+      }
+      .code-pane .kw {
+        color: var(--duck);
+      }
+      .code-pane .str {
+        color: var(--log);
       }
 
-      /* file tree */
+      .chat-pane {
+        flex: 1 1 56%;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      /* ============================================================
+         5. FOLDER VIEW
+         ============================================================ */
       .tree {
         display: flex;
         flex: 1;
+        min-height: 0;
         overflow: hidden;
       }
       .sidebar {
@@ -359,6 +754,11 @@
         border-right: 1px solid #262b3d;
         padding: 10px 0;
         font-size: 13px;
+        overflow-y: auto;
+        scrollbar-width: none;
+      }
+      .sidebar::-webkit-scrollbar {
+        display: none;
       }
       .sidebar .item {
         padding: 5px 16px;
@@ -374,20 +774,34 @@
         opacity: 1;
         transform: translateX(0);
       }
-      .sidebar .item.folder {
-        color: var(--cream);
-      }
       .sidebar .item.file {
         padding-left: 34px;
         color: var(--duck);
       }
+      .sidebar .item.root {
+        color: var(--cream);
+        font-weight: 700;
+      }
       .sidebar .item.selected {
         background: #262b3d;
       }
+      .sidebar .item.group {
+        padding: 12px 16px 3px;
+        color: var(--slate);
+        font-size: 10px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .sidebar .item.group.divider {
+        border-top: 1px solid #262b3d;
+        margin-top: 6px;
+        padding-top: 12px;
+      }
       .editor {
         flex: 1;
+        min-height: 0;
         padding: 18px 22px;
-        font-size: 13px;
+        font-size: 13.5px;
         color: var(--slate);
         overflow: hidden;
       }
@@ -440,39 +854,88 @@
     <div class="chrome">
       <h1>Think Before Code — Interactive Demo</h1>
       <p>
-        Choose a scenario and press Play to see how Quackrates coaches without
-        spoiling the solution.
+        Choose a scenario and press Play. Each scene is one portable
+        <b>SKILL.md</b> coaching behaviour — not a hosted tutor app —
+        refusing to spoil the answer.
       </p>
       <div class="controls">
-        <button data-reel="gif1" class="active">
-          Scenario 1 — The refusal
+        <button data-reel="main" class="active">
+          Main reel — DSA + code review
         </button>
-        <button data-reel="gif2">Scenario 2 — Mistake logging</button>
-        <button data-reel="gif3">Scenario 3 — Skills folder</button>
+        <button data-reel="refusal">DSA refusal</button>
+        <button data-reel="review">Code-review coach</button>
+        <button data-reel="mistakes">Mistake logging</button>
+        <button data-reel="skills">Skills folder</button>
         <div class="sep"></div>
         <button id="playBtn">Play</button>
         <button id="restartBtn">Restart</button>
         <button id="fullscreenBtn">Fullscreen stage</button>
+        <div class="sep"></div>
+        <button id="recordBtn">Record main reel</button>
       </div>
-      <div id="stage"></div>
+      <div id="stage"><div class="stage-canvas" id="stageCanvas"></div></div>
       <p class="hint">
         Each scenario is self-contained. Use <b>Restart</b> to replay it or
         <b>Fullscreen stage</b> for a closer look.
       </p>
+      <p class="shortcuts">
+        <kbd>Space</kbd> play · <kbd>R</kbd> restart · <kbd>F</kbd>
+        fullscreen · <kbd>G</kbd> record · <kbd>1</kbd>–<kbd>5</kbd> select
+        scenario
+      </p>
     </div>
 
     <script>
+      /* ============================================================
+         6. PLAYBACK HELPERS
+         ============================================================ */
       const stage = document.getElementById("stage");
+      const stageCanvas = document.getElementById("stageCanvas");
       const reducedMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
       ).matches;
 
-      function sleep(ms) {
-        return new Promise((r) => setTimeout(r, reducedMotion ? 1 : ms));
+      // Development-only timing instrumentation. Flip to true locally to
+      // see scene boundaries and total main-reel duration in the console;
+      // produces no output at all when false.
+      const DEBUG_TIMING = false;
+      let debugStartTime = 0;
+      function debugLog(label) {
+        if (!DEBUG_TIMING) return;
+        const now = performance.now();
+        const elapsed = debugStartTime ? Math.round(now - debugStartTime) : 0;
+        console.log("[timing] " + label + " — +" + elapsed + "ms");
+      }
+
+      // Every play()/record() call mints a new token. Any in-flight
+      // animation whose token no longer matches the live playToken aborts
+      // at its next wait() instead of continuing to mutate a stage it no
+      // longer owns.
+      let playToken = 0;
+      let recording = false;
+      const CANCELLED = Symbol("cancelled");
+
+      function scaledDelay(ms) {
+        if (!reducedMotion) return ms;
+        // Keep pauses perceptible but short — never a total flash, never
+        // longer than the original.
+        return Math.min(ms, Math.max(80, Math.round(ms * 0.3)));
+      }
+
+      function wait(ms, ctx) {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            if (ctx.token !== playToken) {
+              reject(CANCELLED);
+              return;
+            }
+            resolve();
+          }, scaledDelay(ms));
+        });
       }
 
       function clearStage() {
-        stage.innerHTML = "";
+        stageCanvas.innerHTML = "";
       }
 
       function scrollChat(body, behavior = "smooth") {
@@ -490,78 +953,114 @@
       function el(tag, cls, parent) {
         const e = document.createElement(tag);
         if (cls) e.className = cls;
-        (parent || stage).appendChild(e);
+        (parent || stageCanvas).appendChild(e);
         return e;
       }
 
-      async function fadeIn(node, dur = 250) {
+      async function fadeIn(node, ctx, dur = 250) {
         node.classList.add("layer");
-        await sleep(20);
+        await wait(20, ctx);
         node.classList.add("on");
-        await sleep(dur);
+        await wait(dur, ctx);
       }
-      async function fadeOut(node, dur = 250) {
+      async function fadeOut(node, ctx, dur = 250) {
         node.classList.remove("on");
-        await sleep(dur);
+        await wait(dur, ctx);
         node.remove();
       }
 
-      async function typeInto(node, text, cps = 26) {
-        const per = 1000 / cps;
+      // Fades/slides in a block already in the DOM (code pane, learner
+      // card, log card) rather than revealing it character by character.
+      async function revealBlock(node, ctx, dur = 400) {
+        await wait(40, ctx);
+        node.classList.add("on");
+        await wait(dur, ctx);
+      }
+
+      async function typeInto(node, text, ctx, cps = 32) {
         node.classList.add("txt");
+        if (reducedMotion) {
+          node.textContent = text;
+          node.classList.add("done");
+          keepVisible(node);
+          return;
+        }
+        const per = 1000 / cps;
         for (let i = 0; i <= text.length; i++) {
           node.textContent = text.slice(0, i);
           if (i % 4 === 0 || i === text.length) keepVisible(node);
-          await sleep(per);
+          if (i === text.length) break;
+          await new Promise((r) => setTimeout(r, per));
+          if (ctx.token !== playToken) throw CANCELLED;
         }
         node.classList.add("done");
         keepVisible(node);
       }
 
-      function makeWindow(appLabel, url) {
-        const win = el("div", "win");
+      /* ---- window / message builders ---- */
+      function makeWin() {
+        return el("div", "win");
+      }
+      function makeTitlebar(win, badgeText, url) {
         const bar = el("div", "titlebar", win);
         el("span", "dot r", bar);
         el("span", "dot y", bar);
         el("span", "dot g", bar);
         const u = el("div", "urlbar", bar);
         u.textContent = url;
-        const tag = el("div", "apptag", bar);
-        tag.innerHTML = "app: <b>" + appLabel + "</b>";
+        const badge = el("div", "skill-badge", bar);
+        badge.textContent = badgeText;
+      }
+      function makeChapterStrip(win, num, text) {
+        const strip = el("div", "chapter-strip chapter-label", win);
+        if (num) {
+          const n = el("span", "num", strip);
+          n.textContent = num + " · ";
+        }
+        strip.append(text);
+      }
+      function makeSimpleWindow(badge, url, chapter) {
+        const win = makeWin();
+        makeTitlebar(win, badge, url);
+        if (chapter) makeChapterStrip(win, chapter.num, chapter.text);
         const body = el("div", "body", win);
         return { win, body };
       }
+      function makeReviewWindow(badge, url, chapter) {
+        const win = makeWin();
+        makeTitlebar(win, badge, url);
+        if (chapter) makeChapterStrip(win, chapter.num, chapter.text);
+        const split = el("div", "review-split", win);
+        const codePane = el("div", "code-pane", split);
+        const chatPane = el("div", "chat-pane", split);
+        const body = el("div", "body", chatPane);
+        return { win, codePane, body };
+      }
 
-      async function userMsg(body, text, cps) {
+      async function userMsg(body, text, ctx, cps) {
         const m = el("div", "msg user", body);
         const who = el("div", "who", m);
         who.textContent = "you";
         const txt = el("div", "", m);
-        await typeInto(txt, text, cps || 30);
+        await typeInto(txt, text, ctx, cps || 42);
         scrollChat(body);
         return m;
       }
-
-      async function thinking(body, ms) {
-        const d = el("div", "dots", body);
-        d.innerHTML = "<span></span><span></span><span></span>";
-        scrollChat(body);
-        await sleep(ms);
-        d.remove();
-      }
-
-      async function assistantMsg(body, who, text, cps, generic) {
-        const m = el(
-          "div",
-          "msg assistant" + (generic ? " generic" : ""),
-          body,
-        );
+      async function assistantMsg(body, who, text, ctx, cps) {
+        const m = el("div", "msg assistant", body);
         const w = el("div", "who", m);
         w.textContent = who;
         const txt = el("div", "", m);
-        await typeInto(txt, text, cps || 22);
+        await typeInto(txt, text, ctx, cps || 32);
         scrollChat(body);
         return m;
+      }
+      async function thinking(body, ctx, ms) {
+        const d = el("div", "dots", body);
+        d.innerHTML = "<span></span><span></span><span></span>";
+        scrollChat(body);
+        await wait(ms, ctx);
+        d.remove();
       }
 
       function centerCard() {
@@ -569,163 +1068,438 @@
         const card = el("div", "card", layer);
         return { layer, card };
       }
-
-      /* ============ REEL: GIF 1 ============ */
-      async function playGif1() {
-        clearStage();
-
-        // outside-GIF title card
-        {
-          const { layer, card } = centerCard();
-          card.innerHTML =
-            '<div class="big">AI shouldn\'t solve DSA for you.</div>';
-          await fadeIn(layer, 300);
-          await sleep(1600);
-          await fadeOut(layer, 250);
-        }
-
-        // Frame 1: generic AI, instant dump, hard cut
-        {
-          const layer = el("div", "layer");
-          const { win, body } = makeWindow(
-            "generic assistant",
-            "chat.example.com",
-          );
-          layer.appendChild(win);
-          await fadeIn(layer, 200);
-          await userMsg(body, "Solve Two Sum.", 34);
-          await sleep(150);
-          await thinking(body, 260);
-          await assistantMsg(
-            body,
-            "assistant",
-            "Sure! Here's the code...",
-            55,
-            true,
-          );
-          const cb = el("div", "codeblock", body);
-          cb.textContent = "def twoSum(nums, target):\n    seen = {}\n    ...";
-          scrollChat(body);
-          await sleep(500);
-          const flash = el("div", "cutflash on");
-          await sleep(70);
-          flash.remove();
-          await fadeOut(layer, 120);
-        }
-
-        // Frame 2/3: Think Before Code, Socratic dialogue
-        {
-          const layer = el("div", "layer");
-          const { win, body } = makeWindow(
-            "Think Before Code",
-            "github.com/Far-200/think-before-code",
-          );
-          layer.appendChild(win);
-          await fadeIn(layer, 200);
-
-          await userMsg(body, "Solve Two Sum.", 30);
-          await thinking(body, 700);
-          await assistantMsg(
-            body,
-            "quackrates 🦆",
-            "No.\n\nLet's think first.\n\nWhat information do you need to remember\nwhile scanning the array once?",
-            24,
-          );
-          await sleep(300);
-
-          await userMsg(body, "Previous numbers?", 28);
-          await thinking(body, 500);
-          await assistantMsg(
-            body,
-            "quackrates 🦆",
-            "Closer.\n\nDo you need ALL previous numbers?\n\nOr only something that helps\nfind the missing value?",
-            24,
-          );
-          await sleep(300);
-
-          await userMsg(body, "Maybe...\n\nvalue -> index?", 26);
-          await thinking(body, 500);
-          await assistantMsg(
-            body,
-            "quackrates 🦆",
-            "Exactly.\n\nWhy would a hash map help here?",
-            24,
-          );
-
-          const cap = el(
-            "div",
-            "caption",
-            win.parentElement === layer ? layer : layer,
-          );
-          cap.textContent = "No solution shown. Only curiosity.";
-          await sleep(400);
-          cap.classList.add("on");
-          await sleep(1400);
-          await fadeOut(layer, 300);
-        }
-
-        // End card
-        {
-          const { layer, card } = centerCard();
-          card.innerHTML =
-            '<div class="brand">Think Before Code</div>' +
-            '<div class="big" style="font-size:26px;">Learn algorithms.<br>Don\'t outsource thinking.</div>' +
-            '<div class="url">github.com/Far-200/think-before-code</div>';
-          await fadeIn(layer, 300);
-          await sleep(2200);
-        }
+      async function showCaption(layer, text, ctx, holdMs) {
+        const cap = el("div", "caption", layer);
+        cap.textContent = text;
+        await wait(150, ctx);
+        cap.classList.add("on");
+        await wait(holdMs, ctx);
+        return cap;
       }
 
-      /* ============ Bonus beat: the refusal, on its own ============ */
-      async function playRefusal() {
-        clearStage();
+      /* ---- code pane (pinned, review scenes) ---- */
+      function buildCodePane(codePane) {
+        const file = el("div", "rp-file", codePane);
+        file.textContent = "src/api/users.js";
+        const codeWrap = el("div", "rp-code", codePane);
+        const codeLines = [
+          '<span class="kw">async function</span> getUser(id) {',
+          '  <span class="kw">const</span> response = <span class="kw">await</span> fetch(<span class="str">`/api/users/${id}`</span>);',
+          '  <span class="kw">return</span> response.json();',
+          "}",
+        ];
+        return codeLines.map((html, i) => {
+          const row = el("div", "rline", codeWrap);
+          el("span", "marker", row);
+          const ln = el("span", "ln", row);
+          ln.textContent = String(i + 1);
+          const c = el("span", "code", row);
+          c.innerHTML = html;
+          return row;
+        });
+      }
+      function focusLine(rows, index) {
+        rows.forEach((row, i) => {
+          row.classList.toggle("focus", i === index);
+          row.classList.toggle("dim", i !== index);
+        });
+      }
+
+      /* ============================================================
+         7. SCENE BUILDERS
+         ============================================================ */
+
+      /* ---- poster frames (idle first-frame for each scenario) ---- */
+      const posters = {
+        main: {
+          kicker: "Think Before Code",
+          big: "Same prompt.",
+          small: "Different behaviour.",
+          tiny: "Default assistant vs Think Before Code",
+        },
+        refusal: {
+          kicker: "DSA Refusal",
+          big: "Give me the code.",
+          small: "Quackrates has other plans.",
+        },
+        review: {
+          kicker: "Code-Review Coach",
+          big: "Tell me everything wrong.",
+          small: "One risk. Evidence first.",
+        },
+        mistakes: {
+          kicker: "Mistake Logging",
+          big: "Sliding Window?",
+          small: "Root cause, not a syntax slip.",
+        },
+        skills: {
+          kicker: "Skills Folder",
+          big: "10 portable Socratic skills.",
+          small: "One SKILL.md per behaviour.",
+        },
+      };
+      function renderPoster(key) {
+        const data = posters[key] || posters.main;
+        const { layer, card } = centerCard();
+        card.innerHTML =
+          '<div class="kicker">' +
+          data.kicker +
+          '</div><div class="big">' +
+          data.big +
+          '</div><div class="small">' +
+          data.small +
+          "</div>" +
+          (data.tiny
+            ? '<div class="small" style="margin-top:8px; font-size:12px;">' +
+              data.tiny +
+              "</div>"
+            : "") +
+          '<div class="poster-footer">Press Play · Space</div>';
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => layer.classList.add("on"));
+        });
+      }
+
+      /* ---- countdown (record mode only; excluded from reel timing) ---- */
+      async function showCountdown(ctx) {
+        const { layer, card } = centerCard();
+        card.classList.add("countdown-card");
+        await fadeIn(layer, ctx, 200);
+        for (const n of ["3", "2", "1"]) {
+          card.textContent = n;
+          card.classList.remove("pulse");
+          void card.offsetWidth;
+          card.classList.add("pulse");
+          await wait(760, ctx);
+        }
+        await fadeOut(layer, ctx, 160);
+      }
+
+      /* ---- main reel scenes ---- */
+
+      // Scene 1: the behaviour a cold viewer already expects from an
+      // unconstrained assistant — answer first, dumped whole, nothing to
+      // author. Both panels reveal as complete artifacts, never typed,
+      // because the point is the instant dump itself, not its content.
+      async function sceneBaselineMontage(ctx) {
         const layer = el("div", "layer");
-        const { win, body } = makeWindow(
-          "Think Before Code",
+        const shell = el("div", "comparison-shell", layer);
+
+        const badge = el("div", "comparison-badge", shell);
+        badge.textContent = "default assistant behaviour";
+        const heading = el("div", "comparison-heading", shell);
+        heading.textContent = "Without the skills";
+
+        const grid = el("div", "comparison-grid", shell);
+
+        const dsaPanel = el("div", "comparison-panel", grid);
+        dsaPanel.innerHTML =
+          '<div class="comparison-label">DSA</div>' +
+          '<div class="comparison-prompt">Solve Two Sum.</div>' +
+          "<div class=\"default-response\">Sure — here's the complete solution.</div>" +
+          '<div class="artifact-block">' +
+          '<div class="artifact-line">unordered_map&lt;int,int&gt; seen;</div>' +
+          '<div class="artifact-line">for (int i = 0; i &lt; nums.size(); i++) {</div>' +
+          '<div class="artifact-line">    if (seen.count(target - nums[i]))</div>' +
+          '<div class="artifact-line">        return {seen[target-nums[i]], i};</div>' +
+          '<div class="artifact-line">    seen[nums[i]] = i;</div>' +
+          '<div class="artifact-line">}</div>' +
+          "</div>" +
+          '<div class="default-status">Solution authored by the model</div>';
+
+        const reviewPanel = el("div", "comparison-panel", grid);
+        reviewPanel.innerHTML =
+          '<div class="comparison-label">Code review</div>' +
+          '<div class="comparison-prompt">Tell me everything wrong.</div>' +
+          '<div class="default-response">Here are the findings and a rewritten version.</div>' +
+          '<div class="artifact-block">' +
+          '<div class="artifact-line"><span class="n">01</span>Missing response-status check</div>' +
+          '<div class="artifact-line"><span class="n">02</span>Network errors not handled</div>' +
+          '<div class="artifact-line"><span class="n">03</span>Response shape not validated</div>' +
+          '<div class="artifact-line"><span class="n">04</span>No cancellation path</div>' +
+          '<div class="artifact-line"><span class="n">+</span>Rewritten implementation</div>' +
+          "</div>" +
+          '<div class="default-status">Judgment authored by the model</div>';
+
+        const footer = el("div", "comparison-footer", shell);
+        footer.innerHTML =
+          '<div class="cf-line1">The model authors. You read.</div>' +
+          '<div class="cf-line2">Task completed. Judgment not practised.</div>';
+
+        await fadeIn(layer, ctx, 180);
+        await wait(90, ctx);
+        badge.classList.add("on");
+        heading.classList.add("on");
+        await wait(300, ctx);
+
+        dsaPanel.classList.add("on");
+        reviewPanel.classList.add("on");
+        await wait(380, ctx);
+
+        dsaPanel.querySelector(".artifact-block").classList.add("on");
+        reviewPanel.querySelector(".artifact-block").classList.add("on");
+        await wait(900, ctx);
+
+        footer.classList.add("on");
+        await wait(200, ctx);
+        footer.querySelector(".cf-line2").classList.add("on");
+        await wait(1100, ctx);
+
+        await fadeOut(layer, ctx, 220);
+      }
+
+      // Scene 2: the behavioural switch — same yellow/duck identity that
+      // carries the rest of the reel, snapping back in after the
+      // orange-red baseline.
+      async function sceneBehaviourSwitch(ctx) {
+        const { layer, card } = centerCard();
+        card.innerHTML =
+          '<div class="kicker">With Think Before Code</div>' +
+          '<div class="big" style="font-size:26px;">Question first.</div>' +
+          '<div class="small delayed" style="margin-top:12px;">' +
+          '<span style="display:block; color:var(--cream); font-size:16px; margin-bottom:6px;">Answer last.</span>' +
+          "You author the reasoning." +
+          "</div>";
+        await fadeIn(layer, ctx, 160);
+        await wait(180, ctx);
+        card.querySelector(".small.delayed").classList.add("on");
+        await wait(500, ctx);
+        await fadeOut(layer, ctx, 160);
+      }
+
+      async function sceneDsaCoaching(ctx) {
+        const layer = el("div", "layer");
+        const { win, body } = makeSimpleWindow(
+          "skill: dsa-tutor",
           "github.com/Far-200/think-before-code",
+          { num: "01", text: "Choose the reasoning" },
         );
         layer.appendChild(win);
-        await fadeIn(layer, 200);
-        await userMsg(body, "Give me the code.", 30);
-        await thinking(body, 600);
-        await assistantMsg(body, "quackrates 🦆", "No.", 20);
-        await sleep(1000);
+        await fadeIn(layer, ctx, 220);
+
+        await userMsg(body, "Solve Two Sum for me.", ctx, 46);
+        await wait(200, ctx);
+        await thinking(body, ctx, 340);
+        await assistantMsg(body, "quackrates 🦆", "No.", ctx, 30);
+        await wait(520, ctx);
+        await thinking(body, ctx, 340);
         await assistantMsg(
           body,
           "quackrates 🦆",
-          "I won't solve this for you.\n\nI'll help you solve it.",
-          22,
+          "What must you remember to find the complement in one scan?",
+          ctx,
+          40,
         );
-        await sleep(2200);
+        await wait(290, ctx);
+
+        await userMsg(body, "value → index", ctx, 44);
+        await thinking(body, ctx, 340);
+        await assistantMsg(
+          body,
+          "quackrates 🦆",
+          "Good. Why check before inserting?",
+          ctx,
+          38,
+        );
+        await wait(290, ctx);
+
+        const card = el("div", "learner-card", body);
+        card.innerHTML =
+          '<div class="lc-tag">your reasoning</div>' +
+          '<div class="lc-row">Check before inserting so the current element cannot match with itself.</div>';
+        scrollChat(body);
+        await revealBlock(card, ctx, 400);
+        await wait(550, ctx);
+
+        await fadeOut(layer, ctx, 200);
       }
 
-      /* ============ REEL: GIF 2 — mistake logging ============ */
-      async function playGif2() {
-        clearStage();
+      async function sceneTransition(ctx) {
+        const { layer, card } = centerCard();
+        card.innerHTML =
+          '<div class="big" style="font-size:25px;">The algorithm is only the beginning.</div>' +
+          '<div class="small delayed">Now defend the code.</div>' +
+          '<div class="chapter-label"><span class="num">02</span> · Review the judgment</div>';
+        await fadeIn(layer, ctx, 180);
+        await wait(220, ctx);
+        card.querySelector(".small.delayed").classList.add("on");
+        await wait(340, ctx);
+        await fadeOut(layer, ctx, 180);
+      }
+
+      // Shared by the main reel (embedded, cuts to the closing card) and
+      // the standalone "Code-review coach" scenario (slightly longer
+      // pauses, holds on the finding instead of handing off).
+      async function reviewScene(ctx, { standalone = false } = {}) {
+        const pad = standalone ? 1.25 : 1;
         const layer = el("div", "layer");
-        const { win, body } = makeWindow(
-          "Think Before Code",
+        const { win, codePane, body } = makeReviewWindow(
+          "skill: code-review-coach",
+          "github.com/Far-200/think-before-code",
+          { num: null, text: "One risk · evidence · impact" },
+        );
+        layer.appendChild(win);
+        await fadeIn(layer, ctx, 220);
+
+        const codeRows = buildCodePane(codePane);
+        await wait(60, ctx);
+        codePane.classList.add("on");
+        await wait(780 * pad, ctx);
+
+        await userMsg(body, "Tell me everything wrong.", ctx, 46);
+        await thinking(body, ctx, 380);
+        await assistantMsg(body, "quackrates 🦆", "Not yet.", ctx, 30);
+        await wait(780 * pad, ctx);
+        await assistantMsg(
+          body,
+          "quackrates 🦆",
+          "What should happen on a 404 or 500?",
+          ctx,
+          40,
+        );
+        await wait(380 * pad, ctx);
+
+        await userMsg(
+          body,
+          "An error must not look like a valid user.",
+          ctx,
+          46,
+        );
+        await thinking(body, ctx, 380);
+        await assistantMsg(
+          body,
+          "quackrates 🦆",
+          "Where can that happen?",
+          ctx,
+          38,
+        );
+        await wait(380 * pad, ctx);
+
+        await userMsg(body, "Line 3.", ctx, 40);
+        focusLine(codeRows, 2);
+        await wait(700 * pad, ctx);
+
+        await thinking(body, ctx, 380);
+        await assistantMsg(
+          body,
+          "quackrates 🦆",
+          "Write the finding: evidence, then impact.",
+          ctx,
+          38,
+        );
+        await wait(420 * pad, ctx);
+
+        const finding = el("div", "learner-card", body);
+        finding.innerHTML =
+          '<div class="lc-tag">your finding</div>' +
+          '<div class="lc-row findingtext"><span class="lc-label">Evidence — </span><code>response.json()</code> runs without checking <code>response.ok</code>.</div>' +
+          '<div class="lc-row"><span class="lc-label">Impact — </span>A 404 or 500 payload can be returned as a valid user.</div>';
+        scrollChat(body);
+        await revealBlock(finding, ctx, 540);
+        await wait(700 * pad, ctx);
+
+        await assistantMsg(
+          body,
+          "quackrates 🦆",
+          "Now you have a review finding.",
+          ctx,
+          34,
+        );
+        await wait(750 * pad, ctx);
+
+        if (!standalone) {
+          await fadeOut(layer, ctx, 260);
+        }
+      }
+
+      async function sceneClosing(ctx) {
+        const { layer, card } = centerCard();
+        card.innerHTML =
+          '<div class="brand">Think Before Code</div>' +
+          '<div class="big" style="font-size:23px; line-height:1.55;">Choose the reasoning.<br>Defend the judgment.<br>Don\'t outsource thinking.</div>' +
+          '<div class="small" style="margin-top:16px; color:var(--slate); font-size:12px;">Productive struggle, protected.</div>' +
+          '<div class="small" style="margin-top:6px;">10 portable Socratic skills</div>' +
+          '<div class="url">github.com/Far-200/think-before-code</div>' +
+          '<div class="small" style="margin-top:10px; color:var(--duck);">Quackrates 🦆</div>';
+        await fadeIn(layer, ctx, 260);
+        await wait(2500, ctx);
+        // Intentionally no fadeOut and no loop — this stays as the final
+        // recorded frame.
+      }
+
+      async function playMainReel(ctx) {
+        debugStartTime = performance.now();
+        debugLog("reel start");
+        await sceneBaselineMontage(ctx);
+        debugLog("scene 1 done (without the skills)");
+        await sceneBehaviourSwitch(ctx);
+        debugLog("scene 2 done (behaviour switch)");
+        await sceneDsaCoaching(ctx);
+        debugLog("scene 3 done (dsa reasoning)");
+        await sceneTransition(ctx);
+        debugLog("scene 4 done (transition)");
+        await reviewScene(ctx, { standalone: false });
+        debugLog("scene 5 done (code review)");
+        await sceneClosing(ctx);
+        debugLog("scene 6 done (closing) — total main-reel duration");
+      }
+
+      /* ---- standalone scenarios ---- */
+      async function playRefusal(ctx) {
+        const layer = el("div", "layer");
+        const { win, body } = makeSimpleWindow(
+          "skill: dsa-tutor",
           "github.com/Far-200/think-before-code",
         );
         layer.appendChild(win);
-        await fadeIn(layer, 200);
+        await fadeIn(layer, ctx, 220);
+        await userMsg(body, "Give me the code.", ctx, 44);
+        await thinking(body, ctx, 400);
+        await assistantMsg(body, "quackrates 🦆", "No.", ctx, 28);
+        await wait(700, ctx);
+        await assistantMsg(
+          body,
+          "quackrates 🦆",
+          "I won't solve it for you. I'll help you solve it.",
+          ctx,
+          34,
+        );
+        await wait(1800, ctx);
+      }
 
-        await userMsg(body, "Sliding Window?", 28);
-        await thinking(body, 500);
-        await assistantMsg(body, "quackrates 🦆", "Why Sliding Window?", 24);
-        await sleep(300);
+      async function playMistakeLog(ctx) {
+        const layer = el("div", "layer");
+        const { win, body } = makeSimpleWindow(
+          "skill: dsa-tutor · feature: mistake log",
+          "github.com/Far-200/think-before-code",
+        );
+        layer.appendChild(win);
+        await fadeIn(layer, ctx, 220);
+
+        await userMsg(body, "Sliding Window?", ctx, 40);
+        await thinking(body, ctx, 400);
+        await assistantMsg(
+          body,
+          "quackrates 🦆",
+          "Why Sliding Window?",
+          ctx,
+          32,
+        );
+        await wait(300, ctx);
 
         await userMsg(
           body,
           "...\n\nActually...\n\nWindow size isn't fixed.",
-          26,
+          ctx,
+          38,
         );
-        await thinking(body, 500);
+        await thinking(body, ctx, 400);
         await assistantMsg(
           body,
           "quackrates 🦆",
           "Good catch.\n\nMistake logged:",
-          24,
+          ctx,
+          32,
         );
 
         const card = el("div", "logcard", body);
@@ -734,117 +1508,210 @@
         const txt = el("div", "txt", card);
         txt.textContent =
           '"I assumed Sliding Window before checking constraints."';
-        await sleep(150);
-        card.classList.add("on");
         scrollChat(body);
-        await sleep(2400);
+        await revealBlock(card, ctx, 380);
+        await wait(2000, ctx);
       }
 
-      /* ============ REEL: GIF 3 — skills folder ============ */
-      async function playGif3() {
-        clearStage();
+      async function playSkillsFolder(ctx) {
         const layer = el("div", "layer");
-        const win = el("div", "win");
-        layer.appendChild(win);
-        const bar = el("div", "titlebar", win);
-        el("span", "dot r", bar);
-        el("span", "dot y", bar);
-        el("span", "dot g", bar);
-        const u = el("div", "urlbar", bar);
-        u.textContent = "think-before-code";
-        const tag = el("div", "apptag", bar);
-        tag.innerHTML = "app: <b>editor</b>";
+        const win = makeWin();
+        makeTitlebar(win, "repo: skills/", "think-before-code");
         const tree = el("div", "tree", win);
         const sidebar = el("div", "sidebar", tree);
         const editor = el("div", "editor", tree);
+        layer.appendChild(win);
 
-        await fadeIn(layer, 200);
+        await fadeIn(layer, ctx, 220);
 
         const items = [
-          { cls: "folder", label: "📁 skills/" },
-          { cls: "file", label: "problem-decoder/" },
-          { cls: "file", label: "dsa-tutor/" },
-          { cls: "file", label: "dry-run-coach/" },
-          { cls: "file", label: "complexity-coach/" },
-          { cls: "file", label: "debug-coach/" },
-          { cls: "file", label: "test-case-coach/" },
-          { cls: "file", label: "pattern-transfer-coach/" },
-          { cls: "file", label: "code-review-coach/" },
-          { cls: "file", label: "mock-interviewer/" },
+          { cls: "item root", label: "📁 skills/" },
+          { cls: "item group", label: "Algorithm learning" },
+          { cls: "item file", label: "problem-decoder/" },
+          { cls: "item file", label: "dsa-tutor/" },
+          { cls: "item file", label: "dry-run-coach/" },
+          { cls: "item file", label: "complexity-coach/" },
+          { cls: "item file", label: "debug-coach/" },
+          { cls: "item file", label: "test-case-coach/" },
+          { cls: "item file", label: "pattern-transfer-coach/" },
+          { cls: "item file", label: "mock-interviewer/" },
+          {
+            cls: "item group divider",
+            label: "Software engineering judgment",
+          },
+          { cls: "item file", label: "specification-coach/" },
+          { cls: "item file", label: "code-review-coach/" },
         ];
         const nodes = [];
         for (const it of items) {
-          const n = el("div", "item " + it.cls, sidebar);
+          const n = el("div", it.cls, sidebar);
           n.textContent = it.label;
           nodes.push(n);
-          await sleep(220);
+          await wait(140, ctx);
           n.classList.add("on");
         }
 
-        await sleep(500);
-        nodes[1].classList.add("selected");
+        await wait(420, ctx);
+        // Select `specification-coach/` — the pre-implementation entry
+        // point, listed immediately before `code-review-coach/`.
+        const selected = nodes[nodes.length - 2];
+        selected.classList.add("selected");
 
         const fname = el("div", "fname", editor);
-        fname.textContent = "skills/problem-decoder/SKILL.md";
+        fname.textContent = "skills/specification-coach/SKILL.md";
         const lines = [
-          ["h", "# Problem Decoder"],
-          ["", "Breaks a problem statement into constraints,"],
-          ["", "edge cases, and the real question being asked —"],
-          ["", "before any approach is chosen."],
-          ["k", "## When to use"],
-          ["", "Any time a prompt names a technique before"],
-          ["", "the constraints have been checked."],
-          ["k", "## Output"],
-          ["", "Questions. Never a solution."],
+          ["h", "# Specification Coach"],
+          ["", "Turns vague feature requests into learner-authored,"],
+          ["", "implementation-ready specifications."],
+          ["k", "## Loop"],
+          ["", "Outcome → current/desired behaviour →"],
+          ["", "scope/non-goals → constraints/failures →"],
+          ["", "acceptance criteria → smallest verifiable slice →"],
+          ["", "learner-authored specification"],
         ];
         for (const [k, text] of lines) {
           const l = el("div", "line" + (k ? " " + k : ""), editor);
           l.textContent = text;
-          await sleep(260);
+          await wait(210, ctx);
           l.classList.add("on");
         }
 
-        const cap = el("div", "caption on", win.parentElement);
-        cap.textContent = "Reusable AI tutors.";
-        await sleep(2000);
+        await showCaption(
+          layer,
+          "Portable coaching behaviour, documented as SKILL.md.",
+          ctx,
+          2000,
+        );
       }
 
-      /* ============ controller ============ */
-      const reels = { gif1: playGif1, gif2: playGif2, gif3: playGif3 };
-      let currentReel = "gif1";
-      let playing = false;
+      /* ============================================================
+         8. CONTROLLER AND KEYBOARD SHORTCUTS
+         ============================================================ */
+      const reels = {
+        main: playMainReel,
+        refusal: playRefusal,
+        review: (ctx) => reviewScene(ctx, { standalone: true }),
+        mistakes: playMistakeLog,
+        skills: playSkillsFolder,
+      };
+      const reelOrder = ["main", "refusal", "review", "mistakes", "skills"];
+      let currentReel = "main";
+
+      function setActiveButtonUI(key) {
+        document.querySelectorAll("[data-reel]").forEach((b) => {
+          b.classList.toggle("active", b.dataset.reel === key);
+        });
+      }
+
+      function selectScenario(key) {
+        if (recording) return;
+        if (!reels[key]) return;
+        currentReel = key;
+        setActiveButtonUI(key);
+        playToken++;
+        clearStage();
+        renderPoster(key);
+      }
 
       document.querySelectorAll("[data-reel]").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          document
-            .querySelectorAll("[data-reel]")
-            .forEach((b) => b.classList.remove("active"));
-          btn.classList.add("active");
-          currentReel = btn.dataset.reel;
-          clearStage();
-        });
+        btn.addEventListener("click", () => selectScenario(btn.dataset.reel));
       });
 
-      document.getElementById("playBtn").addEventListener("click", async () => {
-        if (playing) return;
-        playing = true;
-        await reels[currentReel]();
-        playing = false;
-      });
+      async function play() {
+        if (recording) return;
+        playToken++;
+        const ctx = { token: playToken };
+        clearStage();
+        try {
+          await reels[currentReel](ctx);
+        } catch (err) {
+          if (err !== CANCELLED) throw err;
+        }
+      }
+      document.getElementById("playBtn").addEventListener("click", play);
+      document.getElementById("restartBtn").addEventListener("click", play);
+
+      async function recordMainReel() {
+        if (recording) return;
+        currentReel = "main";
+        setActiveButtonUI("main");
+        playToken++;
+        const ctx = { token: playToken };
+        recording = true;
+        clearStage();
+        if (stage.requestFullscreen) {
+          try {
+            await stage.requestFullscreen();
+          } catch (err) {
+            // Fullscreen denied or unavailable in this context — continue
+            // the recording without it rather than blocking playback.
+          }
+        }
+        try {
+          if (ctx.token !== playToken) throw CANCELLED;
+          await showCountdown(ctx);
+          await playMainReel(ctx);
+        } catch (err) {
+          if (err !== CANCELLED) throw err;
+        } finally {
+          if (ctx.token === playToken) recording = false;
+        }
+      }
       document
-        .getElementById("restartBtn")
-        .addEventListener("click", async () => {
-          if (playing) return;
-          playing = true;
-          await reels[currentReel]();
-          playing = false;
-        });
+        .getElementById("recordBtn")
+        .addEventListener("click", recordMainReel);
 
+      async function toggleFullscreen() {
+        if (document.fullscreenElement) {
+          await document.exitFullscreen();
+        } else if (stage.requestFullscreen) {
+          await stage.requestFullscreen();
+        }
+      }
       document
         .getElementById("fullscreenBtn")
-        .addEventListener("click", async () => {
-          if (stage.requestFullscreen) await stage.requestFullscreen();
-        });
+        .addEventListener("click", toggleFullscreen);
+
+      // Auto-hide the cursor over the stage during fullscreen recording;
+      // restore it immediately on movement or on leaving fullscreen.
+      let cursorTimer = null;
+      function armCursorAutoHide() {
+        stage.classList.remove("cursor-hidden");
+        clearTimeout(cursorTimer);
+        if (!document.fullscreenElement) return;
+        cursorTimer = setTimeout(() => {
+          stage.classList.add("cursor-hidden");
+        }, 1000);
+      }
+      stage.addEventListener("mousemove", armCursorAutoHide);
+      document.addEventListener("fullscreenchange", armCursorAutoHide);
+
+      window.addEventListener("keydown", (e) => {
+        const active = document.activeElement;
+        const controlHasFocus =
+          active &&
+          ["BUTTON", "INPUT", "TEXTAREA", "SELECT"].includes(active.tagName);
+        if (controlHasFocus) return;
+
+        if (e.key === " ") {
+          e.preventDefault();
+          play();
+        } else if (e.key === "r" || e.key === "R") {
+          play();
+        } else if (e.key === "f" || e.key === "F") {
+          toggleFullscreen();
+        } else if (e.key === "g" || e.key === "G") {
+          recordMainReel();
+        } else if (["1", "2", "3", "4", "5"].includes(e.key)) {
+          const key = reelOrder[Number(e.key) - 1];
+          if (key) selectScenario(key);
+        }
+        // Escape is intentionally left unhandled so the browser's native
+        // fullscreen-exit behaviour keeps working untouched.
+      });
+
+      // Initial paint: the stage must never appear blank.
+      selectScenario(currentReel);
     </script>
   </body>
 </html>

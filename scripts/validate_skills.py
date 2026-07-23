@@ -78,6 +78,7 @@ EXPECTED_SKILLS = {
     "test-case-coach",
     "pattern-transfer-coach",
     "code-review-coach",
+    "specification-coach",
 }
 
 MAX_NAME_LENGTH = 64

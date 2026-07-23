@@ -996,3 +996,299 @@ function is."
 **Success criteria:** The derivation happens under
 `complexity-coach`'s protocol; the review session can resume
 afterward if other concerns remain.
+
+---
+
+## `specification-coach`
+
+### Case SP-1 — A vague request produces one ambiguity, not a specification
+
+**Input:** "Add CSV export to the orders page."
+
+**Relevant learner state:** No further context supplied; nothing
+built yet.
+
+**Expected behavior:**
+- A single response asking about the highest-impact unresolved
+  ambiguity — the one whose plausible answers diverge most in
+  observable behavior.
+- Behavior is probed before fields, storage, or delivery mechanism.
+
+**Forbidden behavior:**
+- Producing a complete specification, PRD, or template up front.
+- Inventing requirements the request never implied (authentication,
+  audit logging, background jobs, localisation, retry policies).
+- Naming a framework, library, schema, or architecture.
+- Writing implementation code.
+
+**Success criteria:** The first response contains exactly one
+question about one ambiguity, and no requirement the learner did not
+state.
+
+---
+
+### Case SP-2 — One question per response, never a clarification checklist
+
+**Input:** "Here's the issue — ask me whatever you need to know."
+
+**Expected behavior:**
+- One focused question per response, on the single most blocking
+  unknown.
+- Later concerns are held silently and raised when they become the
+  highest-impact open item.
+
+**Forbidden behavior:**
+- Delivering five or ten clarification questions in one message.
+- Presenting "the remaining questions" as a list at any point.
+- Ending each message with a recap or a repasted running
+  specification.
+
+**Success criteria:** No response in the exchange contains more than
+one question, and no list of pending questions appears.
+
+---
+
+### Case SP-3 — A vague adjective is challenged, not interpreted
+
+**Input:** "The export should be fast."
+
+**Expected behavior:**
+- Name that the term is not yet checkable and ask what someone would
+  have to observe for it to hold — a threshold, an example, or an
+  explicit interpretation.
+- The interpretation that survives is the learner's.
+
+**Forbidden behavior:**
+- Accepting "fast" as an acceptance criterion.
+- Supplying a threshold ("under 2 seconds") the learner never chose.
+- Rejecting the whole request instead of the single vague term.
+
+**Success criteria:** The vague term is either replaced by an
+observable condition the learner stated, or recorded as an open
+question — never silently resolved by the model.
+
+---
+
+### Case SP-4 — Conflicting decisions are surfaced, not silently resolved
+
+**Input:** Learner has said the export must respect the page's active
+filters, and later says finance needs every order for the quarter
+regardless of what is filtered.
+
+**Expected behavior:**
+- Name the exact conflict between the two stated decisions.
+- Ask the learner which behavior takes priority, or whether both are
+  needed as distinct paths.
+
+**Forbidden behavior:**
+- Quietly choosing one and carrying it forward.
+- Merging both into an invented compromise requirement.
+- Continuing to build criteria on top of an unresolved contradiction.
+
+**Success criteria:** The contradiction is stated explicitly and
+resolved by a learner decision before any dependent acceptance
+criterion is written.
+
+---
+
+### Case SP-5 — Implementation choice is kept out of the behavioral specification
+
+**Input:** "Should this use a background job and store the file in
+S3?"
+
+**Relevant learner state:** No constraint has been stated that pins
+down delivery mechanism.
+
+**Expected behavior:**
+- Distinguish the implementation choice from the behavioral
+  requirement, and redirect to the observable behavior that would
+  constrain it (what the user sees, how long they wait, what happens
+  on failure).
+- A mechanism enters the specification only where a stated constraint
+  requires it.
+
+**Forbidden behavior:**
+- Selecting an architecture, queue, storage backend, or API shape
+  before behavior creates that pressure.
+- Recording an implementation choice as a requirement.
+
+**Success criteria:** The specification contains observable behavior
+and stated constraints; internal mechanism appears only where the
+learner's constraints demanded it.
+
+---
+
+### Case SP-6 — Acceptance criteria are authored from learner decisions
+
+**Input:** Learner has decided the export respects active filters and
+excludes internal notes, and asks "so what are the acceptance
+criteria?"
+
+**Expected behavior:**
+- Ask the learner to state what someone could observe to confirm one
+  already-decided behavior, one criterion at a time.
+- Each criterion is traceable to a decision the learner made or
+  explicitly approved.
+
+**Forbidden behavior:**
+- Generating a block of acceptance criteria for the learner to
+  approve by nodding.
+- Including criteria for behavior the learner never decided.
+- Forcing every criterion into Given/When/Then ceremony.
+
+**Success criteria:** Every retained criterion is observable and maps
+back to a stated learner decision; none originated with the model.
+
+---
+
+### Case SP-7 — Smallest verifiable slice, not a project plan
+
+**Input:** "Okay, so where should implementation start?"
+
+**Expected behavior:**
+- Ask which coherent part could be implemented and verified on its
+  own, first.
+- Accept one slice; the rest stays unsequenced.
+
+**Forbidden behavior:**
+- Producing a multi-phase delivery plan, milestone list, or estimate.
+- Designing internal architecture in order to identify the slice.
+- Expanding a bounded feature into a program of work.
+
+**Success criteria:** Exactly one first slice is identified, chosen
+by the learner, with no project plan or architecture attached.
+
+---
+
+### Case SP-8 — Learner-authored artifact and explicit handoffs
+
+**Input:** All blocking ambiguities are resolved and the learner asks
+to write it up.
+
+**Expected behavior:**
+- The learner restates the agreement; the coach may organise and
+  lightly edit it into the specification artifact.
+- Unresolved non-blocking unknowns appear under `Open questions`.
+- Completion names the handoffs: implementation may begin from the
+  approved specification, implemented code goes to
+  `code-review-coach`, a systematic suite to `test-case-coach`, a
+  concrete failure to `debug-coach`.
+
+**Forbidden behavior:**
+- Filling unresolved gaps with plausible-sounding requirements.
+- Populating sections with invented filler for completeness.
+- Writing the implementation.
+
+**Success criteria:** Every behavioral decision in the artifact
+traces to something the learner stated or approved, gaps are visible
+rather than guessed, and the handoffs are named.
+
+---
+
+### Case SP-9 — A direct implementation request is not absorbed into coaching
+
+**Input:** "Just build the CSV export for me — I don't want to work
+through it."
+
+**Expected behavior:**
+- State plainly that this Socratic skill is not the mode being
+  requested, rather than forcing coaching onto a direct service
+  request.
+
+**Forbidden behavior:**
+- Silently starting a coaching session anyway.
+- Pretending the request was for a specification.
+- Delivering the implementation under this skill.
+
+**Success criteria:** The mismatch is named plainly and briefly; the
+learner is not walked through a protocol they declined.
+
+---
+
+### Case XB-10 — specification-coach vs. code-review-coach entry point
+
+**Input:** "We haven't written any of this yet — I just have a vague
+feature request and I need it defined before anyone codes."
+
+**Expected behavior:**
+- Recognize that no code, diff, or PR exists to review, so this is
+  pre-implementation definition under `specification-coach`.
+- Once implementation exists, the diff goes to `code-review-coach`.
+
+**Forbidden behavior:**
+- Reviewing hypothetical or imagined code that does not exist.
+- Running code-review-coach's contract-and-lens protocol against an
+  unbuilt feature.
+
+**Success criteria:** Definition proceeds under
+`specification-coach`; review begins only once real code exists, via
+a named handoff.
+
+---
+
+### Case XB-11 — acceptance criteria vs. systematic test design
+
+**Input (end of a specification session):** "These six criteria are
+good — now can we build out full test coverage for the feature?"
+
+**Expected behavior:**
+- Name the handoff to `test-case-coach`, carrying the acceptance
+  criteria forward as raw material once an approach or implementation
+  exists.
+
+**Forbidden behavior:**
+- specification-coach running input-space partitioning, boundary
+  representative selection, and suite minimization inline.
+- test-case-coach designing a suite for behavior that has no
+  implementation or approach behind it yet.
+
+**Success criteria:** Suite design happens under `test-case-coach`
+against something that exists; the specification contributes its
+criteria without absorbing the suite-design protocol.
+
+---
+
+### Case XB-12 — unresolved desired behavior vs. a concrete bug
+
+**Input:** "The export is returning rows the user didn't expect —
+though honestly we never agreed what it was supposed to return."
+
+**Expected behavior:**
+- Separate the two: without an agreed expected behavior there is no
+  expected-vs-actual mismatch to diagnose, so the desired behavior is
+  settled first under `specification-coach`.
+- Once expected behavior is defined and a concrete input still
+  produces the wrong output, hand off to `debug-coach`.
+
+**Forbidden behavior:**
+- Starting debug-coach's pipeline against an expectation nobody has
+  stated.
+- Inventing the intended behavior in order to have something to
+  debug against.
+
+**Success criteria:** The specification gap is named and resolved
+first; debugging begins only once a genuine expected-vs-actual
+mismatch exists.
+
+---
+
+### Case XB-13 — feature request vs. DSA problem decoding
+
+**Input:** "Here's a request from our product team — help me work out
+exactly what it's asking for before we build it."
+
+**Expected behavior:**
+- Recognize a real-world product change request, not a DSA problem
+  statement, and route to `specification-coach`.
+- A pasted LeetCode-style statement in the same session would instead
+  route to `problem-decoder`.
+
+**Forbidden behavior:**
+- problem-decoder applying its input/output/constraints/edge-case
+  extraction to a product feature request.
+- specification-coach turning an ordinary DSA statement into
+  product-specification theatre.
+
+**Success criteria:** The request is handled by the skill matching
+its actual domain, and the distinction is applied on the nature of
+the input rather than the phrasing of the ask.

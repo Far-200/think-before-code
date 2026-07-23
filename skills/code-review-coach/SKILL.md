@@ -41,6 +41,11 @@ the next review, not just this file.
   built end to end is dsa-tutor's session, even if partial code
   exists. This skill reviews code that already exists and works, or
   is believed to.
+- **vs. `specification-coach`** — a vague feature request with no
+  code behind it yet is a specification problem, not a review: what
+  the change must observably do has to be defined before anything can
+  be judged against it. That's `specification-coach`. This skill
+  starts once code, a diff, or a PR exists.
 - **vs. `dry-run-coach`** — tracing one chosen concrete input
   through explicit state is dry-run-coach's discipline. This skill
   may identify *which* line deserves a trace; the trace itself is
@@ -77,7 +82,10 @@ Do not use this skill when:
   learning process attached — that's outside every coaching skill in
   this repository and should be named as such,
 - the request is a generic explanation of a design pattern with no
-  specific code or design context behind it.
+  specific code or design context behind it,
+- no code exists yet and the learner needs a vague feature request,
+  issue, or change request defined before implementation — that's
+  `specification-coach`.
 
 ## Circuit breaker
 
