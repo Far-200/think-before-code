@@ -12,7 +12,7 @@ The format is loosely based on
 ### Added
 
 - `specification-coach`, the suite's second software-engineering
-  skill and the first that runs *before* implementation — a Socratic
+  skill and the first that runs _before_ implementation — a Socratic
   training mode for turning a vague feature request, issue, or change
   request into an implementation-ready specification: one ambiguity
   resolved per exchange, vague adjectives challenged rather than
@@ -66,15 +66,16 @@ The format is loosely based on
   skills, and names the key boundary between the two SWE skills —
   `specification-coach` before implementation, `code-review-coach`
   after code exists.
-- The demo source (`demo/index.html`) now states ten portable skills
-  on its closing card and skills-folder poster, lists all ten skills
-  in the skills-folder scenario with `specification-coach/` and
-  `code-review-coach/` grouped under software-engineering judgment in
-  pre- then post-implementation order, and selects
-  `specification-coach/` in that scenario. The main reel is unchanged.
-  The recorded `public/demo.gif` is intentionally untouched and still
-  reflects the previous release; it needs a separate re-recording
-  from the updated source.
+- The interactive demo (`demo/index.html`) now contrasts default
+  assistant artifact dumping with learner-authored reasoning and
+  judgment, demonstrates both `dsa-tutor` and `code-review-coach`,
+  adds the fullscreen recording workflow, and updates the visible
+  suite count and skills-folder scenario for all ten skills. The
+  folder view groups `specification-coach/` and
+  `code-review-coach/` under software-engineering judgment in
+  pre- then post-implementation order and selects
+  `specification-coach/`. The recorded `public/demo.gif` was
+  re-recorded from the updated source and replaced for this release.
 - The roadmap's SWE validation item is now an honest forward-looking
   item covering both `code-review-coach` and `specification-coach`;
   no real-session validation is claimed as complete.
