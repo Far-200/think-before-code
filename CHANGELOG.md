@@ -7,6 +7,8 @@ The format is loosely based on
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-07-31
+
 ### Added
 
 - `find-your-coach/`, an interactive Find Your Coach page served from
@@ -91,7 +93,7 @@ The format is loosely based on
   unchanged.
 - `evals/README.md` documents `finder-cases.csv`, its schema, and the
   validator that executes it, and draws the distinction that matters:
-  the activation and behavior files specify what a *model* should do
+  the activation and behavior files specify what a _model_ should do
   and are still checked by hand, while the finder cases describe a
   deterministic router and are executed on every push.
 

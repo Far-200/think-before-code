@@ -115,7 +115,7 @@ code-review-coach
 feature request, issue, or change request, and it resolves one
 ambiguity at a time until observable behaviour, scope, non-goals,
 constraints, failure behaviour, and acceptance criteria are all
-decisions *you* made — ending in a specification an implementation
+decisions _you_ made — ending in a specification an implementation
 agent can act on. It never invents requirements and never writes the
 code.
 
@@ -154,7 +154,7 @@ and a complexity-only question goes to `complexity-coach`.
    ```
 
 2. **Choose a skill.** If you're not sure which one fits where you
-   are, answer up to three questions in
+   are, answer a short series of questions in
    [Find Your Coach](https://far-200.github.io/think-before-code/find-your-coach/)
    and it will name one, with a starter prompt to paste. Otherwise:
    the core skill lives at
@@ -322,18 +322,18 @@ the standard Agent Skills format: a directory named after the skill,
 containing a single `SKILL.md` with frontmatter (`name`,
 `description`) that tells an agent when to use it.
 
-| Skill                                                                | Use it when                                                                                                                                                                                          |
-| -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`dsa-tutor`](./skills/dsa-tutor/SKILL.md)                           | You want the full Socratic walkthrough of a DSA problem, start to finish, with hints released one at a time.                                                                                         |
-| [`problem-decoder`](./skills/problem-decoder/SKILL.md)               | You have a raw problem statement and need to pin down inputs, outputs, constraints, and edge cases before solving anything.                                                                          |
-| [`dry-run-coach`](./skills/dry-run-coach/SKILL.md)                   | You already have an approach and need to manually trace it on a concrete input to verify or debug it.                                                                                                |
-| [`complexity-coach`](./skills/complexity-coach/SKILL.md)             | You have working code or an approach and need to derive, not recall, its time and space complexity.                                                                                                  |
-| [`mock-interviewer`](./skills/mock-interviewer/SKILL.md)             | You want timed, realistic interview practice, with minimal hints during the attempt and feedback only at the end.                                                                                    |
-| [`debug-coach`](./skills/debug-coach/SKILL.md)                       | You already have code with an observed failure and need the bug isolated — expected vs. actual, first divergence, smallest repair — without a rewritten function.                                    |
-| [`test-case-coach`](./skills/test-case-coach/SKILL.md)               | You already have an approach or implementation and want to design a compact, justified test suite — boundaries, adversarial inputs, expected outputs — yourself, one dimension at a time.            |
-| [`pattern-transfer-coach`](./skills/pattern-transfer-coach/SKILL.md) | You've solved a problem and want to turn it into a transferable pattern — strip the story, name recognition and rule-out signals, and adapt it to exactly one cousin problem.                        |
+| Skill                                                                | Use it when                                                                                                                                                                                                                                                                                   |
+| -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`dsa-tutor`](./skills/dsa-tutor/SKILL.md)                           | You want the full Socratic walkthrough of a DSA problem, start to finish, with hints released one at a time.                                                                                                                                                                                  |
+| [`problem-decoder`](./skills/problem-decoder/SKILL.md)               | You have a raw problem statement and need to pin down inputs, outputs, constraints, and edge cases before solving anything.                                                                                                                                                                   |
+| [`dry-run-coach`](./skills/dry-run-coach/SKILL.md)                   | You already have an approach and need to manually trace it on a concrete input to verify or debug it.                                                                                                                                                                                         |
+| [`complexity-coach`](./skills/complexity-coach/SKILL.md)             | You have working code or an approach and need to derive, not recall, its time and space complexity.                                                                                                                                                                                           |
+| [`mock-interviewer`](./skills/mock-interviewer/SKILL.md)             | You want timed, realistic interview practice, with minimal hints during the attempt and feedback only at the end.                                                                                                                                                                             |
+| [`debug-coach`](./skills/debug-coach/SKILL.md)                       | You already have code with an observed failure and need the bug isolated — expected vs. actual, first divergence, smallest repair — without a rewritten function.                                                                                                                             |
+| [`test-case-coach`](./skills/test-case-coach/SKILL.md)               | You already have an approach or implementation and want to design a compact, justified test suite — boundaries, adversarial inputs, expected outputs — yourself, one dimension at a time.                                                                                                     |
+| [`pattern-transfer-coach`](./skills/pattern-transfer-coach/SKILL.md) | You've solved a problem and want to turn it into a transferable pattern — strip the story, name recognition and rule-out signals, and adapt it to exactly one cousin problem.                                                                                                                 |
 | [`specification-coach`](./skills/specification-coach/SKILL.md)       | You have a vague feature request, issue, or change request and need observable behaviour, scope, non-goals, constraints, failure behaviour, and acceptance criteria defined — a learner-authored implementation handoff, with no invented requirements and no implementation written for you. |
-| [`code-review-coach`](./skills/code-review-coach/SKILL.md)           | You have existing code, a diff, or a PR — not necessarily DSA — and want to practise discovering and justifying review findings yourself, one concern at a time, without a dumped list or a rewrite. |
+| [`code-review-coach`](./skills/code-review-coach/SKILL.md)           | You have existing code, a diff, or a PR — not necessarily DSA — and want to practise discovering and justifying review findings yourself, one concern at a time, without a dumped list or a rewrite.                                                                                          |
 
 These are complementary, not redundant. `dsa-tutor` is the default
 skill that coordinates a complete DSA learning session. Six
@@ -554,8 +554,8 @@ think-before-code/
   deliberate non-goal, and a learner-authored specification with an
   implementation handoff
 - [`find-your-coach/`](./find-your-coach/) — the Find Your Coach
-  page: a deterministic router that asks up to three questions and
-  names one skill. Plain HTML, CSS, and JavaScript with no build step
+  page: a deterministic router that asks a short series of questions
+  and names one skill. Plain HTML, CSS, and JavaScript with no build step
   and no model call; every screen and every routing decision comes
   from [`routes.json`](./find-your-coach/routes.json). Hosted via
   GitHub Pages alongside the demo
@@ -577,7 +577,7 @@ think-before-code/
 - [`skills/`](./skills/) — one self-contained Agent Skill per
   directory, each with its own `SKILL.md`; see
   [Skills in this repository](#skills-in-this-repository)
-- [`tests/`](./tests/) — `unittest` coverage for both validation
+- [`tests/`](./tests/) — `unittest` coverage for all three validation
   scripts, run by CI and locally with `python -m unittest discover`
 - [`.gitignore`](./.gitignore) — files Git should ignore
 - [`CHANGELOG.md`](./CHANGELOG.md) — notable changes per version
@@ -658,7 +658,7 @@ Five layers protect the repository's structure and behavior:
 
 ## Release
 
-The current release is `v1.4.1`. See
+The current release is `v1.5.0`. See
 [`CHANGELOG.md`](./CHANGELOG.md) for the complete release notes.
 
 ## Roadmap
@@ -694,6 +694,8 @@ The current release is `v1.4.1`. See
       evals, reciprocal boundaries, and an example session
 - [x] Extract eval validation into a locally runnable script and
       cover both validators with unit tests
+- [x] Add the interactive Find Your Coach router, executable routing
+      cases, validation, tests, and CI coverage
 
 ### Next
 
