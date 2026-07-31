@@ -51,12 +51,21 @@ that pairing is what makes a routing boundary testable.
 
 ## Coverage requirement
 
-CI enforces that every skill directory under `skills/` has at least
-one `should_activate = true` row and at least one
+Every skill directory under `skills/` must have at least one
+`should_activate = true` row and at least one
 `should_activate = false` row in `activation-prompts.csv` — a skill
 with no negative cases has an untested activation boundary. Rows
 with `target_skill = none` remain allowed (they test that *no* skill
 engages) but don't count toward any skill's coverage.
+
+This rule, along with the CSV's shape, unique ids, and valid
+`target_skill` values, is enforced by
+[`scripts/validate_evals.py`](../scripts/validate_evals.py). CI runs
+that script, so you can check the same rules before pushing:
+
+```bash
+python scripts/validate_evals.py
+```
 
 ## Behavior constraints
 

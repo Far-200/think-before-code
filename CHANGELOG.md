@@ -7,6 +7,57 @@ The format is loosely based on
 
 ## [Unreleased]
 
+## [1.4.1] - 2026-07-31
+
+### Added
+
+- `scripts/validate_evals.py`, a standard-library validator for
+  `evals/activation-prompts.csv`. It carries every rule that
+  previously ran only inside GitHub Actions — expected header, per-row
+  column count, unique ids, `target_skill` matching a real skill
+  directory (or `none`), `should_activate` of exactly `true` or
+  `false`, non-empty prompts and reasons, and at least one positive
+  and one negative activation row per skill — and can now be run
+  locally with `python scripts/validate_evals.py`.
+- `tests/`, a `unittest` suite covering both validation scripts: 64
+  tests exercising failure paths as well as success paths, using
+  fixtures written to temporary directories. No third-party test
+  framework, no network access, and nothing written to the real
+  repository.
+- Two activation-CSV rules that CI never enforced: a row's `id` must
+  be non-empty, and validation now fails when `skills/` is absent
+  rather than silently reporting complete coverage over no skills.
+
+### Changed
+
+- Activation-eval validation is no longer implemented inside
+  `.github/workflows/validate-skills.yml`. The workflow's inline
+  Python program is replaced by a call to the new script, so CI
+  orchestrates checks instead of containing them, and the rules
+  enforced on a pull request are exactly the rules a contributor can
+  run before pushing.
+- CI additionally runs `python -m unittest discover`, and its compile
+  check now covers `scripts/` and `tests/` together.
+- The eval validator reports every problem it finds rather than
+  stopping at the first, matching `scripts/validate_skills.py`'s
+  existing behaviour. Duplicate ids name both the repeated line and
+  the line where the id was first used.
+- The README installation section now documents GitHub Copilot's
+  personal skills paths (`~/.copilot/skills/` and `~/.agents/skills/`)
+  alongside the existing project paths, and adds an optional
+  `gh skill preview` / `gh skill install` workflow, labelled as the
+  public preview it currently is.
+- The README testing section, repository tree, file list, and release
+  version reflect the new script and test suite; `evals/README.md`
+  points at the validator that enforces its coverage requirement.
+
+### Fixed
+
+- The nine interactive demo controls in `demo/index.html` now carry an
+  explicit `type="button"`, so none of them would default to submit
+  behaviour if the markup were ever placed inside a form. No visual,
+  behavioural, or animation change, so `public/demo.gif` is unchanged.
+
 ## [1.4.0] - 2026-07-23
 
 ### Added

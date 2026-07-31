@@ -227,6 +227,10 @@ GitHub Copilot / VS Code project
 .claude/skills/<skill-name>/SKILL.md
 .agents/skills/<skill-name>/SKILL.md
 
+GitHub Copilot personal
+~/.copilot/skills/<skill-name>/SKILL.md
+~/.agents/skills/<skill-name>/SKILL.md
+
 Codex project
 .agents/skills/<skill-name>/SKILL.md
 
@@ -268,6 +272,29 @@ ln -s "$(pwd)/skills/dsa-tutor" ~/.claude/skills/dsa-tutor
 On Windows, symbolic links may require Developer Mode or elevated
 permissions, so copying (the PowerShell example above) is the
 simpler default there rather than a symlink.
+
+### GitHub CLI (`gh skill`, public preview)
+
+If you use GitHub Copilot, GitHub CLI can install a skill straight
+from this repository instead of you copying directories by hand.
+GitHub documents `gh skill` as a public preview that is subject to
+change, and it requires GitHub CLI 2.90.0 or later, so treat this as
+a convenience rather than the supported path:
+
+```bash
+gh skill preview Far-200/think-before-code dsa-tutor
+gh skill install Far-200/think-before-code dsa-tutor
+```
+
+`preview` renders a skill's `SKILL.md` and file tree in your terminal
+without installing anything. GitHub's own guidance is to inspect a
+skill this way before installing it, since skills are not verified by
+GitHub — that applies to this repository as much as any other. By
+default `gh skill install` installs for Copilot at project scope;
+`--agent` and `--scope` change that. Note that installing this way
+writes provenance metadata into the installed copy's frontmatter, so
+an installed `SKILL.md` won't be byte-identical to the one in
+`skills/`.
 
 If your tool doesn't use a `skills/` discovery directory at all,
 you can usually paste the contents of a `SKILL.md` directly into a
@@ -447,6 +474,7 @@ think-before-code/
 │   ├── demo.gif
 │   └── logo.png
 ├── scripts/
+│   ├── validate_evals.py
 │   └── validate_skills.py
 ├── skills/
 │   ├── code-review-coach/
@@ -469,6 +497,9 @@ think-before-code/
 │   │   └── SKILL.md
 │   └── test-case-coach/
 │       └── SKILL.md
+├── tests/
+│   ├── test_validate_evals.py
+│   └── test_validate_skills.py
 ├── .gitignore
 ├── CHANGELOG.md
 ├── LICENSE
@@ -476,8 +507,8 @@ think-before-code/
 ```
 
 - [`.github/workflows/validate-skills.yml`](./.github/workflows/validate-skills.yml) —
-  CI that runs the structural validator and the activation-CSV
-  checks (parsing plus per-skill coverage) on pushes and pull
+  CI that runs the validator test suite, the structural validator,
+  and the evaluation-specification validator on pushes and pull
   requests
 - [`demo/index.html`](./demo/index.html) — the page the demo GIF was
   recorded from, also hosted via GitHub Pages
@@ -510,9 +541,14 @@ think-before-code/
 - [`scripts/validate_skills.py`](./scripts/validate_skills.py) — the
   structural validator; see
   [Testing and validation](#testing-and-validation)
+- [`scripts/validate_evals.py`](./scripts/validate_evals.py) — the
+  evaluation-specification validator; see
+  [Testing and validation](#testing-and-validation)
 - [`skills/`](./skills/) — one self-contained Agent Skill per
   directory, each with its own `SKILL.md`; see
   [Skills in this repository](#skills-in-this-repository)
+- [`tests/`](./tests/) — `unittest` coverage for both validation
+  scripts, run by CI and locally with `python -m unittest discover`
 - [`.gitignore`](./.gitignore) — files Git should ignore
 - [`CHANGELOG.md`](./CHANGELOG.md) — notable changes per version
 - [`LICENSE`](./LICENSE) — repository license
@@ -520,7 +556,7 @@ think-before-code/
 
 ## Testing and validation
 
-Three layers protect the repository's structure and behavior:
+Four layers protect the repository's structure and behavior:
 
 - **`scripts/validate_skills.py`** checks that every skill under
   `skills/` has a `SKILL.md` with valid frontmatter, that its `name`
@@ -534,15 +570,33 @@ Three layers protect the repository's structure and behavior:
   python scripts/validate_skills.py
   ```
 
-- **`.github/workflows/validate-skills.yml`** runs that same script
-  on every push and pull request, plus checks on
+- **`scripts/validate_evals.py`** checks
   `evals/activation-prompts.csv`: it must parse with the expected
-  columns, IDs must be unique, every `target_skill` must be a real
-  skill directory (or `none`), prompts and reasons must be non-empty
-  — and every skill directory must have at least one
+  columns, IDs must be present and unique, every `target_skill` must
+  be a real skill directory (or `none`), `should_activate` must be
+  `true` or `false`, prompts and reasons must be non-empty — and
+  every skill directory must have at least one
   `should_activate = true` row and at least one
   `should_activate = false` row, so no skill ships without both a
-  positive and a negative activation case.
+  positive and a negative activation case. Run it locally with:
+
+  ```bash
+  python scripts/validate_evals.py
+  ```
+
+- **`tests/`** covers both validators with Python's built-in
+  `unittest` — no third-party test framework, no network access, and
+  fixtures written to temporary directories rather than the real
+  repository. Run the suite from the repository root with:
+
+  ```bash
+  python -m unittest discover
+  ```
+
+- **`.github/workflows/validate-skills.yml`** runs the test suite and
+  both validators on every push and pull request. The workflow only
+  orchestrates: the validation rules live in the scripts above, so
+  what CI enforces is exactly what you can run locally.
 
 - **`evals/`** documents, per skill, which prompts should and
   shouldn't activate it (`activation-prompts.csv`) and what behavior
@@ -553,7 +607,7 @@ Three layers protect the repository's structure and behavior:
 
 ## Release
 
-The current release is `v1.4.0`. See
+The current release is `v1.4.1`. See
 [`CHANGELOG.md`](./CHANGELOG.md) for the complete release notes.
 
 ## Roadmap
@@ -587,6 +641,8 @@ The current release is `v1.4.0`. See
 - [x] Add a pre-implementation specification coach
       (`specification-coach`), with its own activation and behavior
       evals, reciprocal boundaries, and an example session
+- [x] Extract eval validation into a locally runnable script and
+      cover both validators with unit tests
 
 ### Next
 

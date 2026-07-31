@@ -17,69 +17,13 @@ jobs:
           python-version: "3.12"
 
       - name: Compile check
-        run: python -m py_compile scripts/validate_skills.py
+        run: python -m compileall -q scripts tests
+
+      - name: Run validator unit tests
+        run: python -m unittest discover
 
       - name: Validate skill structure and Markdown links
         run: python scripts/validate_skills.py --root .
 
-      - name: Check activation-prompts.csv parses and covers every skill
-        run: |
-          python - <<'PY'
-          import csv
-          import os
-          import sys
-
-          path = "evals/activation-prompts.csv"
-          with open(path, newline="", encoding="utf-8") as f:
-              rows = list(csv.reader(f))
-
-          expected_header = ["id", "target_skill", "should_activate", "prompt", "reason"]
-          if not rows:
-              sys.exit(f"{path}: file is empty")
-          if rows[0] != expected_header:
-              sys.exit(f"{path}: unexpected header {rows[0]!r}, expected {expected_header!r}")
-
-          valid_skills = {"none"}
-          skills_root = "skills"
-          if os.path.isdir(skills_root):
-              for entry in os.listdir(skills_root):
-                  entry_path = os.path.join(skills_root, entry)
-                  if os.path.isdir(entry_path) and os.path.isfile(os.path.join(entry_path, "SKILL.md")):
-                      valid_skills.add(entry)
-
-          seen_ids = set()
-          coverage = {}  # skill -> set of should_activate values seen
-          for i, row in enumerate(rows[1:], start=2):
-              if len(row) != len(expected_header):
-                  sys.exit(f"{path}: line {i} has {len(row)} columns, expected {len(expected_header)}")
-              row_id, target_skill, should_activate, prompt, reason = row
-              if row_id in seen_ids:
-                  sys.exit(f"{path}: duplicate id '{row_id}' at line {i}")
-              seen_ids.add(row_id)
-              if target_skill not in valid_skills:
-                  sys.exit(f"{path}: line {i} has target_skill {target_skill!r}, which is not a skill directory under '{skills_root}/' and is not 'none'")
-              if should_activate not in ("true", "false"):
-                  sys.exit(f"{path}: line {i} has invalid should_activate value {should_activate!r}")
-              if not prompt.strip():
-                  sys.exit(f"{path}: line {i} has an empty prompt")
-              if not reason.strip():
-                  sys.exit(f"{path}: line {i} has an empty reason")
-              if target_skill != "none":
-                  coverage.setdefault(target_skill, set()).add(should_activate)
-
-          # Every real skill directory must have at least one positive
-          # (should_activate = true) and one negative (should_activate =
-          # false) activation row. 'none' rows remain allowed but don't
-          # count toward any skill's coverage.
-          coverage_errors = []
-          for skill in sorted(valid_skills - {"none"}):
-              seen = coverage.get(skill, set())
-              if "true" not in seen:
-                  coverage_errors.append(f"{path}: skill '{skill}' has no should_activate = true row")
-              if "false" not in seen:
-                  coverage_errors.append(f"{path}: skill '{skill}' has no should_activate = false row")
-          if coverage_errors:
-              sys.exit("\n".join(coverage_errors))
-
-          print(f"OK: {len(rows) - 1} activation-prompt rows validated; every skill has positive and negative activation coverage.")
-          PY
+      - name: Validate evaluation specifications
+        run: python scripts/validate_evals.py --root .
