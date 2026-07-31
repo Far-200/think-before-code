@@ -1,0 +1,354 @@
+{
+  "schema_version": 1,
+  "title": "Find Your Coach",
+  "skills_base": "../skills",
+  "start": "q_start",
+  "questions": [
+    {
+      "id": "q_start",
+      "text": "What are you working with?",
+      "options": [
+        {
+          "id": "o_start_dsa",
+          "label": "A DSA or LeetCode problem",
+          "next": "q_dsa_stage"
+        },
+        {
+          "id": "o_start_feature",
+          "label": "A feature, issue, or change request",
+          "next": "q_feature_stage"
+        },
+        {
+          "id": "o_start_code",
+          "label": "Code, a diff, or a pull request",
+          "next": "q_existing_code"
+        },
+        {
+          "id": "o_start_unsure",
+          "label": "I genuinely don't know",
+          "next": "q_unsure"
+        }
+      ]
+    },
+    {
+      "id": "q_unsure",
+      "text": "Which description is closest?",
+      "options": [
+        {
+          "id": "o_unsure_challenge",
+          "label": "A coding challenge or problem statement",
+          "next": "q_dsa_stage"
+        },
+        {
+          "id": "o_unsure_idea",
+          "label": "An idea or requested change",
+          "next": "q_feature_stage"
+        },
+        {
+          "id": "o_unsure_existing",
+          "label": "Code that already exists",
+          "next": "q_existing_code"
+        },
+        {
+          "id": "o_unsure_none",
+          "label": "None of these",
+          "next": "r_no_match_implementation"
+        }
+      ]
+    },
+    {
+      "id": "q_dsa_stage",
+      "text": "Where are you right now?",
+      "options": [
+        {
+          "id": "o_dsa_stage_statement",
+          "label": "I don't fully understand the statement",
+          "next": "r_problem_decoder"
+        },
+        {
+          "id": "o_dsa_stage_approach_needed",
+          "label": "I understand it but need an approach",
+          "next": "r_dsa_tutor"
+        },
+        {
+          "id": "o_dsa_stage_have_approach",
+          "label": "I already have an approach",
+          "next": "q_dsa_approach_goal"
+        },
+        {
+          "id": "o_dsa_stage_have_code",
+          "label": "I already wrote code",
+          "next": "q_dsa_code_goal"
+        },
+        {
+          "id": "o_dsa_stage_solved",
+          "label": "I solved it",
+          "next": "q_dsa_solved_goal"
+        },
+        {
+          "id": "o_dsa_stage_interview",
+          "label": "I want interview conditions",
+          "next": "r_mock_interviewer"
+        }
+      ]
+    },
+    {
+      "id": "q_dsa_approach_goal",
+      "text": "What do you need from the approach?",
+      "options": [
+        {
+          "id": "o_dsa_approach_trace",
+          "label": "Trace it on a concrete input",
+          "next": "r_dry_run_coach"
+        },
+        {
+          "id": "o_dsa_approach_complexity",
+          "label": "Derive time and space complexity",
+          "next": "r_complexity_coach"
+        },
+        {
+          "id": "o_dsa_approach_tests",
+          "label": "Design test cases",
+          "next": "r_test_case_coach"
+        },
+        {
+          "id": "o_dsa_approach_implement",
+          "label": "Continue solving and implement it",
+          "next": "r_dsa_tutor"
+        }
+      ]
+    },
+    {
+      "id": "q_dsa_code_goal",
+      "text": "What do you need from your code?",
+      "options": [
+        {
+          "id": "o_dsa_code_failing",
+          "label": "It gives wrong output or fails",
+          "next": "r_debug_coach"
+        },
+        {
+          "id": "o_dsa_code_tests",
+          "label": "I want to design stronger tests",
+          "next": "r_test_case_coach"
+        },
+        {
+          "id": "o_dsa_code_complexity",
+          "label": "I want to derive its complexity",
+          "next": "r_complexity_coach"
+        },
+        {
+          "id": "o_dsa_code_guided",
+          "label": "I need broader guided help finishing it",
+          "next": "r_dsa_tutor"
+        }
+      ]
+    },
+    {
+      "id": "q_dsa_solved_goal",
+      "text": "What do you want to strengthen?",
+      "options": [
+        {
+          "id": "o_dsa_solved_pattern",
+          "label": "Extract the reusable pattern",
+          "next": "r_pattern_transfer_coach"
+        },
+        {
+          "id": "o_dsa_solved_interview",
+          "label": "Practise under interview pressure",
+          "next": "r_mock_interviewer"
+        },
+        {
+          "id": "o_dsa_solved_tests",
+          "label": "Build a stronger test suite",
+          "next": "r_test_case_coach"
+        },
+        {
+          "id": "o_dsa_solved_complexity",
+          "label": "Justify the complexity",
+          "next": "r_complexity_coach"
+        }
+      ]
+    },
+    {
+      "id": "q_feature_stage",
+      "text": "What is the current situation?",
+      "options": [
+        {
+          "id": "o_feature_vague",
+          "label": "The requested behaviour is still vague",
+          "next": "r_specification_coach"
+        },
+        {
+          "id": "o_feature_review",
+          "label": "The code exists and I want to review it",
+          "next": "r_code_review_coach"
+        },
+        {
+          "id": "o_feature_failure",
+          "label": "The code has a concrete observed failure",
+          "next": "r_debug_coach"
+        },
+        {
+          "id": "o_feature_tests",
+          "label": "I need systematic tests for existing code",
+          "next": "r_test_case_coach"
+        },
+        {
+          "id": "o_feature_deliver",
+          "label": "I want the implementation written for me",
+          "next": "r_no_match_implementation"
+        }
+      ]
+    },
+    {
+      "id": "q_existing_code",
+      "text": "What do you want to do with it?",
+      "options": [
+        {
+          "id": "o_existing_review",
+          "label": "Discover review risks before anything visibly fails",
+          "next": "r_code_review_coach"
+        },
+        {
+          "id": "o_existing_debug",
+          "label": "Debug a known expected-versus-actual failure",
+          "next": "r_debug_coach"
+        },
+        {
+          "id": "o_existing_tests",
+          "label": "Design a compact test suite",
+          "next": "r_test_case_coach"
+        },
+        {
+          "id": "o_existing_complexity",
+          "label": "Derive time and space complexity",
+          "next": "r_complexity_coach"
+        },
+        {
+          "id": "o_existing_rewrite",
+          "label": "Receive a complete refactor or rewrite",
+          "next": "r_no_match_delivery"
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "id": "r_problem_decoder",
+      "type": "skill",
+      "skill": "problem-decoder",
+      "reason": "The DSA statement's inputs, outputs, constraints, or edge cases are not clear enough to begin solving.",
+      "starter_prompt": "Help me understand this DSA problem before solving it. Ask one question at a time about inputs, outputs, constraints, and edge cases. Do not suggest an approach.",
+      "handoff": {
+        "skill": "dsa-tutor",
+        "note": "once the statement is fully pinned down and solving can begin."
+      }
+    },
+    {
+      "id": "r_dsa_tutor",
+      "type": "skill",
+      "skill": "dsa-tutor",
+      "reason": "The learner understands the problem and needs guided end-to-end problem solving without receiving the finished solution.",
+      "starter_prompt": "Help me solve this DSA problem without giving me the solution. Ask one focused question at a time, make me explain my reasoning, and reveal only the smallest useful hint.",
+      "handoff": {
+        "skill": "dry-run-coach",
+        "note": "once an approach exists and needs tracing on a concrete input."
+      }
+    },
+    {
+      "id": "r_dry_run_coach",
+      "type": "skill",
+      "skill": "dry-run-coach",
+      "reason": "An approach already exists and needs to be traced rigorously on one concrete input.",
+      "starter_prompt": "Help me dry-run this approach on one concrete input. Make me write the state at every step; do not trace it for me.",
+      "handoff": {
+        "skill": "dsa-tutor",
+        "note": "if the trace shows the approach itself needs rethinking."
+      }
+    },
+    {
+      "id": "r_debug_coach",
+      "type": "skill",
+      "skill": "debug-coach",
+      "reason": "Code or pseudocode exists, expected behaviour is known, and a concrete failure has been observed.",
+      "starter_prompt": "Here is my code, expected behaviour, actual behaviour, and failing input. Help me isolate the bug one question at a time without rewriting my solution.",
+      "handoff": {
+        "skill": "test-case-coach",
+        "note": "once the bug is fixed and the case that caught it deserves a suite around it."
+      }
+    },
+    {
+      "id": "r_complexity_coach",
+      "type": "skill",
+      "skill": "complexity-coach",
+      "reason": "A working approach or implementation exists and the learner wants to derive, rather than recall, its time and space complexity.",
+      "starter_prompt": "Help me derive the time and space complexity of this approach from the actual operations. Do not state the Big-O for me."
+    },
+    {
+      "id": "r_test_case_coach",
+      "type": "skill",
+      "skill": "test-case-coach",
+      "reason": "An approach or implementation exists and needs a compact, justified set of boundary, adversarial, and assumption-testing cases.",
+      "starter_prompt": "Help me design a compact, justified test suite for this approach or implementation. Ask me to identify boundaries and assumptions; do not dump test cases."
+    },
+    {
+      "id": "r_pattern_transfer_coach",
+      "type": "skill",
+      "skill": "pattern-transfer-coach",
+      "reason": "The original DSA problem is substantially solved and the learner wants to turn it into reusable structural knowledge.",
+      "starter_prompt": "I solved this problem. Help me abstract the reusable pattern, identify when it applies or fails, and adapt it to one cousin problem."
+    },
+    {
+      "id": "r_mock_interviewer",
+      "type": "skill",
+      "skill": "mock-interviewer",
+      "reason": "The learner explicitly wants realistic interview pressure rather than incremental coaching.",
+      "starter_prompt": "Run a realistic timed DSA interview. Use minimal interviewer-style hints and give structured feedback only after the attempt.",
+      "handoff": {
+        "skill": "dsa-tutor",
+        "note": "for the weaknesses the feedback exposes."
+      }
+    },
+    {
+      "id": "r_specification_coach",
+      "type": "skill",
+      "skill": "specification-coach",
+      "reason": "A feature, issue, change request, or agent task exists, but its observable behaviour and boundaries are not yet defined.",
+      "starter_prompt": "Here is a vague feature request. Help me turn it into an implementation-ready specification one decision at a time. Do not invent requirements or write the implementation.",
+      "handoff": {
+        "skill": "code-review-coach",
+        "note": "after the implementation exists and needs review judgment."
+      }
+    },
+    {
+      "id": "r_code_review_coach",
+      "type": "skill",
+      "skill": "code-review-coach",
+      "reason": "Existing code, a diff, or a pull request needs learner-led review judgment before a known concrete failure exists.",
+      "starter_prompt": "Here is the code or diff and its intended contract. Help me review it myself, one concern at a time. Do not dump findings or rewrite the code."
+    },
+    {
+      "id": "r_no_match_implementation",
+      "type": "no_match",
+      "headline": "No coaching mode fits this",
+      "reason": "You want the implementation produced for you, or the work isn't a coding challenge, a change request, or existing code.",
+      "explanation": "Think Before Code currently provides coaching modes rather than implementation delivery. Every skill here exists to make you author the reasoning — the specification, the approach, the finding, the fix — one question at a time. None of them will write the feature for you, and pretending otherwise would defeat the point of the suite. If working code is what you need right now, use your assistant without these skills.",
+      "closest_skill": {
+        "skill": "specification-coach",
+        "note": "if you would rather define the behaviour precisely first, then hand that specification to an implementation agent."
+      }
+    },
+    {
+      "id": "r_no_match_delivery",
+      "type": "no_match",
+      "headline": "No coaching mode fits this",
+      "reason": "You want a complete refactor or rewrite handed back, not review judgment you built yourself.",
+      "explanation": "Think Before Code currently provides coaching modes rather than complete rewrites. The suite is deliberately unable to hand you a finished refactor; its skills only help you find, justify, and scope changes yourself. If a delivered rewrite is what you actually need, use your assistant without these skills.",
+      "closest_skill": {
+        "skill": "code-review-coach",
+        "note": "if you would rather discover and justify the changes one concern at a time before making them."
+      }
+    }
+  ]
+}

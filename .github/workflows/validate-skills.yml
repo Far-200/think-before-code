@@ -27,3 +27,6 @@ jobs:
 
       - name: Validate evaluation specifications
         run: python scripts/validate_evals.py --root .
+
+      - name: Validate Find Your Coach routing
+        run: python scripts/validate_finder.py --root .

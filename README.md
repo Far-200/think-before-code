@@ -16,6 +16,12 @@
   A portable suite of Socratic Agent Skills for learning DSA and practicing software-engineering judgment — protecting productive struggle instead of handing you the answer. Not a hosted app: copy a skill into a compatible agent, or paste it as project instructions.
 </p>
 
+<p align="center">
+  <strong>
+    <a href="https://far-200.github.io/think-before-code/find-your-coach/">Not sure where to start? Find your coach →</a>
+  </strong>
+</p>
+
 ## Why this exists
 
 AI assistants are optimized to be helpful. When a learner gets stuck,
@@ -147,11 +153,15 @@ and a complexity-only question goes to `complexity-coach`.
    cd think-before-code
    ```
 
-2. **Choose a skill.** The core skill lives at
+2. **Choose a skill.** If you're not sure which one fits where you
+   are, answer up to three questions in
+   [Find Your Coach](https://far-200.github.io/think-before-code/find-your-coach/)
+   and it will name one, with a starter prompt to paste. Otherwise:
+   the core skill lives at
    [`skills/dsa-tutor/SKILL.md`](./skills/dsa-tutor/SKILL.md). Nine
    more skills live alongside it, ten in total — see
-   [Which skill should I use?](#which-skill-should-i-use) for a quick
-   decision guide, and
+   [Which skill should I use?](#which-skill-should-i-use) for the same
+   routing in text, and
    [Skills in this repository](#skills-in-this-repository) for the
    full table.
 
@@ -179,7 +189,10 @@ less useful.
 
 ## Which skill should I use?
 
-Match where you actually are, not where you'd like to be:
+Match where you actually are, not where you'd like to be.
+[Find Your Coach](https://far-200.github.io/think-before-code/find-your-coach/)
+asks these same questions one at a time; the list below is the same
+routing in text, and it keeps working without JavaScript:
 
 - **Unsolved problem, want to learn it end to end** → `dsa-tutor`
   (the default; when in doubt, start here)
@@ -461,13 +474,19 @@ think-before-code/
 ├── evals/
 │   ├── README.md
 │   ├── activation-prompts.csv
-│   └── behavior-cases.md
+│   ├── behavior-cases.md
+│   └── finder-cases.csv
 ├── examples/
 │   ├── code-review-session.md
 │   ├── pattern-transfer-session.md
 │   ├── specification-session.md
 │   ├── test-case-session.md
 │   └── tutoring-session.md
+├── find-your-coach/
+│   ├── app.js
+│   ├── index.html
+│   ├── routes.json
+│   └── styles.css
 ├── mistake-logs/
 │   └── README.md
 ├── public/
@@ -475,6 +494,7 @@ think-before-code/
 │   └── logo.png
 ├── scripts/
 │   ├── validate_evals.py
+│   ├── validate_finder.py
 │   └── validate_skills.py
 ├── skills/
 │   ├── code-review-coach/
@@ -499,6 +519,7 @@ think-before-code/
 │       └── SKILL.md
 ├── tests/
 │   ├── test_validate_evals.py
+│   ├── test_validate_finder.py
 │   └── test_validate_skills.py
 ├── .gitignore
 ├── CHANGELOG.md
@@ -508,8 +529,8 @@ think-before-code/
 
 - [`.github/workflows/validate-skills.yml`](./.github/workflows/validate-skills.yml) —
   CI that runs the validator test suite, the structural validator,
-  and the evaluation-specification validator on pushes and pull
-  requests
+  the evaluation-specification validator, and the finder-routing
+  validator on pushes and pull requests
 - [`demo/index.html`](./demo/index.html) — the page the demo GIF was
   recorded from, also hosted via GitHub Pages
 - [`evals/`](./evals/) — activation and behavior specifications for
@@ -532,6 +553,12 @@ think-before-code/
   request: one ambiguity at a time, a vague adjective challenged, a
   deliberate non-goal, and a learner-authored specification with an
   implementation handoff
+- [`find-your-coach/`](./find-your-coach/) — the Find Your Coach
+  page: a deterministic router that asks up to three questions and
+  names one skill. Plain HTML, CSS, and JavaScript with no build step
+  and no model call; every screen and every routing decision comes
+  from [`routes.json`](./find-your-coach/routes.json). Hosted via
+  GitHub Pages alongside the demo
 - [`mistake-logs/README.md`](./mistake-logs/README.md) — where
   learner-confirmed mistake-log entries accumulate; currently empty,
   see Roadmap
@@ -543,6 +570,9 @@ think-before-code/
   [Testing and validation](#testing-and-validation)
 - [`scripts/validate_evals.py`](./scripts/validate_evals.py) — the
   evaluation-specification validator; see
+  [Testing and validation](#testing-and-validation)
+- [`scripts/validate_finder.py`](./scripts/validate_finder.py) — the
+  finder-routing validator; see
   [Testing and validation](#testing-and-validation)
 - [`skills/`](./skills/) — one self-contained Agent Skill per
   directory, each with its own `SKILL.md`; see
@@ -556,7 +586,7 @@ think-before-code/
 
 ## Testing and validation
 
-Four layers protect the repository's structure and behavior:
+Five layers protect the repository's structure and behavior:
 
 - **`scripts/validate_skills.py`** checks that every skill under
   `skills/` has a `SKILL.md` with valid frontmatter, that its `name`
@@ -584,7 +614,25 @@ Four layers protect the repository's structure and behavior:
   python scripts/validate_evals.py
   ```
 
-- **`tests/`** covers both validators with Python's built-in
+- **`scripts/validate_finder.py`** checks the routing data behind
+  [Find Your Coach](https://far-200.github.io/think-before-code/find-your-coach/):
+  `find-your-coach/routes.json` must parse, its question, option, and
+  result ids must be unique, every option must point at a node that
+  exists, every path must terminate at a result without cycling, every
+  skill result must name a real skill directory and carry a reason and
+  a starter prompt, all ten skills must be reachable as
+  recommendations, the two no-match outcomes must stay honest — no
+  skill name, no starter prompt — and every relative
+  `../skills/<name>/SKILL.md` link the page builds must resolve. It
+  then walks every path in `evals/finder-cases.csv` through the real
+  route data and fails if one lands somewhere other than its
+  `expected_result`. Run it locally with:
+
+  ```bash
+  python scripts/validate_finder.py
+  ```
+
+- **`tests/`** covers all three validators with Python's built-in
   `unittest` — no third-party test framework, no network access, and
   fixtures written to temporary directories rather than the real
   repository. Run the suite from the repository root with:
@@ -594,16 +642,19 @@ Four layers protect the repository's structure and behavior:
   ```
 
 - **`.github/workflows/validate-skills.yml`** runs the test suite and
-  both validators on every push and pull request. The workflow only
-  orchestrates: the validation rules live in the scripts above, so
-  what CI enforces is exactly what you can run locally.
+  all three validators on every push and pull request. The workflow
+  only orchestrates: the validation rules live in the scripts above,
+  so what CI enforces is exactly what you can run locally.
 
 - **`evals/`** documents, per skill, which prompts should and
   shouldn't activate it (`activation-prompts.csv`) and what behavior
-  is expected or forbidden once it has (`behavior-cases.md`). This is
-  currently a human-readable specification, not an automated grader —
-  see [`evals/README.md`](./evals/README.md) for exactly what that
-  means today and what a future automated runner could do with it.
+  is expected or forbidden once it has (`behavior-cases.md`). Those
+  two are currently a human-readable specification, not an automated
+  grader. The third file, `finder-cases.csv`, is different: the finder
+  is deterministic, so its routing cases are executed in CI rather
+  than described. See [`evals/README.md`](./evals/README.md) for
+  exactly what that means today and what a future automated runner
+  could do with the other two.
 
 ## Release
 

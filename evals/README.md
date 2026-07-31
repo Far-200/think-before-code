@@ -17,8 +17,14 @@ checks by hand today.
 - **`behavior-cases.md`** — detailed scenarios per skill describing
   expected behavior, forbidden behavior, and success criteria once a
   skill has activated. Used for behavior-constraint testing.
+- **`finder-cases.csv`** — routing cases for the
+  [Find Your Coach](../find-your-coach/) page: a declared answer path
+  and the skill (or honest no-match outcome) it must reach. Unlike the
+  two files above, these are executed today, not just specified — see
+  [Finder routing cases](#finder-routing-cases).
 
-Both files cover all ten skills, including the two
+`activation-prompts.csv` and `behavior-cases.md` cover all ten skills,
+including the two
 software-engineering skills that sit outside the DSA lifecycle:
 `specification-coach` before implementation, when the desired
 behaviour isn't defined yet, and `code-review-coach` after code
@@ -76,9 +82,55 @@ mistake's root cause, and so on. These are the rules a human reviewer
 (or, eventually, an automated grader reading model output against
 `expected behavior` / `forbidden behavior` pairs) should check for.
 
+## Finder routing cases
+
+`finder-cases.csv` tests a different thing from the two files above.
+Activation and behavior cases describe what a *model* should do;
+finder cases describe what the deterministic router in
+[`find-your-coach/`](../find-your-coach/) does. There is no model in
+that path at all — the page walks a declared tree in
+`find-your-coach/routes.json` — so these cases can be, and are,
+checked automatically on every push.
+
+The schema is fixed:
+
+```text
+id,path,expected_result,reason
+```
+
+- **`id`** — a stable case id (`F001`-style today; the format is not
+  enforced, only uniqueness and non-emptiness).
+- **`path`** — the option ids a visitor clicks, in order, separated by
+  `>`. Option ids are unique across the whole tree, so a path reads as
+  an unambiguous route: `o_start_dsa>o_dsa_stage_statement`.
+- **`expected_result`** — the result id the path must land on. Skill
+  results are named after the skill they recommend
+  (`r_problem_decoder`); the two honest dead ends are
+  `r_no_match_implementation` and `r_no_match_delivery`.
+- **`reason`** — why that path belongs at that destination. Boundary
+  cases say which neighbouring skill they are being distinguished
+  from.
+
+[`scripts/validate_finder.py`](../scripts/validate_finder.py) walks
+every path through the real route data and fails if it stops early,
+runs past a result, or arrives somewhere other than
+`expected_result`. It also requires that every result and every option
+in the tree is exercised by at least one case, so a new branch cannot
+ship without a routing case behind it — the same spirit as the
+activation coverage requirement above. Run it locally with:
+
+```bash
+python scripts/validate_finder.py
+```
+
+The cases deliberately include both no-match outcomes. A router that
+can only ever recommend something is a router that will recommend
+something wrong, and "Think Before Code does not do this" is a result
+worth regression-testing.
+
 ## Regression testing
 
-Both files double as a regression baseline. If a future change to a
+The activation and behavior files double as a regression baseline. If a future change to a
 `SKILL.md` file causes a previously-passing case to fail — a skill
 that used to correctly decline to activate now does, or a skill that
 used to withhold code now reveals it early — that's a regression, and

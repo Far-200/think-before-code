@@ -1,0 +1,469 @@
+/* ==============================================================
+   Find Your Coach — styles
+
+   Shares the repository's colour language with demo/index.html
+   (ink, panel, cream, slate, duck) but is deliberately its own
+   interface: a quiet routing form rather than a recorded stage.
+   No external fonts, no CDN assets, no build step.
+   ============================================================== */
+
+/* --------------------------------------------------------------
+   1. Tokens
+   -------------------------------------------------------------- */
+:root {
+  --backdrop: #05060a;
+  --ink: #10121a;
+  --panel: #171a24;
+  --panel-2: #1d2130;
+  --edge: #2a2f42;
+  --cream: #edeae0;
+  --slate: #8b93a6;
+  --duck: #f2b705;
+  --duck-dim: #8a6608;
+  --cut: #e2542d;
+  --log: #5fb3a3;
+
+  --mono:
+    ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+  --sans:
+    system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    sans-serif;
+
+  --radius: 10px;
+  --gap: 14px;
+}
+
+/* --------------------------------------------------------------
+   2. Base
+   -------------------------------------------------------------- */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--backdrop);
+  color: var(--cream);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+}
+
+a {
+  color: var(--duck);
+}
+
+a:hover {
+  color: var(--cream);
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.92em;
+  color: var(--duck);
+}
+
+:focus-visible {
+  outline: 2px solid var(--duck);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--panel);
+  color: var(--cream);
+  padding: 10px 14px;
+  border: 1px solid var(--duck);
+  border-radius: 0 0 var(--radius) 0;
+  z-index: 10;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 20px 56px;
+}
+
+/* --------------------------------------------------------------
+   3. Masthead
+   -------------------------------------------------------------- */
+.masthead {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.masthead__mascot {
+  width: 112px;
+  height: auto;
+  display: block;
+  margin: 0 auto 12px;
+}
+
+.masthead__eyebrow {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--duck-dim);
+  margin: 0 0 6px;
+}
+
+.masthead__title {
+  font-size: clamp(28px, 6vw, 38px);
+  line-height: 1.15;
+  margin: 0 0 12px;
+  letter-spacing: -0.01em;
+}
+
+.masthead__lede {
+  color: var(--slate);
+  font-size: 15px;
+  margin: 0 auto;
+  max-width: 56ch;
+  text-align: left;
+}
+
+/* --------------------------------------------------------------
+   4. Progress
+   -------------------------------------------------------------- */
+.finder:focus {
+  outline: none;
+}
+
+.progress {
+  margin: 0 0 14px;
+}
+
+.progress__label {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--slate);
+  margin: 0 0 8px;
+}
+
+.progress__steps {
+  display: flex;
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.progress__step {
+  height: 4px;
+  flex: 1;
+  border-radius: 2px;
+  background: var(--edge);
+  transition: background-color 160ms ease;
+}
+
+.progress__step[data-state="done"] {
+  background: var(--duck-dim);
+}
+
+.progress__step[data-state="current"] {
+  background: var(--duck);
+}
+
+/* --------------------------------------------------------------
+   5. Stage: question, result, error
+   -------------------------------------------------------------- */
+.stage {
+  background: var(--panel);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius);
+  padding: 24px 22px;
+}
+
+.stage__loading {
+  color: var(--slate);
+  margin: 0;
+}
+
+.question__text,
+.result__title,
+.error__title {
+  font-size: clamp(20px, 4.4vw, 25px);
+  line-height: 1.25;
+  margin: 0 0 18px;
+  letter-spacing: -0.01em;
+}
+
+.question__text:focus,
+.result__title:focus,
+.error__title:focus {
+  outline: none;
+}
+
+.options {
+  display: grid;
+  gap: 10px;
+}
+
+.option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--cream);
+  background: var(--panel-2);
+  border: 1px solid var(--edge);
+  border-radius: 8px;
+  padding: 16px 18px;
+  cursor: pointer;
+  transition:
+    border-color 140ms ease,
+    background-color 140ms ease;
+}
+
+.option:hover {
+  border-color: var(--duck);
+  background: #232838;
+}
+
+.option::after {
+  content: " →";
+  color: var(--duck-dim);
+}
+
+.option:hover::after {
+  color: var(--duck);
+}
+
+/* --------------------------------------------------------------
+   6. Result card
+   -------------------------------------------------------------- */
+.result__eyebrow {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--log);
+  margin: 0 0 8px;
+}
+
+.result__title code,
+.result__skill {
+  font-family: var(--mono);
+  color: var(--duck);
+}
+
+.result__reason {
+  color: var(--cream);
+  margin: 0 0 20px;
+}
+
+.result__section-label {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--slate);
+  margin: 0 0 8px;
+}
+
+.result__prompt {
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  color: var(--cream);
+  background: var(--ink);
+  border: 1px solid var(--edge);
+  border-left: 3px solid var(--duck);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin: 0 0 12px;
+  overflow-wrap: break-word;
+}
+
+.result__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.copy-status {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--log);
+}
+
+.copy-status:empty {
+  display: none;
+}
+
+.result__meta {
+  border-top: 1px solid var(--edge);
+  padding-top: 16px;
+  margin-top: 4px;
+}
+
+.result__meta p {
+  margin: 0 0 8px;
+  font-size: 15px;
+  color: var(--slate);
+}
+
+.result__meta p:last-child {
+  margin-bottom: 0;
+}
+
+.result__meta a {
+  font-family: var(--mono);
+  font-size: 14px;
+}
+
+/* No-match card: honest dead end, not a fake skill. */
+.result--no-match .result__eyebrow {
+  color: var(--cut);
+}
+
+.result--no-match .result__title {
+  color: var(--cream);
+}
+
+.error__body {
+  color: var(--slate);
+  margin: 0 0 12px;
+}
+
+/* --------------------------------------------------------------
+   7. Buttons and controls
+   -------------------------------------------------------------- */
+.button {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: var(--cream);
+  background: var(--panel-2);
+  border: 1px solid var(--edge);
+  border-radius: 8px;
+  padding: 11px 16px;
+  cursor: pointer;
+  transition:
+    border-color 140ms ease,
+    color 140ms ease;
+}
+
+.button:hover {
+  border-color: var(--duck);
+  color: var(--duck);
+}
+
+.button--primary {
+  border-color: var(--duck-dim);
+  color: var(--duck);
+}
+
+.button--quiet {
+  background: transparent;
+  color: var(--slate);
+}
+
+.button[disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.button[disabled]:hover {
+  border-color: var(--edge);
+  color: var(--slate);
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+/* --------------------------------------------------------------
+   8. Notices and footer
+   -------------------------------------------------------------- */
+.notice {
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: var(--panel);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius);
+  color: var(--slate);
+  font-size: 15px;
+}
+
+.notice p {
+  margin: 0;
+}
+
+.footer {
+  margin-top: 36px;
+  text-align: center;
+  color: var(--slate);
+  font-size: 13px;
+}
+
+.footer p {
+  margin: 0;
+}
+
+/* --------------------------------------------------------------
+   9. Responsive and motion preferences
+   -------------------------------------------------------------- */
+@media (max-width: 480px) {
+  .page {
+    padding: 28px 16px 44px;
+  }
+
+  .stage {
+    padding: 20px 16px;
+  }
+
+  .option {
+    padding: 14px 15px;
+  }
+
+  .controls,
+  .result__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .copy-status {
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .option,
+  .button,
+  .stage {
+    border: 1px solid CanvasText;
+  }
+}
