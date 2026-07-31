@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Find Your Coach — Think Before Code</title>
+    <meta
+      name="description"
+      content="Answer at most three questions and get pointed at the one Think Before Code coaching skill that matches where you actually are."
+    />
+    <link rel="icon" href="../public/logo.png" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#finder">Skip to the finder</a>
+
+    <div class="page">
+      <header class="masthead">
+        <img
+          class="masthead__mascot"
+          src="../public/logo.png"
+          alt="Quackrates, the Think Before Code mascot"
+          width="112"
+          height="112"
+        />
+        <p class="masthead__eyebrow">Think Before Code</p>
+        <h1 class="masthead__title">Find Your Coach</h1>
+        <p class="masthead__lede">
+          Three questions at most — four if you start out unsure — then one
+          recommendation. This is a router, not a tutor: it points you at a
+          portable
+          <code>SKILL.md</code> file you copy into your own agent. Nothing here
+          answers your problem, no model is called, and nothing you choose is
+          stored or sent anywhere.
+        </p>
+      </header>
+
+      <main id="finder" class="finder" tabindex="-1">
+        <div class="progress" id="progress" hidden>
+          <p class="progress__label" id="progress-label">
+            Question 1 of at most 3
+          </p>
+          <ol class="progress__steps" id="progress-steps" aria-hidden="true">
+            <li class="progress__step"></li>
+            <li class="progress__step"></li>
+            <li class="progress__step"></li>
+          </ol>
+        </div>
+
+        <div
+          class="stage"
+          id="stage"
+          aria-live="polite"
+          aria-busy="true"
+          aria-label="Question and recommendation"
+          role="region"
+        >
+          <p class="stage__loading">Loading the questions…</p>
+        </div>
+
+        <div class="controls" id="controls" hidden>
+          <button class="button button--quiet" type="button" id="back">
+            Back
+          </button>
+          <button class="button button--quiet" type="button" id="restart">
+            Start over
+          </button>
+        </div>
+
+        <noscript>
+          <div class="notice">
+            <p>
+              This finder needs JavaScript to walk through its questions. The
+              same routing exists as plain text in the repository — see
+              <a
+                href="https://github.com/Far-200/think-before-code#which-skill-should-i-use"
+                >Which skill should I use?</a
+              >
+              in the README.
+            </p>
+          </div>
+        </noscript>
+      </main>
+
+      <footer class="footer">
+        <p>
+          Ten coaching skills, one hint at a time.
+          <a href="https://github.com/Far-200/think-before-code"
+            >Think Before Code on GitHub</a
+          >
+          ·
+          <a
+            href="https://github.com/Far-200/think-before-code#which-skill-should-i-use"
+            >Text version of this decision guide</a
+          >
+          ·
+          <a href="../demo/">Interactive demo</a>
+        </p>
+      </footer>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+id,path,expected_result,reason
+F001,o_start_dsa>o_dsa_stage_statement,r_problem_decoder,"A raw DSA statement whose inputs, outputs, constraints, and edge cases are not pinned down yet."
+F002,o_start_dsa>o_dsa_stage_approach_needed,r_dsa_tutor,"Statement understood, approach missing — the suite's default guided path."
+F003,o_start_dsa>o_dsa_stage_have_approach>o_dsa_approach_trace,r_dry_run_coach,An existing approach traced step by step on one concrete input.
+F004,o_start_dsa>o_dsa_stage_have_approach>o_dsa_approach_complexity,r_complexity_coach,Complexity derived from an approach that has no implementation behind it yet.
+F005,o_start_dsa>o_dsa_stage_have_approach>o_dsa_approach_tests,r_test_case_coach,Test design against a chosen approach rather than a finished implementation.
+F006,o_start_dsa>o_dsa_stage_have_code>o_dsa_code_failing,r_debug_coach,Code exists and a concrete failure has already been observed.
+F007,o_start_dsa>o_dsa_stage_solved>o_dsa_solved_pattern,r_pattern_transfer_coach,A solved problem turned into reusable structural knowledge.
+F008,o_start_dsa>o_dsa_stage_interview,r_mock_interviewer,Interview conditions requested instead of incremental coaching.
+F009,o_start_feature>o_feature_vague,r_specification_coach,A change request whose observable behaviour is still undefined.
+F010,o_start_code>o_existing_review,r_code_review_coach,Existing code reviewed before anything has visibly failed.
+F011,o_start_feature>o_feature_deliver,r_no_match_implementation,"The visitor wants the implementation written for them, which the suite deliberately does not do."
+F012,o_start_code>o_existing_rewrite,r_no_match_delivery,"The visitor wants a complete rewrite handed back, which the suite deliberately does not do."
+F013,o_start_unsure>o_unsure_challenge>o_dsa_stage_statement,r_problem_decoder,"Boundary — raw statement versus guided solving: the statement itself is still unclear, so decoding comes first."
+F014,o_start_dsa>o_dsa_stage_have_approach>o_dsa_approach_implement,r_dsa_tutor,"Boundary — approach tracing versus guided solving: an approach exists but the visitor wants to keep solving, not trace."
+F015,o_start_code>o_existing_debug,r_debug_coach,"Boundary — observed failure versus review: a known expected-versus-actual gap is debugging, not review judgment."
+F016,o_start_feature>o_feature_review,r_code_review_coach,"Boundary — vague requirements versus existing-code review: the code already exists, so review beats specification."
+F017,o_start_feature>o_feature_tests,r_test_case_coach,"Boundary — systematic test design versus concrete debugging: no failure is in hand, so a suite is what is missing."
+F018,o_start_feature>o_feature_failure,r_debug_coach,"Boundary — concrete debugging versus systematic test design: one observed failure comes before a suite."
+F019,o_start_unsure>o_unsure_idea>o_feature_vague,r_specification_coach,Vague requirements reached through the unsure branch without the visitor naming the stage.
+F020,o_start_unsure>o_unsure_existing>o_existing_complexity,r_complexity_coach,Complexity derivation on code that already exists outside a DSA context.
+F021,o_start_unsure>o_unsure_none,r_no_match_implementation,Nothing in the suite covers the visitor's situation — an honest dead end rather than a guessed skill.
+F022,o_start_dsa>o_dsa_stage_solved>o_dsa_solved_interview,r_mock_interviewer,"Boundary — interview pressure versus pattern abstraction: both follow a solved problem, and only one is requested."
+F023,o_start_dsa>o_dsa_stage_solved>o_dsa_solved_tests,r_test_case_coach,A solved problem that still needs a compact justified suite around it.
+F024,o_start_dsa>o_dsa_stage_solved>o_dsa_solved_complexity,r_complexity_coach,A solved problem whose Big-O still has to be justified rather than recalled.
+F025,o_start_dsa>o_dsa_stage_have_code>o_dsa_code_guided,r_dsa_tutor,"Boundary — unfinished code versus a failing one: with no observed failure, guided solving continues."
+F026,o_start_dsa>o_dsa_stage_have_code>o_dsa_code_tests,r_test_case_coach,"Boundary — stronger tests versus bug isolation: the code works, so the gap is coverage."
+F027,o_start_dsa>o_dsa_stage_have_code>o_dsa_code_complexity,r_complexity_coach,Complexity derived from an implementation rather than from a paper approach.
+F028,o_start_code>o_existing_tests,r_test_case_coach,A compact suite designed around code that already exists.
+F029,o_start_unsure>o_unsure_existing>o_existing_review,r_code_review_coach,"Boundary — review versus debugging on existing code: the risk has not surfaced as a failure yet."
+F030,o_start_unsure>o_unsure_challenge>o_dsa_stage_have_approach>o_dsa_approach_trace,r_dry_run_coach,"The longest route the tree allows — four questions, reached by starting out unsure — still lands on one skill."

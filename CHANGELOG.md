@@ -7,6 +7,94 @@ The format is loosely based on
 
 ## [Unreleased]
 
+### Added
+
+- `find-your-coach/`, an interactive Find Your Coach page served from
+  the repository's existing GitHub Pages deployment. It asks at most
+  three multiple-choice questions — four on the "I genuinely don't
+  know" branch, which spends one extra question working out which of
+  the three main branches applies — and then names one skill to start
+  with. Plain HTML, CSS, and JavaScript: no framework, no build step,
+  no npm dependency, no external font or CDN asset, no analytics, no
+  storage, and no model call. It is a routing interface, not a hosted
+  tutor.
+- Deterministic routing across all ten skills, declared in
+  `find-your-coach/routes.json` rather than hard-coded in DOM logic.
+  Eight questions and thirty-six options traverse to twelve results;
+  every skill under `skills/` is reachable as a primary
+  recommendation, and question, option, and result ids are stable and
+  machine-readable so a route can be written down and tested.
+- A result card carrying the reason that skill fits, a copyable
+  starter prompt with accessible copied-state feedback, a relative
+  link to the skill's `SKILL.md`, and — where one exists — the common
+  handoff that usually follows it.
+- Two honest no-match outcomes. Asking for the implementation to be
+  written, or for a complete refactor or rewrite handed back, ends in
+  a result explaining that Think Before Code currently provides
+  coaching modes rather than implementation delivery or complete
+  rewrites. Neither invents a skill link, and the validator enforces
+  that: a no-match result carrying a `skill` or `starter_prompt`
+  field is an error.
+- `evals/finder-cases.csv`, 30 routing cases in a fixed
+  `id,path,expected_result,reason` schema, where `path` is the option
+  ids a visitor clicks, separated by `>`. Coverage includes one
+  successful path to each of the ten skills, both no-match outcomes,
+  the deepest four-question route, and the neighbouring boundaries
+  that are easiest to get wrong: raw statement versus guided solving,
+  approach tracing versus debugging, observed failure versus review,
+  vague requirements versus existing-code review, systematic test
+  design versus concrete debugging, and coaching versus
+  implementation delivery.
+- `scripts/validate_finder.py`, a standard-library validator for the
+  route data. It checks the file parses and the required structures
+  exist, requires unique question, option, and result ids, rejects
+  cycles and dead ends, requires every question and result to be
+  reachable from the start, requires every skill result to name a
+  real skill directory and carry a non-empty reason and starter
+  prompt, confirms all ten skills appear as primary results, checks
+  that `handoff` and `closest_skill` references name real skills, and
+  verifies that every relative `../skills/<name>/SKILL.md` link the
+  page constructs resolves on disk. It then walks every case in
+  `evals/finder-cases.csv` through the real route data and fails if a
+  path stops on a question, runs past a result, or arrives somewhere
+  other than its `expected_result` — and requires every option and
+  every result to be exercised by at least one case, so a new branch
+  cannot ship without a routing case behind it. Like the other
+  validators, it reports every problem it finds rather than stopping
+  at the first.
+- `tests/test_validate_finder.py`, 59 `unittest` cases covering the
+  validator's failure paths as well as its success path: cycles,
+  unreachable branches, duplicate ids, option counts outside the
+  allowed range, no-match results dressed up as recommendations,
+  unresolvable skill links, and routing cases that stop early, run
+  past a result, or reach the wrong destination. Fixtures are written
+  to temporary directories, matching the existing suites.
+
+### Changed
+
+- The README leads with a centred "Not sure where to start? Find your
+  coach →" call to action, placed after the introductory paragraph and
+  before "Why this exists", and Quick Start step 2 now sends
+  uncertain visitors to the finder before the file paths. The textual
+  "Which skill should I use?" decision guide is retained as the
+  accessible fallback, with one added line noting that the finder asks
+  the same questions interactively and that the list keeps working
+  without JavaScript.
+- The README repository tree, file list, and testing section now
+  cover `find-your-coach/`, `evals/finder-cases.csv`,
+  `scripts/validate_finder.py`, and `tests/test_validate_finder.py`,
+  and document `python scripts/validate_finder.py` as a locally
+  runnable check alongside the existing two.
+- `.github/workflows/validate-skills.yml` additionally runs
+  `python scripts/validate_finder.py --root .`. The existing compile,
+  unit-test, skill-validation, and activation-eval steps are
+  unchanged.
+- `evals/README.md` documents `finder-cases.csv`, its schema, and the
+  validator that executes it, and draws the distinction that matters:
+  the activation and behavior files specify what a *model* should do
+  and are still checked by hand, while the finder cases describe a
+  deterministic router and are executed on every push.
+
 ## [1.4.1] - 2026-07-31
 
 ### Added
