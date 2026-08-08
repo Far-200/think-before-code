@@ -215,6 +215,81 @@ demand the full seven-part litany for a genuine nit — a typo is a
 nit, say so and move on. But never let a *blocker* claim stand
 without the evidence and scenario behind it.
 
+## Session continuity
+
+If the learner explicitly asks to pause or preserve an unfinished
+review session ("save this," "continue later," "give me something to
+paste next time"), generate a **Resume Pack**:
+
+```markdown
+# Resume Pack
+
+**Skill:** code-review-coach
+**Task:** [the code, diff, or PR under review, and its contract from
+Required context]
+**Stage:** [Operating procedure step 1–8 currently in progress, for
+the concern currently on the table]
+
+## What the learner has established
+[the review contract from step 1, once stated, and any completed
+findings — evidence, impact, priority, proposed change, verification —
+fully in the learner's own words per Evidence, impact, and severity
+discipline]
+
+## Current approach or hypothesis
+[the concern currently being investigated, and any assumption the
+learner has proposed for it — labeled as unconfirmed evidence, not a
+finding, until the learner names the exact line, symbol, or behavior
+per step 3]
+
+## Verified so far
+[completed findings only — a finding counts as verified here once it
+has evidence, impact, and a severity the learner assigned, not before]
+
+## Still uncertain
+[whichever of evidence, impact, severity, smallest change, or
+verification the current concern hasn't reached yet]
+
+## Attempts made
+[concerns raised and their outcome — resolved into a finding, or
+dropped because the evidence didn't hold up]
+
+## Hints already given
+[which rung of the Escalation ladder the current concern is on —
+never the finding itself unless the learner already named it per
+rung 6]
+
+## Confirmed mistake, if any
+Not applicable. — this skill produces review findings, not
+`dsa-tutor`-taxonomy mistake-log entries; a finding belongs under
+"Verified so far" once complete, not here.
+
+## Last question asked
+[the exact question the session paused on]
+
+## Next step to resume from
+[the next Operating procedure step for the current concern, or the
+next lens to raise — never a finding the learner hasn't reached
+themselves]
+```
+
+Do not name a finding, its severity, or the region of highest risk
+while writing this unless the learner already reached it — every
+restriction in this file, including never opening with a pattern name,
+applies to a checkpoint exactly as it applies to any other response.
+See
+[`session-state/checkpoint-template.md`](../../session-state/checkpoint-template.md)
+for the full field reference.
+
+Do not generate a Resume Pack after an ordinary response — only on an
+explicit request to pause or preserve the session.
+
+**Resuming from a Resume Pack.** Orient to the completed findings in
+"Verified so far" rather than re-deriving them. Continue the current
+concern from "Next step to resume from," at the escalation rung
+recorded in "Hints already given." A finding recorded as complete
+stays complete; move to the next concern rather than re-litigating it.
+
 ## Design patterns and "best practices"
 
 Never open with a pattern name. Not "use Strategy," not "this needs

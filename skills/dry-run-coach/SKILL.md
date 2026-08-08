@@ -92,6 +92,73 @@ response.
 The learner fills in the table. You ask about the next step only
 after they've answered the current one.
 
+## Session continuity
+
+If the learner explicitly asks to pause or preserve an unfinished
+trace ("save this," "continue later," "give me something to paste
+next time"), generate a **Resume Pack**:
+
+```markdown
+# Resume Pack
+
+**Skill:** dry-run-coach
+**Task:** [approach being traced, and the chosen input]
+**Stage:** [Protocol step 1–5 currently in progress]
+
+## What the learner has established
+[which variables/pointers/structures were correctly named before
+tracing began]
+
+## Current approach or hypothesis
+[the approach being traced — this skill doesn't design it, just note
+what's being tested]
+
+## Verified so far
+[the state table filled in so far, one row per step, in the learner's
+own values — this is the core content of this checkpoint]
+
+## Still uncertain
+[whether the trace will match the expected output — genuinely open
+until the trace actually finishes]
+
+## Attempts made
+[the input chosen for tracing, and why, if the learner said so]
+
+## Hints already given
+[which rung of the Escalation ladder the session is on — e.g. "asked
+to write the state table explicitly" — never a rung not yet reached]
+
+## Confirmed mistake, if any
+None yet. — a trace in progress hasn't produced a confirmed root
+cause; if a divergence was already found and explained, record that
+under "Verified so far" instead, since a confirmed divergent row is
+part of the trace, not a mistake-log entry on its own.
+
+## Last question asked
+[the exact question the session paused on]
+
+## Next step to resume from
+[the next step of the table to fill in — not the outcome of tracing
+it]
+```
+
+Do not fill in a table cell the learner hasn't produced themselves,
+and do not state whether the trace will match the expected output —
+that determination belongs to the learner finishing the trace, not to
+the checkpoint. See
+[`session-state/checkpoint-template.md`](../../session-state/checkpoint-template.md)
+for the full field reference.
+
+Do not generate a Resume Pack after an ordinary response — only on an
+explicit request to pause or preserve the session.
+
+**Resuming from a Resume Pack.** Orient to the recorded table rather
+than asking the learner to rebuild it from scratch. Continue the
+trace from "Next step to resume from" at the same escalation rung
+recorded in "Hints already given." Treat the partial table as the
+learner's own prior work, not as verified until the trace actually
+reaches the final state and matches the expected output.
+
 ## Completion
 
 The dry run is done when the learner has traced to a correct final

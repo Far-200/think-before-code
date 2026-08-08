@@ -96,6 +96,73 @@ learner to state each one first; only add what they missed.
 Nothing about a pattern yet. That's dsa-tutor's job, and only after
 the problem itself is fully pinned down.
 
+## Session continuity
+
+If the learner explicitly asks to pause or preserve an unfinished
+decoding session ("save this," "let me continue later," "give me
+something to paste next time"), generate a **Resume Pack**:
+
+```markdown
+# Resume Pack
+
+**Skill:** problem-decoder
+**Task:** [problem statement being decoded, restated briefly]
+**Stage:** [which of Input / Output / Constraints / Edge cases /
+Ambiguities is currently in progress, and which are already solid in
+the learner's own words]
+
+## What the learner has established
+[the categories the learner has stated correctly in their own words]
+
+## Current approach or hypothesis
+[not applicable at this stage — this skill precedes approach design;
+write "Not applicable — decoding only." unless the learner has
+started speculating about an approach, in which case record that
+speculation as an unverified aside, not as this session's subject]
+
+## Verified so far
+[categories confirmed against the actual statement text]
+
+## Still uncertain
+[genuine ambiguities the statement doesn't resolve, and any category
+not yet attempted]
+
+## Attempts made
+[not typically applicable here — omit or write "None yet." unless the
+learner tried and revised a reading]
+
+## Hints already given
+[which categories were pointed at without the answer being supplied —
+never a category that hasn't come up yet]
+
+## Confirmed mistake, if any
+None yet. — a `reading-error` entry belongs to `dsa-tutor`'s taxonomy
+and is only confirmed once solving has actually begun.
+
+## Last question asked
+[the exact question the session paused on]
+
+## Next step to resume from
+[the next category to extract, or the specific missing piece within
+the current one]
+```
+
+Do not name an approach or pattern while writing this — the circuit
+breaker above still applies to a checkpoint exactly as it applies to
+any other response. See
+[`session-state/checkpoint-template.md`](../../session-state/checkpoint-template.md)
+for the full field reference.
+
+Do not generate a Resume Pack after an ordinary response — only on an
+explicit request to pause or preserve the session.
+
+**Resuming from a Resume Pack.** Orient to the recorded stage rather
+than re-asking about categories already marked solid. Continue
+extracting from "Next step to resume from," one category at a time,
+same as a fresh session. If every category is already solid in the
+checkpoint, say so and hand off to `dsa-tutor` immediately rather than
+re-verifying settled ground.
+
 ## Handoff
 
 Once the learner can state input, output, constraints, and at least

@@ -138,6 +138,79 @@ A normal coaching message contains, at most:
 Never bundle the recognition signals, the near-miss, and the cousin
 into one response. Each earns its own exchange.
 
+## Session continuity
+
+If the learner explicitly asks to pause or preserve an unfinished
+transfer session ("save this," "continue later," "give me something
+to paste next time"), generate a **Resume Pack**:
+
+```markdown
+# Resume Pack
+
+**Skill:** pattern-transfer-coach
+**Task:** [the originally solved problem, and its confirmed
+approach]
+**Stage:** [Protocol step 1–10 currently in progress]
+
+## What the learner has established
+[the story-stripped structural restatement, the maintained state, and
+any positive/negative signals the learner has already named
+themselves — only what they said, never the pattern name unless the
+learner used it first]
+
+## Current approach or hypothesis
+[a signal or near-miss explanation currently being worked out, if
+the learner is mid-attempt — labeled as in-progress]
+
+## Verified so far
+[recognition signals, the near-miss explanation, and the recognition
+rule, but only once the learner has actually stated each — not before]
+
+## Still uncertain
+[whichever of the structural restatement, signals, near-miss, or
+recognition rule the learner hasn't reached yet]
+
+## Attempts made
+[what the learner has tried to articulate so far, even if imprecise]
+
+## Hints already given
+[which rung of the Circuit breaker's structural prompts the session
+is on — never the pattern name unless the learner already said it]
+
+## Confirmed mistake, if any
+None yet. — this skill runs after a problem is already solved; a
+mistake here would belong to the original `dsa-tutor` or `debug-coach`
+session, not to transfer.
+
+## Last question asked
+[the exact question the session paused on]
+
+## Next step to resume from
+[the next Protocol step — never the cousin problem itself unless it
+was already given to the learner during this session, in which case
+it may be preserved as something they already have, not as new
+content]
+```
+
+The cousin problem, once actually given to the learner during the
+session, may be preserved verbatim in the checkpoint — it isn't new
+information, the learner already has it. The pattern's name, any
+signal, the near-miss explanation, and the recognition rule may only
+appear if the learner already stated them; the Circuit breaker above
+applies to a checkpoint exactly as it applies to any other response.
+See
+[`session-state/checkpoint-template.md`](../../session-state/checkpoint-template.md)
+for the full field reference.
+
+Do not generate a Resume Pack after an ordinary response — only on an
+explicit request to pause or preserve the session.
+
+**Resuming from a Resume Pack.** Orient to what's already recorded as
+established rather than re-asking for it. Continue from "Next step to
+resume from," one structural prompt at a time. If the cousin problem
+was already given, don't re-issue it or offer a different one — pick
+up where the adaptation was left off.
+
 ## What good looks like
 
 **Bad:**

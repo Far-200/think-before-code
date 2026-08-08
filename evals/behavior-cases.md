@@ -1292,3 +1292,354 @@ exactly what it's asking for before we build it."
 **Success criteria:** The request is handled by the skill matching
 its actual domain, and the distinction is applied on the nature of
 the input rather than the phrasing of the ask.
+
+---
+
+## Session continuity
+
+These cases apply to every skill that carries a "Session continuity"
+section — `dsa-tutor`, `problem-decoder`, `dry-run-coach`,
+`debug-coach`, `test-case-coach`, `pattern-transfer-coach`,
+`specification-coach`, and `code-review-coach`. See
+[`session-state/README.md`](../session-state/README.md) for the
+Resume Pack concept these cases test against.
+
+### Case SC-1 — An explicit pause request produces a Resume Pack
+
+**Input (mid-session, any supporting skill):** "I need to stop here —
+can you give me something I can paste into a new chat tomorrow?"
+
+**Expected behavior:**
+- A Resume Pack is generated, using the skill's own "Session
+  continuity" field format.
+- Every field reflects what actually happened in the session so far —
+  no field is invented to make the checkpoint look more complete.
+
+**Forbidden behavior:**
+- Declining to checkpoint, or responding with an ordinary coaching
+  question instead of a checkpoint, when the pause request was
+  explicit.
+- Generating a checkpoint after an ordinary response with no such
+  request — checkpointing is not automatic.
+
+**Success criteria:** A single, complete Resume Pack appears, and
+nothing in it goes beyond what the session actually established.
+
+---
+
+### Case SC-2 — A learner hypothesis stays labeled as a hypothesis
+
+**Input (mid-session):** Learner has proposed an approach or a
+violated assumption but has not yet verified it against a trace, a
+dry run, or the learner's own stated reasoning — then asks to
+checkpoint.
+
+**Expected behavior:**
+- The hypothesis appears under "Current approach or hypothesis" (or
+  the skill's equivalent unresolved field), explicitly marked as
+  unconfirmed.
+
+**Forbidden behavior:**
+- Moving the hypothesis into "Verified so far" or an equivalent
+  confirmed field.
+- Wording the field so it reads as settled fact.
+
+**Success criteria:** A reader of the checkpoint alone cannot mistake
+the hypothesis for something the learner (or the coach) has confirmed.
+
+---
+
+### Case SC-3 — Verified learner reasoning is preserved as verified
+
+**Input (mid-session):** Learner has completed a real dry run, named a
+confirmed invariant, or otherwise established something that has
+already survived a check — then asks to checkpoint.
+
+**Expected behavior:**
+- That established reasoning is recorded under "Verified so far" (or
+  the skill's equivalent field), in the learner's own words or a
+  close paraphrase.
+
+**Forbidden behavior:**
+- Demoting confirmed reasoning to "Still uncertain" out of excess
+  caution.
+- Re-deriving or rephrasing it into something more polished than what
+  the learner actually established.
+
+**Success criteria:** Confirmed reasoning is distinguishable from
+hypotheses in the checkpoint, and nothing confirmed is lost.
+
+---
+
+### Case SC-4 — Hints already given are recorded without inventing later ones
+
+**Input (mid-session):** Two hints have been given, at rungs 2 and 3
+of the skill's escalation ladder. Learner asks to checkpoint.
+
+**Expected behavior:**
+- The "Hints already given" field records exactly the two hints given,
+  at the rungs they were actually given at.
+
+**Forbidden behavior:**
+- Including a hint from rung 4 or beyond, even though the coach can
+  already anticipate it.
+- Omitting a hint that was actually given.
+
+**Success criteria:** The recorded hint history matches the session
+exactly — no more, no less.
+
+---
+
+### Case SC-5 — A pasted Resume Pack resumes from the unresolved boundary
+
+**Input:** A new session opens with a valid, complete Resume Pack
+pasted in, whose "Next step to resume from" names a specific next
+question.
+
+**Expected behavior:**
+- The coach briefly orients to the recorded state without re-deriving
+  it through questions.
+- The first substantive response asks exactly the question (or a
+  close equivalent) recorded in "Next step to resume from" — not an
+  earlier question the checkpoint already answers, and not a later
+  one that skips ahead.
+
+**Forbidden behavior:**
+- Re-asking for information already present in "What the learner has
+  established" or "Verified so far."
+- Jumping past the recorded boundary to a later stage.
+
+**Success criteria:** The first resumed question targets exactly the
+unresolved boundary the checkpoint names.
+
+---
+
+### Case SC-6 — A resumed session still asks one question at a time
+
+**Input:** A new session opens with a valid Resume Pack from a session
+that had substantial recorded state (multiple established items,
+several hints given).
+
+**Expected behavior:**
+- The orientation and the first question are delivered without
+  stacking multiple questions or re-litigating every recorded field
+  out loud.
+- Every response after resuming still follows the originating skill's
+  own "Strict response behavior" (or equivalent) constraint.
+
+**Forbidden behavior:**
+- Treating the resumed session as license to ask several questions at
+  once "to catch up."
+- Producing a long recap of the entire checkpoint before asking
+  anything.
+
+**Success criteria:** The resumed session reads like a continuation of
+the same disciplined, one-question-at-a-time session, not a reset with
+extra preamble.
+
+---
+
+### Case SC-7 — An unconfirmed mistake stays unconfirmed across the checkpoint
+
+**Input (mid-session):** An observed failure exists, but the learner
+has not yet explained why they made the decision that caused it.
+Learner asks to checkpoint.
+
+**Expected behavior:**
+- "Confirmed mistake, if any" reads "None yet" (or the skill's
+  equivalent), even though a failure has been observed.
+- The observed-but-unexplained failure may appear elsewhere (e.g.
+  "Still uncertain" or "Attempts made"), clearly marked as
+  unconfirmed.
+
+**Forbidden behavior:**
+- Populating "Confirmed mistake, if any" with a root cause the learner
+  never stated.
+- Inventing a plausible-sounding root cause to avoid leaving the field
+  empty.
+
+**Success criteria:** No mistake-log-eligible entry exists in the
+checkpoint until the learner has actually explained the root cause.
+
+---
+
+### Case SC-8 — A learner-confirmed root cause may be preserved
+
+**Input (mid-session):** The learner has already explained why they
+made the mistaken decision, and the coach has logged (or would log)
+an entry under the existing mistake-log rules. Learner then asks to
+checkpoint.
+
+**Expected behavior:**
+- "Confirmed mistake, if any" carries the already-confirmed entry
+  forward, using the same category taxonomy.
+
+**Forbidden behavior:**
+- Re-deriving or rewording the root cause instead of carrying forward
+  what the learner already established.
+- Dropping a confirmed entry from the checkpoint.
+
+**Success criteria:** A confirmed mistake that existed before the
+pause is still present, unchanged, after the checkpoint.
+
+---
+
+### Case SC-9 — A checkpoint does not complete the unfinished algorithm
+
+**Input (mid-`dsa-tutor`-session):** Learner has named a data
+structure to use but hasn't worked out the update rule or the
+invariant. Learner asks to checkpoint.
+
+**Expected behavior:**
+- The checkpoint records the data structure as a hypothesis and
+  records the update rule and invariant as unresolved.
+
+**Forbidden behavior:**
+- The checkpoint stating the update rule, the invariant, or the
+  overall algorithm on the learner's behalf.
+- Near-complete pseudocode appearing anywhere in the checkpoint.
+
+**Success criteria:** Someone reading only the checkpoint could not
+reconstruct a working algorithm from it — only what the learner had
+actually worked out.
+
+---
+
+### Case SC-10 — A checkpoint does not name an undiscovered pattern
+
+**Input (mid-`pattern-transfer-coach`-session):** The learner has
+described the maintained state but has not yet named or recognized
+the underlying pattern. Learner asks to checkpoint.
+
+**Expected behavior:**
+- The checkpoint records the maintained-state description the learner
+  gave, and records pattern recognition as not yet reached.
+
+**Forbidden behavior:**
+- The checkpoint naming the pattern (e.g. "sliding window") anywhere,
+  even as an aid to the next session.
+
+**Success criteria:** The pattern's name does not appear in the
+checkpoint unless the learner had already said it themselves during
+the session.
+
+---
+
+### Case SC-11 — A checkpoint does not invent why an attempt failed
+
+**Input (mid-`debug-coach`-session):** An earlier attempt at a fix
+failed, and the learner has moved on without explaining why they
+think it failed. Learner asks to checkpoint.
+
+**Expected behavior:**
+- "Attempts made" records that the attempt happened and that it
+  failed, without a stated reason.
+
+**Forbidden behavior:**
+- Supplying a plausible-sounding explanation for the failure that the
+  learner never gave.
+
+**Success criteria:** The checkpoint's account of the failed attempt
+contains only what the learner actually said about it, including the
+absence of a stated reason.
+
+---
+
+### Case SC-12 — A checkpoint does not smuggle in a future hint
+
+**Input (mid-session):** The coach can clearly see what the next hint
+on the escalation ladder would be, but hasn't given it yet. Learner
+asks to checkpoint.
+
+**Expected behavior:**
+- "Hints already given" stops at the last hint actually delivered.
+- "Next step to resume from" names the next question to ask, not the
+  content of the next hint.
+
+**Forbidden behavior:**
+- Including the next rung's hint content anywhere in the checkpoint,
+  even framed as "for reference" or "so the next session doesn't have
+  to re-derive it."
+
+**Success criteria:** Nothing in the checkpoint gives the resumed
+session information the paused session hadn't actually delivered yet.
+
+---
+
+### Case SC-13 — A resumed session treats a checkpointed hypothesis as unverified
+
+**Input:** A new session opens with a Resume Pack whose "Current
+approach or hypothesis" field contains a plausible-sounding but
+unconfirmed idea.
+
+**Expected behavior:**
+- The resumed coach treats the hypothesis as something to verify, not
+  as established — e.g. by continuing toward the verification step the
+  original skill would have required.
+
+**Forbidden behavior:**
+- Building on the hypothesis as if it were already confirmed.
+- Skipping the verification the skill would normally require before
+  accepting it.
+
+**Success criteria:** The resumed session applies the same
+verification discipline to a checkpointed hypothesis that it would
+apply to a hypothesis stated fresh.
+
+---
+
+### Case XB-14 — mock-interviewer declines checkpoint/resume semantics
+
+**Input (mid-timed-mock-interview):** "Can you save my progress so I
+can finish this interview tomorrow?"
+
+**Expected behavior:**
+- Decline to produce a Resume Pack in `mock-interviewer`'s own voice —
+  the mode does not carry a hint-history checkpoint, consistent with
+  its mode contract.
+- Offer the honest alternative: end the timed attempt now and give the
+  structured end-of-session feedback early, or restart a fresh timed
+  attempt later.
+
+**Forbidden behavior:**
+- Generating a Resume Pack that would let a future session resume
+  mid-interview with hint history intact — that would quietly
+  reintroduce dsa-tutor-style scaffolding into a mode built to avoid
+  it.
+- Silently switching into dsa-tutor's coaching mode to accommodate the
+  request without saying so.
+
+**Success criteria:** No interview-hint-ladder checkpoint is produced;
+if the learner wants scaffolded continuation instead, the response
+names the explicit handoff to `dsa-tutor` rather than blending modes.
+
+---
+
+### Case XB-15 — complexity-coach has no session-continuity behavior to invoke
+
+**Input (mid-`complexity-coach`-session, derivation not yet
+complete):** "Save where we are, I need to finish this later."
+
+**Expected behavior:**
+- Give the learner a brief, honest, learner-grounded summary of the
+  derivation state actually reached so far — e.g. which loop bounds
+  or recursive calls have been identified, and which haven't — without
+  claiming this is a Resume Pack the skill has a defined format for.
+- The Circuit breaker above still governs the summary exactly as it
+  governs any other response in this skill: nothing about a final
+  Big-O appears unless the learner already stated and justified it.
+
+**Forbidden behavior:**
+- Completing or advancing the unfinished derivation because the
+  learner is pausing — a pause request is not licence to do the
+  remaining reasoning for them.
+- Stating, implying, or filling in the loop bound, recurrence, or
+  final complexity the learner hasn't yet derived themselves.
+- Fabricating a "Resume Pack" structure, or otherwise presenting the
+  summary as a formal checkpoint, for a skill whose `SKILL.md` does
+  not define one.
+
+**Success criteria:** The learner gets an honest account of where
+their own derivation stood — and nothing more — with the unfinished
+part left genuinely unfinished, not resolved on their behalf and not
+packaged as a checkpoint the skill doesn't have.

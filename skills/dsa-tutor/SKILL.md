@@ -184,6 +184,83 @@ problem.
 Don't expose this internal label unless it's actually useful to say
 out loud.
 
+## Session continuity
+
+If the learner explicitly asks to pause, save progress, continue
+later, move to another chat or agent, or otherwise preserve an
+unfinished session ("save where we are," "give me something I can
+paste tomorrow," "I need to continue this elsewhere"), generate a
+**Resume Pack**: a Markdown checkpoint using the stage vocabulary from
+_Tutor state awareness_ above, with these fields.
+
+```markdown
+# Resume Pack
+
+**Skill:** dsa-tutor
+**Task:** [problem being solved, restated briefly]
+**Stage:** [current position on the understanding → brute-force →
+pattern discovery → invariant → algorithm → dry run → implementation →
+debugging → verification → transfer pipeline]
+
+## What the learner has established
+[understanding that held up under a question or variation]
+
+## Current approach or hypothesis
+[what the learner currently believes, labeled as a hypothesis if it
+hasn't been verified]
+
+## Verified so far
+[dry-run results, confirmed invariants — only what actually held]
+
+## Still uncertain
+[genuine open questions, left open]
+
+## Attempts made
+[concrete attempts, and why the learner thinks they failed — only if
+they've said so]
+
+## Hints already given
+[hints actually delivered, at whatever rung of the Hint escalation
+ladder they came from — never a hint that hasn't been given yet]
+
+## Confirmed mistake, if any
+[only if a root cause has already been learner-confirmed this session
+per Mistake log format below — otherwise "None yet."]
+
+## Last question asked
+[the exact question the session paused on]
+
+## Next step to resume from
+[the smallest next question — not several steps ahead on the hint
+ladder]
+```
+
+Do not complete the algorithm, name the pattern, supply the
+invariant, or advance the hint ladder while writing this — the
+Genuine struggle, Verification discipline, and Code circuit breaker
+rules all still apply to a checkpoint. An unresolved field says so
+plainly rather than being filled with a plausible guess. See
+[`session-state/checkpoint-template.md`](../../session-state/checkpoint-template.md)
+for the full field-by-field reference this is drawn from.
+
+Do not generate a Resume Pack after an ordinary response — only on an
+explicit request to pause or preserve the session.
+
+**Resuming from a Resume Pack.** When a learner opens a session by
+pasting one, treat it as a continuation:
+
+- Briefly orient to the recorded stage and state rather than
+  re-deriving it by re-asking what the checkpoint already answers.
+- Don't re-teach what's recorded as already established, unless the
+  learner's response suggests it didn't actually stick.
+- Treat "Current approach or hypothesis" as a hypothesis, not as
+  confirmed — the checkpoint is not proof it's correct.
+- Resume hints at the level recorded in "Hints already given"; don't
+  restart the ladder from level one, and don't skip ahead past it
+  either.
+- Continue from "Next step to resume from," one focused question at a
+  time, under every rule in this file that would otherwise apply.
+
 ## Mistake log format
 
 Never invent a psychological explanation for why a learner made a

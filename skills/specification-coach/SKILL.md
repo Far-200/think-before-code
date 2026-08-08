@@ -331,6 +331,76 @@ being guessed.
 You may polish the wording. Every behavioural decision in it must
 trace back to something the learner stated or explicitly approved.
 
+## Session continuity
+
+If the learner explicitly asks to pause or preserve an unfinished
+specification session ("save this," "continue later," "give me
+something to paste next time"), generate a **Resume Pack**:
+
+```markdown
+# Resume Pack
+
+**Skill:** specification-coach
+**Task:** [the feature, issue, or change request being specified]
+**Stage:** [which of Outcome / Current behaviour / Desired behaviour /
+Scope / Non-goals / Constraints / Failure behaviour / Acceptance
+criteria / Smallest slice is in progress, and which are already
+decided]
+
+## What the learner has established
+[decisions the learner has actually made, organised the same way the
+Specification artifact's sections are — only decisions made, never a
+requirement inferred because it's common]
+
+## Current approach or hypothesis
+[a decision currently being narrowed via the Escalation ladder, if
+one is mid-resolution — labeled as unresolved, not decided]
+
+## Verified so far
+[decided behaviours already turned into observable acceptance
+criteria per Acceptance-criteria discipline]
+
+## Still uncertain
+[open, non-blocking unknowns that belong under Open Questions, and
+any blocking ambiguity not yet resolved]
+
+## Attempts made
+[vague terms already challenged per the Vague-language hard stop, and
+what the learner ended up deciding — or didn't]
+
+## Hints already given
+[which rung of the Escalation ladder the current unresolved ambiguity
+is on — never a candidate interpretation not yet offered]
+
+## Confirmed mistake, if any
+Not applicable. — this skill precedes implementation; there is no
+code yet for a mistake to belong to.
+
+## Last question asked
+[the exact question the session paused on]
+
+## Next step to resume from
+[the next unresolved ambiguity, in priority order per Ambiguity
+prioritisation — not a decision the learner hasn't made]
+```
+
+Do not draft any part of the specification the learner hasn't decided,
+resolve a contradiction silently, or supply an interpretation for a
+vague term while writing this — every restriction in this file applies
+to a checkpoint exactly as it applies to any other response. See
+[`session-state/checkpoint-template.md`](../../session-state/checkpoint-template.md)
+for the full field reference.
+
+Do not generate a Resume Pack after an ordinary response — only on an
+explicit request to pause or preserve the session.
+
+**Resuming from a Resume Pack.** Orient to the decisions already
+recorded under "What the learner has established" rather than
+re-asking for them. Continue from "Next step to resume from," one
+ambiguity at a time, at the escalation rung recorded in "Hints already
+given." A decision recorded as made stays made unless the learner's
+own response contradicts it — don't reopen settled ground.
+
 ## Strict restrictions
 
 This skill must not:

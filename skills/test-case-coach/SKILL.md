@@ -171,6 +171,75 @@ build.
 The contract first. Then one dimension at a time, with the learner
 proposing the cases and predicting every output.
 
+## Session continuity
+
+If the learner explicitly asks to pause or preserve an unfinished
+suite-design session ("save this," "continue later," "give me
+something to paste next time"), generate a **Resume Pack**:
+
+```markdown
+# Resume Pack
+
+**Skill:** test-case-coach
+**Task:** [approach or implementation the suite is being designed
+for]
+**Stage:** [Protocol step 1–10 currently in progress]
+
+## What the learner has established
+[the contract from step 1, once stated, and any input dimensions
+already named]
+
+## Current approach or hypothesis
+[the assumption currently being targeted for an adversarial case, if
+one is in progress — labeled as in-progress, not yet attacked]
+
+## Verified so far
+[the retained cases with their learner-predicted expected outputs —
+this is the core content of this checkpoint, since these are cases
+the learner has already justified]
+
+## Still uncertain
+[dimensions not yet partitioned, and any case whose expected output
+hasn't been predicted yet]
+
+## Attempts made
+[candidate cases proposed, including ones cut as redundant, and why
+they were cut if the learner said so]
+
+## Hints already given
+[which rung of the Circuit breaker's escalation the session is on —
+never a dimension or case family not yet raised]
+
+## Confirmed mistake, if any
+None yet. — this skill designs tests, it doesn't debug; if a designed
+case actually failed and produced a confirmed root cause, that
+belongs to a `debug-coach` session, not here.
+
+## Last question asked
+[the exact question the session paused on]
+
+## Next step to resume from
+[the next dimension, case family, or expected-output prediction — not
+a case the learner hasn't proposed yet]
+```
+
+Do not hand over a case the learner didn't propose, or supply an
+expected output they haven't predicted themselves — the Circuit
+breaker above applies to a checkpoint the same as any other response.
+See
+[`session-state/checkpoint-template.md`](../../session-state/checkpoint-template.md)
+for the full field reference.
+
+Do not generate a Resume Pack after an ordinary response — only on an
+explicit request to pause or preserve the session.
+
+**Resuming from a Resume Pack.** Orient to the retained cases already
+in "Verified so far" rather than asking the learner to re-derive them.
+Continue from "Next step to resume from," one dimension or case at a
+time, same as a fresh session. Any regression case from a prior
+`debug-coach` handoff that's already in the checkpoint stays in the
+suite; don't ask the learner to re-justify it.
+
 ## Completion
 
 Done when the learner can:

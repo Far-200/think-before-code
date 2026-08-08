@@ -426,6 +426,42 @@ Template:
 to repeat this, phrased so it is answerable in one line]
 ```
 
+## Session continuity
+
+> Stop the session, not the reasoning.
+
+Eight of the ten skills — every coaching skill except
+`mock-interviewer` and `complexity-coach` — can generate a **Resume
+Pack**: a portable Markdown checkpoint for an unfinished session, on
+explicit request ("save where we are," "give me something I can paste
+tomorrow," "I need to continue this in another chat").
+
+A Resume Pack is not hidden persistent memory. Nothing in this
+repository stores or retrieves one automatically — the learner carries
+it themselves, typically by copying the Markdown into a new chat,
+agent, or context window. It preserves what the learner actually
+established, clearly separated from hypotheses, hints already given,
+and unresolved questions — and it never uses the act of summarizing as
+an excuse to advance the solution: no completed algorithm, no named
+pattern the learner hasn't found, no invented invariant or root cause,
+no hint that hasn't actually been given yet.
+
+To resume, paste the Resume Pack at the start of a new session with a
+supporting skill. The coach orients to the recorded state instead of
+re-deriving it, treats recorded hypotheses as hypotheses rather than
+confirmed fact, and continues from the checkpoint's recorded next
+step — one focused question at a time, at the same hint level, same as
+any other session.
+
+See [`session-state/README.md`](./session-state/README.md) for the
+full explanation and
+[`session-state/checkpoint-template.md`](./session-state/checkpoint-template.md)
+for the field-by-field format, and
+[`examples/session-continuity-example.md`](./examples/session-continuity-example.md)
+for a complete interrupted-and-resumed transcript. Each supporting
+skill's own `SKILL.md` carries the behavior directly, so a single
+copied skill directory keeps working on its own.
+
 ## What dsa-tutor will not do
 
 - Dump a complete solution immediately
@@ -479,6 +515,7 @@ think-before-code/
 ├── examples/
 │   ├── code-review-session.md
 │   ├── pattern-transfer-session.md
+│   ├── session-continuity-example.md
 │   ├── specification-session.md
 │   ├── test-case-session.md
 │   └── tutoring-session.md
@@ -496,6 +533,9 @@ think-before-code/
 │   ├── validate_evals.py
 │   ├── validate_finder.py
 │   └── validate_skills.py
+├── session-state/
+│   ├── README.md
+│   └── checkpoint-template.md
 ├── skills/
 │   ├── code-review-coach/
 │   │   └── SKILL.md
@@ -553,6 +593,10 @@ think-before-code/
   request: one ambiguity at a time, a vague adjective challenged, a
   deliberate non-goal, and a learner-authored specification with an
   implementation handoff
+- [`examples/session-continuity-example.md`](./examples/session-continuity-example.md) —
+  a `debug-coach` session interrupted mid-trace, checkpointed into a
+  Resume Pack, and resumed in a new chat from the exact unresolved
+  question, with no fix or root cause smuggled into the checkpoint
 - [`find-your-coach/`](./find-your-coach/) — the Find Your Coach
   page: a deterministic router that asks a short series of questions
   and names one skill. Plain HTML, CSS, and JavaScript with no build step
@@ -574,6 +618,13 @@ think-before-code/
 - [`scripts/validate_finder.py`](./scripts/validate_finder.py) — the
   finder-routing validator; see
   [Testing and validation](#testing-and-validation)
+- [`session-state/README.md`](./session-state/README.md) — what a
+  Resume Pack is, when to generate one, and which skills support it;
+  see [Session continuity](#session-continuity)
+- [`session-state/checkpoint-template.md`](./session-state/checkpoint-template.md) —
+  the canonical Resume Pack field reference. Documentation, not a
+  runtime dependency — each supporting skill's `SKILL.md` carries its
+  own copy of the behavior
 - [`skills/`](./skills/) — one self-contained Agent Skill per
   directory, each with its own `SKILL.md`; see
   [Skills in this repository](#skills-in-this-repository)
@@ -696,6 +747,9 @@ The current release is `v1.5.0`. See
       cover both validators with unit tests
 - [x] Add the interactive Find Your Coach router, executable routing
       cases, validation, tests, and CI coverage
+- [x] Add session-state templates and a Resume Pack checkpoint/resume
+      protocol for unfinished sessions, covering eight of the ten
+      skills (see [Session continuity](#session-continuity))
 
 ### Next
 
@@ -705,7 +759,6 @@ The current release is `v1.5.0`. See
       documented paths
 - [ ] Add automated behavior eval execution — `evals/` is currently a
       specification, not a runner
-- [ ] Add session-state templates for unfinished problems
 - [ ] Add progress tracking across patterns
 - [ ] Add spaced-revision prompts, building on top of the per-session
       transfer coaching that now exists

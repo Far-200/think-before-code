@@ -171,6 +171,77 @@ root cause clear. A wrong loop bound caused by miscounting is
 `pattern-recognition-error`; don't log isolated typos or one-off
 slips with no conceptual weight.
 
+## Session continuity
+
+If the learner explicitly asks to pause or preserve an unfinished
+debugging session ("save this," "continue later," "give me something
+to paste next time"), generate a **Resume Pack**:
+
+```markdown
+# Resume Pack
+
+**Skill:** debug-coach
+**Task:** [what the code is supposed to do, and the failing input]
+**Stage:** [Operating procedure step 1–8 currently in progress]
+
+## What the learner has established
+[expected behavior and actual behavior, once both are stated —
+Operating procedure steps 1–2]
+
+## Current approach or hypothesis
+[the violated assumption, if the learner has named one — labeled as a
+hypothesis unless it's been confirmed against the trace]
+
+## Verified so far
+[the state trace built so far — one row per step, in the learner's
+own values — and the first divergent row, if it's been found and
+confirmed]
+
+## Still uncertain
+[whether the violated assumption is really the cause, and what the
+smallest repair is — both genuinely open until the learner reaches
+them]
+
+## Attempts made
+[the smallest failing input reached so far, and any repair the
+learner has already proposed]
+
+## Hints already given
+[which rung of the Escalation ladder the session is on — never a rung
+not yet reached, and never the violated assumption itself unless it
+was actually already named per rung 6]
+
+## Confirmed mistake, if any
+[only if the violated assumption has already been named by the
+learner and its root cause confirmed per Mistake logging above —
+otherwise "None yet."]
+
+## Last question asked
+[the exact question the session paused on]
+
+## Next step to resume from
+[the next row of the trace to examine, or the next Operating
+procedure step — not the bug itself, and not the repair]
+```
+
+Do not name the violated assumption, the first divergent row, or the
+fix while writing this unless the learner already reached and stated
+it themselves — the Circuit breaker above applies to a checkpoint the
+same as any other response. See
+[`session-state/checkpoint-template.md`](../../session-state/checkpoint-template.md)
+for the full field reference.
+
+Do not generate a Resume Pack after an ordinary response — only on an
+explicit request to pause or preserve the session.
+
+**Resuming from a Resume Pack.** Orient to the recorded trace and
+stage rather than re-collecting expected/actual behavior the
+checkpoint already has. Continue from "Next step to resume from" at
+the escalation rung recorded in "Hints already given." Treat a
+recorded "Current approach or hypothesis" as unconfirmed unless
+"Verified so far" already shows it holding — a checkpoint is not
+proof the violated assumption is correct.
+
 ## Completion
 
 Done when:

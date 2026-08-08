@@ -7,6 +7,74 @@ The format is loosely based on
 
 ## [Unreleased]
 
+### Added
+
+- Session continuity for unfinished coaching sessions: a **Resume
+  Pack**, a portable Markdown checkpoint that preserves the learner's
+  verified reasoning, hypotheses, attempts, hint history, and any
+  learner-confirmed mistake — without advancing the solution,
+  completing an unfinished algorithm, naming an undiscovered pattern,
+  or smuggling in a hint that hasn't actually been given yet. Generated
+  only on an explicit request to pause or preserve a session ("save
+  where we are," "give me something I can paste tomorrow"), never
+  automatically.
+- A "Session continuity" section added directly to eight `SKILL.md`
+  files — `dsa-tutor`, `problem-decoder`, `dry-run-coach`,
+  `debug-coach`, `test-case-coach`, `pattern-transfer-coach`,
+  `specification-coach`, and `code-review-coach` — each with its own
+  Resume Pack field mapping tied to that skill's own stage vocabulary
+  and hint or escalation ladder, and its own resume behavior: orient
+  to the recorded state, don't re-teach or re-collect what's already
+  established, treat recorded hypotheses as unconfirmed, and continue
+  from the recorded next step at the same hint level. The behavior is
+  self-contained in each skill file, so a single copied skill
+  directory keeps working without the rest of the repository present.
+- `session-state/`, the repository-level reference: `README.md`
+  explains the Resume Pack concept, the anti-spoiler rules, the
+  relationship to `mistake-logs/`, and which skills support (and
+  deliberately don't support) checkpointing; `checkpoint-template.md`
+  is the canonical field-by-field format the per-skill sections are
+  drawn from. Both are documentation — the runtime behavior lives in
+  each skill's own file, not here.
+- `examples/session-continuity-example.md`, a `debug-coach` session
+  split into an interrupted Session A and a resumed Session B: a
+  partial state trace and an unconfirmed violated-assumption
+  hypothesis are checkpointed faithfully, the resumed session asks
+  exactly the question the checkpoint names next, and no fix or root
+  cause is smuggled into the checkpoint despite the coach being able
+  to see where the trace was heading.
+- 15 new cases in `evals/behavior-cases.md`: a `Session continuity`
+  section (`SC-1` through `SC-13`) covering checkpoint generation,
+  hypothesis/verified-fact separation, hint-history fidelity, mistake
+  confirmation status, and resume behavior across every supporting
+  skill; plus two further cross-skill boundary cases (`XB-14`,
+  `XB-15`) covering `mock-interviewer`'s deliberate refusal to
+  checkpoint mid-interview and `complexity-coach` having no defined
+  checkpoint format to invoke.
+
+### Changed
+
+- README gains a "Session continuity" section explaining Resume
+  Packs, when to use one, how to resume from one, and that they are
+  portable Markdown rather than hidden persistent memory — linking to
+  `session-state/` and the new example rather than restating the full
+  specification inline.
+- The README repository tree and file list now cover `session-state/`
+  and `examples/session-continuity-example.md`.
+- The Roadmap's "Add session-state templates for unfinished problems"
+  item moves from Next to Completed.
+
+### Excluded
+
+- `mock-interviewer` and `complexity-coach` deliberately do not carry
+  checkpoint/resume behavior. Reviving a paused mock interview with a
+  hint-history checkpoint would quietly reintroduce the scaffolded
+  coaching that skill's mode contract exists to keep out;
+  `complexity-coach` is a short, single-focus derivation drill with no
+  multi-stage state worth checkpointing. Both exclusions, and the
+  reasoning behind them, are documented in `session-state/README.md`
+  and exercised in `evals/behavior-cases.md` (`XB-14`, `XB-15`).
+
 ## [1.5.0] - 2026-07-31
 
 ### Added
