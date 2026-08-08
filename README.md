@@ -709,7 +709,7 @@ Five layers protect the repository's structure and behavior:
 
 ## Release
 
-The current release is `v1.5.0`. See
+The current release is `v1.6.0`. See
 [`CHANGELOG.md`](./CHANGELOG.md) for the complete release notes.
 
 ## Roadmap

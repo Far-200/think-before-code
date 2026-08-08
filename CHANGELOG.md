@@ -7,6 +7,8 @@ The format is loosely based on
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-08-08
+
 ### Added
 
 - Session continuity for unfinished coaching sessions: a **Resume
