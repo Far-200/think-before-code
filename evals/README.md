@@ -23,8 +23,8 @@ checks by hand today.
   two files above, these are executed today, not just specified — see
   [Finder routing cases](#finder-routing-cases).
 
-`activation-prompts.csv` and `behavior-cases.md` cover all ten skills,
-including the two
+`activation-prompts.csv` and `behavior-cases.md` cover all eleven skills,
+including the general `think-before-code` learning partner and the two
 software-engineering skills that sit outside the DSA lifecycle:
 `specification-coach` before implementation, when the desired
 behaviour isn't defined yet, and `code-review-coach` after code

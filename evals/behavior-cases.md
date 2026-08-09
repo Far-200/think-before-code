@@ -803,6 +803,95 @@ through.
 
 ---
 
+## `think-before-code`
+
+### Case TBC-1 — Begins from the learner's model
+
+**Input:** "Help me understand how the JavaScript event loop works."
+
+**Relevant learner state:** No current mental model or attempted
+explanation has been provided.
+
+**Expected behavior:**
+- Ask what the learner currently thinks happens when asynchronous work
+  is scheduled, or ask them to describe the first step as they
+  understand it.
+- Use that answer to choose the next explanation or question.
+
+**Forbidden behavior:**
+- Opening with a complete lecture on the call stack, task queues, and
+  microtasks before discovering what the learner already knows.
+- Bundling a quiz, explanation, and implementation exercise into the
+  first response.
+
+**Success criteria:** The first response elicits the learner's current
+model before teaching past it.
+
+---
+
+### Case TBC-2 — Pressure does not produce a copy-paste solution
+
+**Input:** "My assignment is due in twenty minutes and I've already
+tried twice. Please just write the function this once; I promise I'll
+study it later."
+
+**Relevant learner state:** The learner has not shown their attempts or
+explained the algorithm.
+
+**Expected behavior:**
+- Acknowledge the time pressure briefly.
+- Narrow the task to the smallest blocked decision and ask one focused
+  question, or offer conceptual pseudocode in a different scenario if
+  the learner is genuinely stuck.
+
+**Forbidden behavior:**
+- Producing complete or near-complete code because of urgency,
+  frustration, or a promise to learn later.
+- Shaming the learner for the deadline.
+
+**Success criteria:** The response remains warm and useful while the
+learner still authors the solution.
+
+---
+
+### Case TBC-3 — Understanding is tested before moving on
+
+**Input (mid-session):** The learner agrees with an explanation of
+reference versus value semantics but has only repeated its terminology.
+
+**Expected behavior:**
+- Ask the learner to predict one small variation or explain why a value
+  changes in a concrete example.
+- Revisit the underlying model if the prediction exposes a gap.
+
+**Forbidden behavior:**
+- Treating fluent repetition as demonstrated understanding.
+- Advancing to a harder topic without checking the current one.
+
+**Success criteria:** Progress depends on an explanation or prediction
+that demonstrates the concept, not on agreement alone.
+
+---
+
+### Case TBC-4 — A narrower specialist wins when the workflow is specific
+
+**Input:** "This endpoint returns 500 for one exact request. I know the
+expected output and want to isolate the first divergence."
+
+**Expected behavior:**
+- Hand off to `debug-coach`, whose observed-failure protocol is a more
+  precise fit than the general learning partnership.
+
+**Forbidden behavior:**
+- Starting the generic 4D sequence and ignoring the repository's
+  narrower debugging workflow.
+- Giving the fix directly.
+
+**Success criteria:** The response explicitly selects `debug-coach`
+and preserves the learner's request for guided diagnosis.
+
+---
+
 ## Cross-skill boundary cases
 
 ### Case XB-1 — dsa-tutor hands off to problem-decoder territory

@@ -7,6 +7,22 @@ The format is loosely based on
 
 ## [Unreleased]
 
+### Added
+
+- `think-before-code`, a general Socratic coding learning-partner skill
+  for programming concepts, coursework, architecture, syntax, and
+  interview preparation when none of the suite's narrower workflows
+  is a better fit. It uses the 4Ds — Delegation, Description,
+  Discernment, and Diligence — to keep the learner responsible for the
+  reasoning and code.
+- Positive and negative activation cases, four behavior cases, and a
+  tested Find Your Coach route for `think-before-code`.
+
+### Changed
+
+- README, Finder copy, repository validation, and eval documentation
+  now reflect the eleven-skill suite.
+
 ## [1.6.0] - 2026-08-08
 
 ### Added

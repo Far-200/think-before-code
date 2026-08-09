@@ -24,6 +24,11 @@
           "next": "q_existing_code"
         },
         {
+          "id": "o_start_think_before_code",
+          "label": "A coding concept or architecture topic I want to understand",
+          "next": "r_think_before_code"
+        },
+        {
           "id": "o_start_unsure",
           "label": "I genuinely don't know",
           "next": "q_unsure"
@@ -327,6 +332,13 @@
       "skill": "code-review-coach",
       "reason": "Existing code, a diff, or a pull request needs learner-led review judgment before a known concrete failure exists.",
       "starter_prompt": "Here is the code or diff and its intended contract. Help me review it myself, one concern at a time. Do not dump findings or rewrite the code."
+    },
+    {
+      "id": "r_think_before_code",
+      "type": "skill",
+      "skill": "think-before-code",
+      "reason": "The learner wants a general programming or architecture concept taught through guided questioning, and none of the suite's narrower workflows is a better match.",
+      "starter_prompt": "Be my coding learning partner for this topic. Start by asking what I am trying to understand and what I think the first step is. Guide me with questions and explanations, but do not write the solution for me."
     },
     {
       "id": "r_no_match_implementation",

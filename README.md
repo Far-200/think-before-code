@@ -158,8 +158,8 @@ and a complexity-only question goes to `complexity-coach`.
    [Find Your Coach](https://far-200.github.io/think-before-code/find-your-coach/)
    and it will name one, with a starter prompt to paste. Otherwise:
    the core skill lives at
-   [`skills/dsa-tutor/SKILL.md`](./skills/dsa-tutor/SKILL.md). Nine
-   more skills live alongside it, ten in total — see
+   [`skills/dsa-tutor/SKILL.md`](./skills/dsa-tutor/SKILL.md). Ten
+   more skills live alongside it, eleven in total — see
    [Which skill should I use?](#which-skill-should-i-use) for the same
    routing in text, and
    [Skills in this repository](#skills-in-this-repository) for the
@@ -194,6 +194,8 @@ Match where you actually are, not where you'd like to be.
 asks these same questions one at a time; the list below is the same
 routing in text, and it keeps working without JavaScript:
 
+- **Want a general coding learning partner for a concept, course,
+  architecture topic, or interview-prep pattern** → `think-before-code`
 - **Unsolved problem, want to learn it end to end** → `dsa-tutor`
   (the default; when in doubt, start here)
 - **Have a vague feature, issue, or change request and need to
@@ -334,6 +336,7 @@ containing a single `SKILL.md` with frontmatter (`name`,
 | [`pattern-transfer-coach`](./skills/pattern-transfer-coach/SKILL.md) | You've solved a problem and want to turn it into a transferable pattern — strip the story, name recognition and rule-out signals, and adapt it to exactly one cousin problem.                                                                                                                 |
 | [`specification-coach`](./skills/specification-coach/SKILL.md)       | You have a vague feature request, issue, or change request and need observable behaviour, scope, non-goals, constraints, failure behaviour, and acceptance criteria defined — a learner-authored implementation handoff, with no invented requirements and no implementation written for you. |
 | [`code-review-coach`](./skills/code-review-coach/SKILL.md)           | You have existing code, a diff, or a PR — not necessarily DSA — and want to practise discovering and justifying review findings yourself, one concern at a time, without a dumped list or a rewrite.                                                                                          |
+| [`think-before-code`](./skills/think-before-code/SKILL.md)           | You want a general Socratic coding learning partner for programming concepts, coursework, architecture, or interview preparation when none of the narrower workflows is a better fit.                                                                                                       |
 
 These are complementary, not redundant. `dsa-tutor` is the default
 skill that coordinates a complete DSA learning session. Six
@@ -352,6 +355,14 @@ interaction mode — scarce hints during the attempt, full feedback
 only afterward — rather than protecting productive struggle
 throughout, and should not be blended with the coaching skills in the
 same session.
+
+`think-before-code` is the general entry point for learning requests
+that do not begin in one of those narrower workflows: concepts,
+coursework, architecture, syntax, or interview-prep mental models. It
+uses the same learner-authored, no-ready-made-solution posture while
+letting a specialist skill take precedence when the task is clearly a
+debugging, test-design, review, specification, complexity, or DSA
+session.
 
 ## Recommended learner prompt
 
@@ -430,8 +441,7 @@ to repeat this, phrased so it is answerable in one line]
 
 > Stop the session, not the reasoning.
 
-Eight of the ten skills — every coaching skill except
-`mock-interviewer` and `complexity-coach` — can generate a **Resume
+Eight of the eleven skills can generate a **Resume
 Pack**: a portable Markdown checkpoint for an unfinished session, on
 explicit request ("save where we are," "give me something I can paste
 tomorrow," "I need to continue this in another chat").
@@ -452,6 +462,9 @@ re-deriving it, treats recorded hypotheses as hypotheses rather than
 confirmed fact, and continues from the checkpoint's recorded next
 step — one focused question at a time, at the same hint level, same as
 any other session.
+
+`think-before-code`, `mock-interviewer`, and `complexity-coach` do not
+define the repository's Resume Pack protocol.
 
 See [`session-state/README.md`](./session-state/README.md) for the
 full explanation and
@@ -554,6 +567,8 @@ think-before-code/
 │   ├── problem-decoder/
 │   │   └── SKILL.md
 │   ├── specification-coach/
+│   │   └── SKILL.md
+│   ├── think-before-code/
 │   │   └── SKILL.md
 │   └── test-case-coach/
 │       └── SKILL.md
@@ -671,7 +686,7 @@ Five layers protect the repository's structure and behavior:
   result ids must be unique, every option must point at a node that
   exists, every path must terminate at a result without cycling, every
   skill result must name a real skill directory and carry a reason and
-  a starter prompt, all ten skills must be reachable as
+  a starter prompt, all eleven skills must be reachable as
   recommendations, the two no-match outcomes must stay honest — no
   skill name, no starter prompt — and every relative
   `../skills/<name>/SKILL.md` link the page builds must resolve. It
@@ -748,7 +763,7 @@ The current release is `v1.6.0`. See
 - [x] Add the interactive Find Your Coach router, executable routing
       cases, validation, tests, and CI coverage
 - [x] Add session-state templates and a Resume Pack checkpoint/resume
-      protocol for unfinished sessions, covering eight of the ten
+      protocol for unfinished sessions, covering eight of the eleven
       skills (see [Session continuity](#session-continuity))
 
 ### Next

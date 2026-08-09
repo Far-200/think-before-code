@@ -29,3 +29,4 @@ F027,o_start_dsa>o_dsa_stage_have_code>o_dsa_code_complexity,r_complexity_coach,
 F028,o_start_code>o_existing_tests,r_test_case_coach,A compact suite designed around code that already exists.
 F029,o_start_unsure>o_unsure_existing>o_existing_review,r_code_review_coach,"Boundary — review versus debugging on existing code: the risk has not surfaced as a failure yet."
 F030,o_start_unsure>o_unsure_challenge>o_dsa_stage_have_approach>o_dsa_approach_trace,r_dry_run_coach,"The longest route the tree allows — four questions, reached by starting out unsure — still lands on one skill."
+F031,o_start_think_before_code,r_think_before_code,"A general programming or architecture concept learned through guided questioning rather than a specialist DSA, specification, review, debugging, test, or complexity workflow."
