@@ -23,12 +23,14 @@ checks by hand today.
   two files above, these are executed today, not just specified — see
   [Finder routing cases](#finder-routing-cases).
 
-`activation-prompts.csv` and `behavior-cases.md` cover all ten skills,
-including the two
-software-engineering skills that sit outside the DSA lifecycle:
-`specification-coach` before implementation, when the desired
-behaviour isn't defined yet, and `code-review-coach` after code
-exists. Their boundaries against each other and against
+`activation-prompts.csv` and `behavior-cases.md` cover all eleven
+skills, including the two software-engineering workflow skills that
+sit outside the DSA lifecycle: `specification-coach` before
+implementation, when the desired behaviour isn't defined yet, and
+`code-review-coach` after code exists. `concept-coach` sits outside
+artifact lifecycle entirely and teaches understanding rather than a
+workflow. Their
+boundaries against each other and against
 `debug-coach`, `test-case-coach`, `complexity-coach`,
 `problem-decoder`, and `dsa-tutor` are tested in the same
 positive/negative pairing style as the DSA skills' boundaries.
