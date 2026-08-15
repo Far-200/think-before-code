@@ -7,6 +7,8 @@ The format is loosely based on
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-08-15
+
 ### Added
 
 - A new skill, `concept-coach`: a Socratic coach for building

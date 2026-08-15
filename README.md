@@ -347,7 +347,7 @@ containing a single `SKILL.md` with frontmatter (`name`,
 | [`pattern-transfer-coach`](./skills/pattern-transfer-coach/SKILL.md) | You've solved a problem and want to turn it into a transferable pattern — strip the story, name recognition and rule-out signals, and adapt it to exactly one cousin problem.                                                                                                                 |
 | [`specification-coach`](./skills/specification-coach/SKILL.md)       | You have a vague feature request, issue, or change request and need observable behaviour, scope, non-goals, constraints, failure behaviour, and acceptance criteria defined — a learner-authored implementation handoff, with no invented requirements and no implementation written for you. |
 | [`code-review-coach`](./skills/code-review-coach/SKILL.md)           | You have existing code, a diff, or a PR — not necessarily DSA — and want to practise discovering and justifying review findings yourself, one concern at a time, without a dumped list or a rewrite.                                                                                          |
-| [`concept-coach`](./skills/concept-coach/SKILL.md)                   | You want to build understanding of a programming, software-engineering, systems, or architecture concept — with no concrete problem, code, feature, or review behind the question yet.                                                                                                          |
+| [`concept-coach`](./skills/concept-coach/SKILL.md)                   | You want to build understanding of a programming, software-engineering, systems, or architecture concept — with no concrete problem, code, feature, or review behind the question yet.                                                                                                        |
 
 These are complementary, not redundant. `dsa-tutor` is the default
 skill that coordinates a complete DSA learning session. Six
@@ -735,7 +735,7 @@ Five layers protect the repository's structure and behavior:
 
 ## Release
 
-The current release is `v1.6.0`. See
+The current release is `v1.7.0`. See
 [`CHANGELOG.md`](./CHANGELOG.md) for the complete release notes.
 
 ## Roadmap
