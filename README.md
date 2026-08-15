@@ -144,6 +144,16 @@ Both hand off like the DSA skills do: a concrete observed failure
 goes to `debug-coach`, a systematic suite goes to `test-case-coach`,
 and a complexity-only question goes to `complexity-coach`.
 
+`concept-coach` is not a third stage in this before/after-implementation
+lifecycle. It's orthogonal to artifact lifecycle entirely: it teaches
+a DSA concept with no concrete problem behind it, a programming-language
+concept, a systems concept, a software-engineering concept, or an
+architecture concept — from wherever the learner's confusion actually
+sits, not from a stage in a diagram. The moment a concrete workflow
+appears — a problem to solve, code to debug, a feature to specify, a
+PR to review — it hands off to the matching specialist rather than
+retaining the session.
+
 ## Quick start
 
 1. **Clone the repository:**
@@ -158,8 +168,8 @@ and a complexity-only question goes to `complexity-coach`.
    [Find Your Coach](https://far-200.github.io/think-before-code/find-your-coach/)
    and it will name one, with a starter prompt to paste. Otherwise:
    the core skill lives at
-   [`skills/dsa-tutor/SKILL.md`](./skills/dsa-tutor/SKILL.md). Nine
-   more skills live alongside it, ten in total — see
+   [`skills/dsa-tutor/SKILL.md`](./skills/dsa-tutor/SKILL.md). Ten
+   more skills live alongside it, eleven in total — see
    [Which skill should I use?](#which-skill-should-i-use) for the same
    routing in text, and
    [Skills in this repository](#skills-in-this-repository) for the
@@ -213,6 +223,9 @@ routing in text, and it keeps working without JavaScript:
   `mock-interviewer`
 - **Have existing non-DSA code or a PR, want to practise reviewing
   it yourself, one concern at a time** → `code-review-coach`
+- **Want to understand a programming, software-engineering, systems,
+  or architecture concept, with no concrete task behind it** →
+  `concept-coach`
 
 ## Installation
 
@@ -334,6 +347,7 @@ containing a single `SKILL.md` with frontmatter (`name`,
 | [`pattern-transfer-coach`](./skills/pattern-transfer-coach/SKILL.md) | You've solved a problem and want to turn it into a transferable pattern — strip the story, name recognition and rule-out signals, and adapt it to exactly one cousin problem.                                                                                                                 |
 | [`specification-coach`](./skills/specification-coach/SKILL.md)       | You have a vague feature request, issue, or change request and need observable behaviour, scope, non-goals, constraints, failure behaviour, and acceptance criteria defined — a learner-authored implementation handoff, with no invented requirements and no implementation written for you. |
 | [`code-review-coach`](./skills/code-review-coach/SKILL.md)           | You have existing code, a diff, or a PR — not necessarily DSA — and want to practise discovering and justifying review findings yourself, one concern at a time, without a dumped list or a rewrite.                                                                                          |
+| [`concept-coach`](./skills/concept-coach/SKILL.md)                   | You want to build understanding of a programming, software-engineering, systems, or architecture concept — with no concrete problem, code, feature, or review behind the question yet.                                                                                                          |
 
 These are complementary, not redundant. `dsa-tutor` is the default
 skill that coordinates a complete DSA learning session. Six
@@ -351,7 +365,11 @@ boundaries. `mock-interviewer` intentionally runs the opposite
 interaction mode — scarce hints during the attempt, full feedback
 only afterward — rather than protecting productive struggle
 throughout, and should not be blended with the coaching skills in the
-same session.
+same session. `concept-coach` sits outside all of the above: it isn't
+tied to a stage of the DSA lifecycle or a side of implementation at
+all, but to whatever concept the learner doesn't yet have a working
+model of — DSA, language, systems, or architecture — and hands off the
+instant a concrete workflow appears.
 
 ## Recommended learner prompt
 
@@ -430,7 +448,7 @@ to repeat this, phrased so it is answerable in one line]
 
 > Stop the session, not the reasoning.
 
-Eight of the ten skills — every coaching skill except
+Nine of the eleven skills — every coaching skill except
 `mock-interviewer` and `complexity-coach` — can generate a **Resume
 Pack**: a portable Markdown checkpoint for an unfinished session, on
 explicit request ("save where we are," "give me something I can paste
@@ -514,6 +532,7 @@ think-before-code/
 │   └── finder-cases.csv
 ├── examples/
 │   ├── code-review-session.md
+│   ├── concept-coach-session.md
 │   ├── pattern-transfer-session.md
 │   ├── session-continuity-example.md
 │   ├── specification-session.md
@@ -540,6 +559,8 @@ think-before-code/
 │   ├── code-review-coach/
 │   │   └── SKILL.md
 │   ├── complexity-coach/
+│   │   └── SKILL.md
+│   ├── concept-coach/
 │   │   └── SKILL.md
 │   ├── debug-coach/
 │   │   └── SKILL.md
@@ -588,6 +609,11 @@ think-before-code/
   a `code-review-coach` transcript on a non-DSA pull request:
   evidence before impact, impact before severity, a declined design
   pattern, and a learner-authored prioritized review summary
+- [`examples/concept-coach-session.md`](./examples/concept-coach-session.md) —
+  a `concept-coach` transcript on dependency injection: the learner's
+  partial understanding used instead of re-collected, a tiny concrete
+  situation exposing the actual gap, and a nearby check the learner's
+  revised model has to survive before the session closes
 - [`examples/specification-session.md`](./examples/specification-session.md) —
   a `specification-coach` transcript on a vague non-DSA feature
   request: one ambiguity at a time, a vague adjective challenged, a
@@ -671,7 +697,7 @@ Five layers protect the repository's structure and behavior:
   result ids must be unique, every option must point at a node that
   exists, every path must terminate at a result without cycling, every
   skill result must name a real skill directory and carry a reason and
-  a starter prompt, all ten skills must be reachable as
+  a starter prompt, all eleven skills must be reachable as
   recommendations, the two no-match outcomes must stay honest — no
   skill name, no starter prompt — and every relative
   `../skills/<name>/SKILL.md` link the page builds must resolve. It
@@ -748,8 +774,14 @@ The current release is `v1.6.0`. See
 - [x] Add the interactive Find Your Coach router, executable routing
       cases, validation, tests, and CI coverage
 - [x] Add session-state templates and a Resume Pack checkpoint/resume
-      protocol for unfinished sessions, covering eight of the ten
+      protocol for unfinished sessions, covering nine of the eleven
       skills (see [Session continuity](#session-continuity))
+- [x] Add a general concept-learning coach (`concept-coach`) for
+      programming, software-engineering, systems, and architecture
+      concepts with no concrete task behind them, orthogonal to the
+      DSA lifecycle and the specification/review stages — with its
+      own activation and behavior evals, Finder integration, Resume
+      Pack support, and example session
 
 ### Next
 

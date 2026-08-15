@@ -29,3 +29,5 @@ F027,o_start_dsa>o_dsa_stage_have_code>o_dsa_code_complexity,r_complexity_coach,
 F028,o_start_code>o_existing_tests,r_test_case_coach,A compact suite designed around code that already exists.
 F029,o_start_unsure>o_unsure_existing>o_existing_review,r_code_review_coach,"Boundary — review versus debugging on existing code: the risk has not surfaced as a failure yet."
 F030,o_start_unsure>o_unsure_challenge>o_dsa_stage_have_approach>o_dsa_approach_trace,r_dry_run_coach,"The longest route the tree allows — four questions, reached by starting out unsure — still lands on one skill."
+F031,o_start_concept,r_concept_coach,"Direct concept-learning path from the start question — no problem, feature, or existing code, just a concept to understand."
+F032,o_start_unsure>o_unsure_concept,r_concept_coach,"The unsure branch reaches the same concept-learning result once the learner recognizes it's a concept and not a coding challenge, feature, or existing code."

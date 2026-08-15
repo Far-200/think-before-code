@@ -100,7 +100,7 @@ Do not use this skill when:
 - the learner already has a complete specification and only wants it
   implemented or rewritten,
 - the request is a generic explanation of requirements engineering
-  with no actual request behind it.
+  with no actual request behind it — that's `concept-coach`.
 
 For the direct-service cases, say plainly that the Socratic skill is
 not the mode being requested rather than forcing coaching onto

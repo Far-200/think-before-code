@@ -14,6 +14,11 @@
           "next": "q_dsa_stage"
         },
         {
+          "id": "o_start_concept",
+          "label": "A concept I want to understand",
+          "next": "r_concept_coach"
+        },
+        {
           "id": "o_start_feature",
           "label": "A feature, issue, or change request",
           "next": "q_feature_stage"
@@ -48,6 +53,11 @@
           "id": "o_unsure_existing",
           "label": "Code that already exists",
           "next": "q_existing_code"
+        },
+        {
+          "id": "o_unsure_concept",
+          "label": "A concept or idea I'm trying to understand",
+          "next": "r_concept_coach"
         },
         {
           "id": "o_unsure_none",
@@ -329,11 +339,18 @@
       "starter_prompt": "Here is the code or diff and its intended contract. Help me review it myself, one concern at a time. Do not dump findings or rewrite the code."
     },
     {
+      "id": "r_concept_coach",
+      "type": "skill",
+      "skill": "concept-coach",
+      "reason": "No concrete problem, code, feature, or review is behind the question — the learner wants to build understanding of the concept itself.",
+      "starter_prompt": "Help me understand this programming/software-engineering concept from what I already know. Use one focused question at a time, test my mental model with small examples, and give only the smallest explanation I need."
+    },
+    {
       "id": "r_no_match_implementation",
       "type": "no_match",
       "headline": "No coaching mode fits this",
-      "reason": "You want the implementation produced for you, or the work isn't a coding challenge, a change request, or existing code.",
-      "explanation": "Think Before Code currently provides coaching modes rather than implementation delivery. Every skill here exists to make you author the reasoning — the specification, the approach, the finding, the fix — one question at a time. None of them will write the feature for you, and pretending otherwise would defeat the point of the suite. If working code is what you need right now, use your assistant without these skills.",
+      "reason": "You want the implementation produced for you, or the work isn't a coding challenge, a change request, existing code, or a concept to understand.",
+      "explanation": "Think Before Code currently provides coaching modes rather than implementation delivery. Every skill here exists to make you author the reasoning — the specification, the approach, the finding, the fix, the understanding — one question at a time. None of them will write the feature for you, and pretending otherwise would defeat the point of the suite. If working code is what you need right now, use your assistant without these skills.",
       "closest_skill": {
         "skill": "specification-coach",
         "note": "if you would rather define the behaviour precisely first, then hand that specification to an implementation agent."

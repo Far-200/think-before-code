@@ -1,6 +1,6 @@
 ---
 name: pattern-transfer-coach
-description: Use after the learner has solved or substantially completed a DSA problem and wants to turn it into transferable knowledge — abstracting the structure away from the story, naming signals that suggest or rule out the pattern, and adapting it to exactly one cousin problem. Not for solving the original problem (dsa-tutor), not for generic data-structure or pattern definitions with no solved problem behind them, not for timed interview simulation (mock-interviewer), and not for complexity derivation (complexity-coach).
+description: Use after the learner has solved or substantially completed a DSA problem and wants to turn it into transferable knowledge — abstracting the structure away from the story, naming signals that suggest or rule out the pattern, and adapting it to exactly one cousin problem. Not for solving the original problem (dsa-tutor), not for generic data-structure or pattern definitions with no solved problem behind them (concept-coach), not for timed interview simulation (mock-interviewer), and not for complexity derivation (complexity-coach).
 ---
 
 # Pattern Transfer Coach
@@ -28,10 +28,10 @@ loud, to a problem that shares the structure but not the surface.
   closing cousin-problem step stays inside dsa-tutor — this skill is
   where to go when the learner wants more than that single closing
   suggestion.
-- **vs. generic explanation** — "explain sliding window to me," with
+- **vs. `concept-coach`** — "explain sliding window to me," with
   no solved problem behind it, is a conceptual question, not a
-  transfer exercise. This skill starts from something the learner
-  actually built.
+  transfer exercise; that belongs to `concept-coach`. This skill
+  starts from something the learner actually built.
 - **vs. `mock-interviewer`** — practising recognition under time
   pressure is interview simulation. This skill is untimed and
   reflective by design.
@@ -58,7 +58,7 @@ Do not use this skill when:
 
 - the original problem is still unsolved — that's `dsa-tutor`,
 - the learner wants a textbook definition of a structure or pattern
-  with no solved problem to abstract from,
+  with no solved problem to abstract from — that's `concept-coach`,
 - the learner wants a timed simulation — that's `mock-interviewer`,
 - the learner wants complexity derived — that's `complexity-coach`,
 - the learner has a specific known bug to isolate — that's

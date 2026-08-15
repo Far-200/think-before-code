@@ -93,8 +93,8 @@ exists.
 
 ## Which skills support this
 
-Resume Packs are not a new, eleventh skill — this is infrastructure
-and behavior added to the coaching skills that already run genuine
+Resume Packs are infrastructure, not a separate skill — this is
+behavior added to the coaching skills that already run genuine
 multi-turn reasoning sessions:
 
 - `dsa-tutor`
@@ -105,6 +105,7 @@ multi-turn reasoning sessions:
 - `pattern-transfer-coach`
 - `specification-coach`
 - `code-review-coach`
+- `concept-coach`
 
 Each of those `SKILL.md` files carries its own "Session continuity"
 section with the checkpoint and resume behavior specific to that

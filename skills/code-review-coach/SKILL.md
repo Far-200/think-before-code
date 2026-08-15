@@ -82,7 +82,7 @@ Do not use this skill when:
   learning process attached — that's outside every coaching skill in
   this repository and should be named as such,
 - the request is a generic explanation of a design pattern with no
-  specific code or design context behind it,
+  specific code or design context behind it — that's `concept-coach`,
 - no code exists yet and the learner needs a vague feature request,
   issue, or change request defined before implementation — that's
   `specification-coach`.

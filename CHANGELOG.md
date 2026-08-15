@@ -7,6 +7,71 @@ The format is loosely based on
 
 ## [Unreleased]
 
+### Added
+
+- A new skill, `concept-coach`: a Socratic coach for building
+  understanding of general programming, software-engineering,
+  systems, and architecture concepts — references, recursion,
+  closures, coupling, dependency injection, caching, concurrency,
+  queues, consistency, and similar — for a learner who isn't solving,
+  debugging, tracing, testing, specifying, or reviewing a concrete
+  artifact, just trying to build a working mental model. It starts
+  from the learner's own stated understanding, tests predictions
+  against tiny concrete examples rather than accepting fluent
+  vocabulary as proof, and hands off explicitly the moment a concrete
+  workflow appears — an unsolved problem, a real bug, a real feature,
+  or a real review — to the matching specialist. The general
+  concept-learning gap was surfaced during review of PR #3; this
+  skill is the maintainer-designed implementation of that narrower
+  role.
+- Activation coverage for `concept-coach`: positive cases spanning
+  language semantics, DSA concepts with no concrete problem attached,
+  software-engineering principles, concurrency/systems, and
+  distributed-systems concepts, plus negative cases against all ten
+  existing specialists explaining the actual routing distinction in
+  each case, and reciprocal negative cases added to
+  `pattern-transfer-coach`, `code-review-coach`, and
+  `specification-coach` testing the same boundaries from their own
+  side.
+- Behavior cases for `concept-coach` covering inspecting learner state
+  before asking, testing mental models over accepting vocabulary,
+  tiny concrete examples instead of production-scale illustrations,
+  adaptive escalation when a gap is genuinely prerequisite knowledge,
+  the direct-answer opt-out, verification before praise, code as a
+  teaching instrument rather than a deliverable, explicit handoff once
+  a concrete workflow appears, and Resume Pack behavior — plus five
+  cross-skill regression cases testing that the same vocabulary
+  ("sliding window," "async/await," "idempotency," "coupling") routes
+  differently depending on the learner's actual current task.
+- `concept-coach` added to [Find Your Coach](./find-your-coach/): a
+  direct "a concept I want to understand" option from the start
+  question, and a matching option under "I genuinely don't know,"
+  both reaching the same result — the existing honest no-match outcome
+  is unchanged and updated only to stop implying concept questions are
+  unsupported.
+- Resume Pack support for `concept-coach`, covering established
+  understanding, current hypothesis, verified predictions, unresolved
+  uncertainty, hints already given, and an honest "Confirmed mistake,
+  if any" field that only records a mistake the learner has actually
+  explained the root cause of.
+- An example `concept-coach` session transcript
+  (`examples/concept-coach-session.md`) on dependency injection.
+
+### Changed
+
+- `scripts/validate_skills.py` now requires `concept-coach` as part of
+  the repository's expected skill shape, not merely allows it.
+- `pattern-transfer-coach`, `code-review-coach`, and
+  `specification-coach` now name `concept-coach` as the destination
+  for a generic concept question with no solved problem, code, diff,
+  PR, or real feature request behind it, where their own text
+  previously said no skill in this repository needed to activate.
+- Documentation (`README.md`, `evals/README.md`,
+  `session-state/README.md`) updated for an eleven-skill repository,
+  including correcting `session-state/README.md`'s description of
+  Resume Packs as infrastructure rather than referring to a specific
+  skill count.
+
 ## [1.6.0] - 2026-08-08
 
 ### Added

@@ -999,7 +999,230 @@ afterward if other concerns remain.
 
 ---
 
-## `specification-coach`
+## `concept-coach`
+
+### Case CN-1 — Inspect before asking
+
+**Input:** "I know threads share memory while processes don't, but I
+don't understand why threads are considered cheaper to create."
+
+**Relevant learner state:** The learner has already stated the known
+distinction and the specific unresolved gap in the same message.
+
+**Expected behavior:**
+- The response treats the memory-sharing distinction as already
+  established and does not ask for it again.
+- A single question targets the actual gap — e.g. what the learner
+  would predict a thread's creation or context-switch cost to involve
+  relative to a process's.
+
+**Forbidden behavior:**
+- Asking "what do you already know about threads and processes?" or
+  any equivalent background question the learner just answered.
+- A generic "let's start from the basics" opener that ignores the
+  supplied state.
+
+**Success criteria:** The first response contains no re-ask of
+information already in the learner's message, and exactly one
+question aimed at the stated gap.
+
+---
+
+### Case CN-2 — Mental model over vocabulary
+
+**Input:** "A closure is a function that remembers its outer scope."
+Followed by a wrong prediction when asked what a shared counter
+variable would do across three calls to a returned inner function.
+
+**Relevant learner state:** The learner can state a textbook-correct
+definition fluently.
+
+**Expected behavior:**
+- The fluent definition is not accepted as proof of understanding; a
+  prediction or small scenario is used to test the model instead.
+- When the prediction turns out wrong, the coach points at the
+  divergence between the prediction and the tiny example rather than
+  simply restating the definition.
+
+**Forbidden behavior:**
+- Treating the correctly recited definition as evidence the concept is
+  understood.
+- Saying "wrong" without surfacing what the prediction assumed that
+  the example contradicts.
+
+**Success criteria:** The session tests a prediction, not recall, and
+a wrong prediction becomes a visible contradiction the learner has to
+resolve, not a corrected definition handed back.
+
+---
+
+### Case CN-3 — Tiny concrete example, not a lecture
+
+**Input:** "Why is cache invalidation considered hard? I get what a
+cache stores."
+
+**Expected behavior:**
+- A small, concrete situation (e.g. a single value requested
+  repeatedly, then changed at the source) is used to create pressure
+  on the learner's current model.
+- The example stays minimal — no framework, product name, or
+  production-scale system is introduced unless the concept genuinely
+  requires it.
+
+**Forbidden behavior:**
+- Describing a full distributed caching architecture (CDN layers,
+  eviction policies, cache-aside vs. write-through) before the learner
+  has engaged with a minimal case.
+- A multi-paragraph explanation delivered before any question or
+  prediction.
+
+**Success criteria:** The example that appears is small enough to
+reason about in one exchange, and it precedes any explanation rather
+than illustrating one already given.
+
+---
+
+### Case CN-4 — Adaptive escalation when the gap is prerequisite knowledge
+
+**Input (mid-session):** The learner has engaged with a prediction and
+a contrast, remains genuinely stuck, and the missing piece is a fact
+they have no way to derive (e.g. how a specific runtime schedules
+coroutines).
+
+**Expected behavior:**
+- The coach recognizes the gap is not derivable from further
+  questioning and supplies the smallest missing fact or explanation
+  directly.
+- Agency returns immediately afterward with one application question
+  that uses the new fact.
+
+**Forbidden behavior:**
+- Continuing to ask increasingly vague Socratic questions after the
+  learner has genuinely tried and the gap is clearly a missing fact,
+  not a missing inference.
+- Delivering a large, multi-concept explanation instead of the single
+  smallest fact needed.
+
+**Success criteria:** The stuck point resolves within one or two
+exchanges once the gap is identified, and the response that supplies
+the fact ends with a question, not a lecture.
+
+---
+
+### Case CN-5 — Direct-answer opt-out is honored
+
+**Input:** "Just give me the definition. No questions."
+
+**Expected behavior:**
+- A concise, direct definition is given.
+- No Socratic question is attached, and no attempt is made to redirect
+  the learner into coaching.
+
+**Forbidden behavior:**
+- Asking a clarifying or probing question anyway.
+- Any framing that implies the learner should have wanted coaching
+  instead ("Before I answer, what do you think it means?").
+
+**Success criteria:** The learner receives exactly what they asked
+for — a direct answer — with the coaching loop not invoked at all.
+
+---
+
+### Case CN-6 — Verification before praise
+
+**Input:** "Yeah, I get it now."
+
+**Relevant learner state:** A concept was just explained or a
+prediction was just corrected; no independent check has happened yet.
+
+**Expected behavior:**
+- One nearby prediction, application, or contrast is requested before
+  the concept is treated as established.
+
+**Forbidden behavior:**
+- Accepting "yeah, got it" as sufficient and moving on.
+- Praising the learner's confidence rather than checking the model
+  survives a question.
+
+**Success criteria:** A single verification question follows the
+learner's claim of understanding before the session considers the
+concept settled.
+
+---
+
+### Case CN-7 — Code as a teaching instrument, not a deliverable
+
+**Input:** "Can you show me what a closure actually captures in code?"
+
+**Expected behavior:**
+- A minimal, few-line didactic snippet is used to make the concept
+  observable (e.g. a counter closure), offered once the learner has
+  engaged with a prediction.
+
+**Forbidden behavior:**
+- Producing a larger, production-shaped example (a module, a class
+  hierarchy, error handling) to illustrate a concept a five-line
+  snippet would show.
+- Using the request as an opening to solve an unrelated real task the
+  learner has not asked to have solved.
+
+**Success criteria:** Any code shown is the smallest snippet that
+makes the concept observable, and nothing beyond what was asked for is
+built.
+
+---
+
+### Case CN-8 — Workflow handoff once a concrete task appears
+
+**Input (mid-session, concept was "async/await"):** "Okay that makes
+sense — actually, here's my function, it's supposed to await this
+call but it's returning `undefined`. Can you help me fix it?"
+
+**Expected behavior:**
+- An explicit handoff to `debug-coach` is stated, since a concrete
+  code failure is now on the table.
+- No attempt is made to debug the real code inside the concept
+  session.
+
+**Forbidden behavior:**
+- Continuing to "explain the concept" using the learner's actual
+  failing code as the example.
+- Silently absorbing the debugging task without naming the handoff.
+
+**Success criteria:** The response names the correct specialist and
+does not attempt the concrete task itself.
+
+---
+
+### Case CN-9 — Session continuity preserves the frontier, not the conclusion
+
+**Input (mid-session):** "Save where we are, I need to finish this
+tomorrow." The learner has made a prediction about reference
+semantics that has not yet been checked against an example.
+
+**Expected behavior:**
+- A Resume Pack is generated using `concept-coach`'s own field
+  mapping: established understanding, current hypothesis (labeled
+  unverified), verified predictions, still-uncertain items, hints
+  already given at the actual escalation rung reached, the exact last
+  question, and the next smallest step.
+- "Confirmed mistake, if any" reads "None yet" unless the learner has
+  already explicitly confirmed a root cause mapping to the existing
+  taxonomy during this session.
+
+**Forbidden behavior:**
+- Upgrading the unchecked prediction into verified understanding.
+- Supplying the explanation or contrast that would resolve the
+  prediction while writing the checkpoint.
+- Inventing a confirmed mistake from an observed-but-unexplained wrong
+  prediction.
+
+**Success criteria:** The checkpoint accurately reflects an unresolved
+prediction as unresolved, and a resumed session continues from the
+recorded next step at the same escalation rung rather than restarting
+or resolving it on the checkpoint's behalf.
+
+---
 
 ### Case SP-1 — A vague request produces one ambiguity, not a specification
 
@@ -1295,16 +1518,137 @@ the input rather than the phrasing of the ask.
 
 ---
 
+### Case XB-16 — "sliding window" as concept vs. as an unsolved problem
+
+**Input A:** "What actually makes a window a window in the
+sliding-window pattern, and why does moving it help? I'm not solving
+anything right now."
+**Input B:** "Help me solve this sliding-window problem: longest
+substring with at most two distinct characters."
+
+**Expected behavior:**
+- Input A routes to `concept-coach` — no concrete problem is attached,
+  only the mechanism itself.
+- Input B routes to `dsa-tutor` — a specific unsolved problem is being
+  worked, even though the same pattern name appears.
+
+**Forbidden behavior:**
+- `concept-coach` absorbing Input B because the vocabulary overlaps
+  with a session it already started.
+- `dsa-tutor` being invoked for Input A when no problem has actually
+  been presented.
+
+**Success criteria:** The same term routes to different skills purely
+because the learner's current task differs, not because the wording
+differs.
+
+---
+
+### Case XB-17 — "sliding window" as concept vs. as a solved pattern to transfer
+
+**Input A:** "Explain what sliding window means conceptually — nothing
+solved, just want to understand it."
+**Input B:** "I just solved Longest Substring Without Repeating
+Characters using sliding window. Help me see where else it applies."
+
+**Expected behavior:**
+- Input A routes to `concept-coach`.
+- Input B routes to `pattern-transfer-coach`, since a solved problem
+  exists to abstract from.
+
+**Forbidden behavior:**
+- `pattern-transfer-coach` engaging with Input A and inventing a
+  "solved problem" to abstract from where none was given.
+- `concept-coach` retaining ownership of Input B once a solved problem
+  and a transfer request are both present.
+
+**Success criteria:** The presence or absence of an already-solved
+problem — not the word "pattern" — decides the destination.
+
+---
+
+### Case XB-18 — "async/await" as concept vs. as a real failure
+
+**Input A:** "I don't understand what async/await is actually doing
+underneath the syntax."
+**Input B:** "Why does my async function return `undefined` here?
+Here's the code and the input that breaks it."
+
+**Expected behavior:**
+- Input A routes to `concept-coach`.
+- Input B routes to `debug-coach`, since real code and an observed
+  failure are both present.
+
+**Forbidden behavior:**
+- `concept-coach` attempting to explain Input B's failure "as a
+  concept" using the learner's actual failing code as the example.
+- `debug-coach` engaging with Input A, where no code or failure
+  exists yet.
+
+**Success criteria:** The presence of real code and an observed
+failure — not the word "async" — decides the destination.
+
+---
+
+### Case XB-19 — "idempotency" as concept vs. as a feature's required behavior
+
+**Input A:** "What is idempotency and why do APIs care about it? Not
+specifying anything real right now."
+**Input B:** "We need our payment webhook endpoint to be idempotent —
+help me work out exactly what behavior it should guarantee on
+retries."
+
+**Expected behavior:**
+- Input A routes to `concept-coach`.
+- Input B routes to `specification-coach`, since a real endpoint's
+  required behavior is being decided.
+
+**Forbidden behavior:**
+- `specification-coach` engaging with Input A and inventing a feature
+  context that was never supplied.
+- `concept-coach` retaining Input B once a real endpoint and its
+  required behavior are on the table.
+
+**Success criteria:** Whether a real feature's behavior is actually
+being decided — not the presence of the word "idempotency" — decides
+the destination.
+
+---
+
+### Case XB-20 — "coupling" as concept vs. as a property of real code under review
+
+**Input A:** "What does high coupling actually mean? No PR in mind,
+just want to understand the term."
+**Input B:** "Here's my PR — help me figure out whether these two
+modules are too tightly coupled before I merge it."
+
+**Expected behavior:**
+- Input A routes to `concept-coach`.
+- Input B routes to `code-review-coach`, since real code is under
+  review.
+
+**Forbidden behavior:**
+- `code-review-coach` engaging with Input A and asking for a diff that
+  was never offered.
+- `concept-coach` retaining Input B once a real PR is presented for
+  review.
+
+**Success criteria:** The presence of real code under review — not
+the word "coupling" — decides the destination.
+
+---
+
 ## Session continuity
 
 These cases apply to every skill that carries a "Session continuity"
 section — `dsa-tutor`, `problem-decoder`, `dry-run-coach`,
 `debug-coach`, `test-case-coach`, `pattern-transfer-coach`,
-`specification-coach`, and `code-review-coach`. See
+`specification-coach`, `code-review-coach`, and `concept-coach`. See
 [`session-state/README.md`](../session-state/README.md) for the
 Resume Pack concept these cases test against.
 
 ### Case SC-1 — An explicit pause request produces a Resume Pack
+
 
 **Input (mid-session, any supporting skill):** "I need to stop here —
 can you give me something I can paste into a new chat tomorrow?"
