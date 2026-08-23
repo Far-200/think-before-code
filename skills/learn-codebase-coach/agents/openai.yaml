@@ -1,0 +1,4 @@
+interface:
+  display_name: "Learn Codebase Coach"
+  short_description: "Learn, implement, and debug through guided hints"
+  default_prompt: "Use $learn-codebase-coach to help me understand this codebase and implement a task through Socratic, source-grounded guidance."
