@@ -109,3 +109,7 @@ Then give a better query and name the concept they are missing. Not the fix.
 
 One line: the single next thing to do.
 
+
+## Authoring provenance
+
+The external authoring and review tools used to create this first-party skill are recorded in [`NOTICE.md`](./NOTICE.md).
