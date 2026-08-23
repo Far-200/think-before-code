@@ -121,3 +121,7 @@ Before responding, verify:
 - Every hint contains at least one verified, directly useful URL.
 - The hint has not crossed the active coaching boundary.
 - The journal reflects meaningful progress when appropriate.
+
+## Provenance and license
+
+This is a modified, combined work. Preserve the upstream attributions and MIT license texts in [`NOTICE.md`](./NOTICE.md) when copying or redistributing this skill.
