@@ -30,3 +30,5 @@ F028,o_start_code>o_existing_tests,r_test_case_coach,A compact suite designed ar
 F029,o_start_unsure>o_unsure_existing>o_existing_review,r_code_review_coach,"Boundary — review versus debugging on existing code: the risk has not surfaced as a failure yet."
 F030,o_start_unsure>o_unsure_challenge>o_dsa_stage_have_approach>o_dsa_approach_trace,r_dry_run_coach,"The longest route the tree allows — four questions, reached by starting out unsure — still lands on one skill."
 F031,o_start_think_before_code,r_think_before_code,"A general programming or architecture concept learned through guided questioning rather than a specialist DSA, specification, review, debugging, test, or complexity workflow."
+F032,o_start_learn_codebase,r_learn_codebase_coach,"An unfamiliar repository learned through evidence, prediction, recall, or a learner-owned real change."
+F033,o_start_learn_by_googling,r_learn_by_googling,"A technical topic learned through primary-source web research, comparison, and cited synthesis."
