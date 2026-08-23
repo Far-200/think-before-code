@@ -23,15 +23,16 @@ checks by hand today.
   two files above, these are executed today, not just specified — see
   [Finder routing cases](#finder-routing-cases).
 
-`activation-prompts.csv` and `behavior-cases.md` cover all eleven skills,
-including the general `think-before-code` learning partner and the two
+`activation-prompts.csv` and `behavior-cases.md` cover all thirteen
+skills, including the general `think-before-code` learning partner,
+the repository-learning workflow `learn-codebase-coach`, the
+source-driven research workflow `learn-by-googling`, and the two
 software-engineering skills that sit outside the DSA lifecycle:
 `specification-coach` before implementation, when the desired
 behaviour isn't defined yet, and `code-review-coach` after code
-exists. Their boundaries against each other and against
-`debug-coach`, `test-case-coach`, `complexity-coach`,
-`problem-decoder`, and `dsa-tutor` are tested in the same
-positive/negative pairing style as the DSA skills' boundaries.
+exists. Their boundaries against neighboring skills and direct-service
+requests are tested in the same positive/negative pairing style as the
+DSA skills' boundaries.
 
 ## Activation testing
 
