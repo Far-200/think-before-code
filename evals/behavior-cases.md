@@ -1732,3 +1732,98 @@ complete):** "Save where we are, I need to finish this later."
 their own derivation stood — and nothing more — with the unfinished
 part left genuinely unfinished, not resolved on their behalf and not
 packaged as a checkpoint the skill doesn't have.
+
+---
+
+## `learn-codebase-coach`
+
+### Case LCC-1 — Explore mode requires prediction before explanation
+
+**Input:** "Teach me how requests flow through this repository."
+
+**Relevant learner state:** The repository is available, but the
+learner has not yet inspected an entry point or stated a prediction.
+
+**Expected behavior:**
+- Ask the learner to select or inspect one concrete entry point.
+- Ask for a prediction about the next component before explaining the
+  flow.
+- Require repository evidence and a learner-authored explanation
+  before confirming the model.
+
+**Forbidden behavior:**
+- Dumping a complete architecture tour.
+- Naming every relevant file before the learner searches.
+- Treating a plausible prediction as confirmed without code evidence.
+
+**Success criteria:** The learner states a prediction, checks it
+against a specific artifact, and explains what changed in their model.
+
+### Case LCC-2 — Build mode keeps implementation ownership with the learner
+
+**Input:** "Help me learn this codebase by adding this small feature."
+
+**Relevant learner state:** A real change request and repository exist;
+no implementation has been attempted.
+
+**Expected behavior:**
+- Clarify the artifact and choose an explicit testing policy.
+- Decompose only the next small implementation step.
+- Have the learner write the code and then inspect the resulting diff.
+
+**Forbidden behavior:**
+- Writing the feature on the learner's behalf.
+- Quietly selecting a testing policy.
+- Skipping from task description to a finished patch.
+
+**Success criteria:** The learner authors the implementation, can
+explain the touched path, and verifies the change under the selected
+testing policy.
+
+---
+
+## `learn-by-googling`
+
+### Case LBG-1 — Primary sources before synthesis
+
+**Input:** "Help me learn how Raft leader election works by Googling
+it myself."
+
+**Relevant learner state:** No sources have been collected.
+
+**Expected behavior:**
+- Turn the topic into a focused research question.
+- Ask the learner to find an original paper or authoritative
+  documentation first.
+- Evaluate source authority and evidence before synthesizing a model.
+
+**Forbidden behavior:**
+- Giving a complete explanation from memory before the search.
+- Treating search-result snippets as sufficient evidence.
+- Presenting uncited claims as settled facts.
+
+**Success criteria:** The learner identifies a primary source, extracts
+supported claims, and connects each major claim to a citation.
+
+### Case LBG-2 — Conflicting sources trigger comparison, not averaging
+
+**Input:** Two credible sources appear to disagree about a technical
+tradeoff.
+
+**Relevant learner state:** The learner has summarized both claims but
+has not compared their scope, date, definitions, or evidence.
+
+**Expected behavior:**
+- Ask the learner to compare publication date, authority, definitions,
+  assumptions, and evidence.
+- Distinguish a real contradiction from different scopes or system
+  models.
+- Preserve uncertainty when the evidence does not resolve it.
+
+**Forbidden behavior:**
+- Selecting the more convenient source without justification.
+- Averaging incompatible claims into a false compromise.
+- Hiding the disagreement in the final synthesis.
+
+**Success criteria:** The learner can state why the sources differ,
+which claim applies under which conditions, and what remains uncertain.
