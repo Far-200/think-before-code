@@ -29,6 +29,16 @@
           "next": "r_think_before_code"
         },
         {
+          "id": "o_start_learn_codebase",
+          "label": "A codebase I want to understand or learn by changing",
+          "next": "r_learn_codebase_coach"
+        },
+        {
+          "id": "o_start_learn_by_googling",
+          "label": "A technical topic I want to research from web sources",
+          "next": "r_learn_by_googling"
+        },
+        {
           "id": "o_start_unsure",
           "label": "I genuinely don't know",
           "next": "q_unsure"
@@ -339,6 +349,24 @@
       "skill": "think-before-code",
       "reason": "The learner wants a general programming or architecture concept taught through guided questioning, and none of the suite's narrower workflows is a better match.",
       "starter_prompt": "Be my coding learning partner for this topic. Start by asking what I am trying to understand and what I think the first step is. Guide me with questions and explanations, but do not write the solution for me."
+    },
+    {
+      "id": "r_learn_codebase_coach",
+      "type": "skill",
+      "skill": "learn-codebase-coach",
+      "reason": "The learner wants to understand a real repository through prediction, evidence, active recall, or a learner-written implementation.",
+      "starter_prompt": "Coach me through learning this codebase. Start by asking whether I want to explore it or learn by implementing a real change. Make me predict, inspect evidence, explain the flow, and write any code myself.",
+      "handoff": {
+        "skill": "debug-coach",
+        "note": "if a concrete expected-versus-actual failure becomes the focus."
+      }
+    },
+    {
+      "id": "r_learn_by_googling",
+      "type": "skill",
+      "skill": "learn-by-googling",
+      "reason": "The learner wants web search, source evaluation, comparison, and cited synthesis to be the mechanism for learning a technical topic.",
+      "starter_prompt": "Help me learn this technical topic by researching it myself. Make me search for primary sources, assess their authority, compare claims, and build a cited mental model instead of giving me an unsupported explanation."
     },
     {
       "id": "r_no_match_implementation",
