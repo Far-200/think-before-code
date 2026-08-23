@@ -149,7 +149,7 @@ and a complexity-only question goes to `complexity-coach`.
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/Far-200/think-before-code.git
+   git clone https://github.com/mahkameh13/think-before-code.git
    cd think-before-code
    ```
 
@@ -158,8 +158,8 @@ and a complexity-only question goes to `complexity-coach`.
    [Find Your Coach](https://far-200.github.io/think-before-code/find-your-coach/)
    and it will name one, with a starter prompt to paste. Otherwise:
    the core skill lives at
-   [`skills/dsa-tutor/SKILL.md`](./skills/dsa-tutor/SKILL.md). Ten
-   more skills live alongside it, eleven in total — see
+   [`skills/dsa-tutor/SKILL.md`](./skills/dsa-tutor/SKILL.md). Twelve
+   more skills live alongside it, thirteen in total — see
    [Which skill should I use?](#which-skill-should-i-use) for the same
    routing in text, and
    [Skills in this repository](#skills-in-this-repository) for the
@@ -337,6 +337,8 @@ containing a single `SKILL.md` with frontmatter (`name`,
 | [`specification-coach`](./skills/specification-coach/SKILL.md)       | You have a vague feature request, issue, or change request and need observable behaviour, scope, non-goals, constraints, failure behaviour, and acceptance criteria defined — a learner-authored implementation handoff, with no invented requirements and no implementation written for you. |
 | [`code-review-coach`](./skills/code-review-coach/SKILL.md)           | You have existing code, a diff, or a PR — not necessarily DSA — and want to practise discovering and justifying review findings yourself, one concern at a time, without a dumped list or a rewrite.                                                                                          |
 | [`think-before-code`](./skills/think-before-code/SKILL.md)           | You want a general Socratic coding learning partner for programming concepts, coursework, architecture, or interview preparation when none of the narrower workflows is a better fit.                                                                                                       |
+| [`learn-codebase-coach`](./skills/learn-codebase-coach/SKILL.md)       | You want to understand an unfamiliar repository or learn by implementing a real change while retaining ownership of the reasoning and code.                                                                                                                                                 |
+| [`learn-by-googling`](./skills/learn-by-googling/SKILL.md)             | You want to learn a technical topic by searching, evaluating, comparing, and synthesizing primary web sources instead of receiving an unsupported explanation.                                                                                                                              |
 
 These are complementary, not redundant. `dsa-tutor` is the default
 skill that coordinates a complete DSA learning session. Six
@@ -355,6 +357,8 @@ interaction mode — scarce hints during the attempt, full feedback
 only afterward — rather than protecting productive struggle
 throughout, and should not be blended with the coaching skills in the
 same session.
+
+`learn-codebase-coach` is the repository-learning entry point: it combines Socratic exploration with learner-led implementation of a real artifact. `learn-by-googling` is the source-driven research entry point: it makes the learner search, assess evidence, and synthesize a technical model from cited sources.
 
 `think-before-code` is the general entry point for learning requests
 that do not begin in one of those narrower workflows: concepts,
@@ -441,7 +445,7 @@ to repeat this, phrased so it is answerable in one line]
 
 > Stop the session, not the reasoning.
 
-Eight of the eleven skills can generate a **Resume
+Eight of the thirteen skills can generate a **Resume
 Pack**: a portable Markdown checkpoint for an unfinished session, on
 explicit request ("save where we are," "give me something I can paste
 tomorrow," "I need to continue this in another chat").
@@ -561,6 +565,12 @@ think-before-code/
 │   ├── dsa-tutor/
 │   │   └── SKILL.md
 │   ├── mock-interviewer/
+│   │   └── SKILL.md
+│   ├── learn-by-googling/
+│   │   └── SKILL.md
+│   ├── learn-codebase-coach/
+│   │   ├── agents/
+│   │   ├── references/
 │   │   └── SKILL.md
 │   ├── pattern-transfer-coach/
 │   │   └── SKILL.md
@@ -686,7 +696,7 @@ Five layers protect the repository's structure and behavior:
   result ids must be unique, every option must point at a node that
   exists, every path must terminate at a result without cycling, every
   skill result must name a real skill directory and carry a reason and
-  a starter prompt, all eleven skills must be reachable as
+  a starter prompt, all thirteen skills must be reachable as
   recommendations, the two no-match outcomes must stay honest — no
   skill name, no starter prompt — and every relative
   `../skills/<name>/SKILL.md` link the page builds must resolve. It
@@ -763,7 +773,7 @@ The current release is `v1.6.0`. See
 - [x] Add the interactive Find Your Coach router, executable routing
       cases, validation, tests, and CI coverage
 - [x] Add session-state templates and a Resume Pack checkpoint/resume
-      protocol for unfinished sessions, covering eight of the eleven
+      protocol for unfinished sessions, covering eight of the thirteen
       skills (see [Session continuity](#session-continuity))
 
 ### Next
@@ -809,6 +819,10 @@ Contributions are welcome, especially those that:
 Every contribution should preserve the central rule:
 
 > **One hint at a time. Think before code.**
+
+## Provenance and third-party notices
+
+This fork preserves the MIT notice for its Far-200/think-before-code base and records direct adaptations, authoring assistance, pinned source revisions, local modifications, and complete required license notices in [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md).
 
 ## License
 
