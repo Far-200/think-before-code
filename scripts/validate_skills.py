@@ -80,6 +80,8 @@ EXPECTED_SKILLS = {
     "code-review-coach",
     "specification-coach",
     "think-before-code",
+    "learn-codebase-coach",
+    "learn-by-googling",
 }
 
 MAX_NAME_LENGTH = 64
