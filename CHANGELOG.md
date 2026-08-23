@@ -17,11 +17,15 @@ The format is loosely based on
   reasoning and code.
 - Positive and negative activation cases, four behavior cases, and a
   tested Find Your Coach route for `think-before-code`.
+- `learn-codebase-coach`, a Socratic explore/build workflow for learning a real repository while retaining ownership of explanations and code.
+- `learn-by-googling`, a source-driven workflow for learning technical topics through primary-source search, evaluation, comparison, and cited synthesis.
+- Pinned provenance, required MIT notices, authoring-tool acknowledgements, and local modification notes in `THIRD_PARTY_NOTICES.md`.
+- Activation cases, behavior cases, and deterministic Find Your Coach routes for both new skills.
 
 ### Changed
 
 - README, Finder copy, repository validation, and eval documentation
-  now reflect the eleven-skill suite.
+  now reflect the thirteen-skill suite.
 
 ## [1.6.0] - 2026-08-08
 
