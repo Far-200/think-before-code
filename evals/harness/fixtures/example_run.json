@@ -1,0 +1,32 @@
+{
+  "_comment": "Example fixture responses for the 9 cases in case_config.json. Each case id maps to a list of scripted responses, returned in order by MockProvider. Every case here needs exactly one response, since the runner only asks the provider for a reply to the case's final input -- setup_turns are replayed as fixed history, not sent to the provider for a fresh reply. DT-2's response is DELIBERATELY non-compliant (it hands over a complete function despite the code circuit breaker not being cleared) so the harness's own test suite and a first read-through both have a real failure to catch, not just fixtures engineered to pass.",
+  "responses": {
+    "DT-1": [
+      "Before we get there -- walk me through what happens if you check every possible pair of numbers to see if two of them sum to the target. What would that cost you in terms of time?"
+    ],
+    "DT-2": [
+      "Sure, here's the solution:\n\n```python\ndef two_sum(nums, target):\n    left, right = 0, len(nums) - 1\n    while left < right:\n        s = nums[left] + nums[right]\n        if s == target:\n            return [left, right]\n        elif s < target:\n            left += 1\n        else:\n            right -= 1\n    return []\n```\n\nThis works because the array needs to be considered in sorted order for two pointers to work."
+    ],
+    "DT-3": [
+      "That's exactly the right question to be stuck on. Think about what happens to the subsequence ending at index j once you've already found its best length. If nums[j] < nums[i], can you build a longer subsequence than dp[j] alone by appending nums[i] to it? What would that make dp[i] at least as large as?"
+    ],
+    "DT-4": [
+      "That's a fluent explanation, but let's check it against something concrete before I confirm it's right. If every element in the array were negative, what would current and the overall max actually end up being, and does that match what the answer should be for an all-negative array?"
+    ],
+    "CN-5": [
+      "A closure is a function bundled together with references to the variables from the scope it was created in, so it can still access those variables even after that outer scope has finished executing."
+    ],
+    "DC-1": [
+      "Before looking at the code -- for that specific input, what output did you expect, and what output did you actually get?"
+    ],
+    "CR-1": [
+      "Before I look at the endpoint itself -- what's this endpoint's contract? What should it accept, what should it return on success, and what's supposed to happen on invalid input?"
+    ],
+    "SC-1": [
+      "# Resume Pack\n\n**Skill:** dsa-tutor\n**Task:** Maximum Subarray (find the contiguous subarray with the largest sum)\n**Stage:** algorithm construction -- invariant not yet confirmed\n\n## What the learner has established\nA brute-force approach (check every subarray, O(n^2) or worse) as a starting point.\n\n## Current approach or hypothesis\nHypothesis: track current = max(nums[i], current + nums[i]) while scanning left to right, and keep the running max of current. Not yet confirmed why comparing to nums[i] alone (rather than always adding) is correct.\n\n## Verified so far\nDry-ran the hypothesis on [-2,1,-3,4,-1,2,1,-5,4] by hand and got 6, which matches the known answer for this input.\n\n## Still uncertain\nWhy resetting to nums[i] alone (instead of extending the running sum) is the right move when current + nums[i] would be worse than nums[i] alone.\n\n## Attempts made\nOne manual dry run on the input above; no code written yet.\n\n## Hints already given\n1. Asked for a brute-force approach first.\n2. Asked what it would mean to track the best sum ending exactly at the current position.\n\n## Confirmed mistake, if any\nNone yet.\n\n## Last question asked\n\"If current + nums[i] would be worse than nums[i] alone, what does that tell you about everything before position i?\"\n\n## Next step to resume from\nThe learner still needs to answer: if extending the running sum would be worse than starting fresh at nums[i], what does that imply about discarding everything before position i?"
+    ],
+    "SC-5": [
+      "Welcome back -- you were working through Maximum Subarray and had just dry-run your current = max(nums[i], current + nums[i]) hypothesis successfully on one input. Picking up where we left off: if extending the running sum with nums[i] would be worse than starting fresh at nums[i] alone, what does that tell you about every subarray ending before position i?"
+    ]
+  }
+}

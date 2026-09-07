@@ -35,3 +35,11 @@ node_modules/
 dist/
 build/
 coverage/
+
+# Behavior-evaluation harness: generated reports/transcripts are run
+# output, not source -- they may also contain sensitive session
+# content depending on what a live run was asked to evaluate. API
+# keys are already covered by the .env rules above; ANTHROPIC_API_KEY
+# should be set as an environment variable, never committed.
+evals/harness/reports/
+evals/harness/*.local.json

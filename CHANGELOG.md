@@ -7,6 +7,30 @@ The format is loosely based on
 
 ## [Unreleased]
 
+## [1.8.0] - 2026-09-07
+
+### Added
+
+- A behavioral evaluation harness under `evals/harness/` for running selected coaching cases against fixture responses or a configured live model.
+- Nine representative behavioral cases covering solution withholding, hint escalation, verification, direct-answer opt-out, debugging, code review, and Resume Pack continuity.
+- Scripted conversation setup and input overrides for cases that require a specific learner state.
+- Automated response checks, optional LLM-judge opinions, and inspectable Markdown reports.
+- An optional Anthropic provider, isolated from the fixture-based test path.
+- Unit and regression tests for case parsing, providers, checks, execution, reporting, and the CLI.
+
+### Changed
+
+- LLM judges now receive the actual conversation, including setup turns and the final input, rather than only the evaluation case's prose description.
+- Missing fixtures and provider failures are recorded as execution errors instead of silently disappearing from reports.
+- Live-evaluation installation instructions use a virtual environment.
+
+### Validation
+
+- 229 unit tests passed in the reviewed snapshot.
+- Structural, evaluation-specification, and finder-routing validators passed.
+- The fixture-based harness completed all nine configured cases.
+- No live model baseline has been performed yet. Mocked results and judge opinions are not proof of educational effectiveness.
+
 ## [1.7.0] - 2026-08-15
 
 ### Added

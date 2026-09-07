@@ -1,12 +1,12 @@
 # Evals
 
 This directory is a human-readable, automation-ready specification for
-how the skills in this repository should activate and behave. It is
-not, currently, a fully automated test suite — there is no runner in
-this repository that scores a live model against these cases yet.
-What exists is the specification that such a runner would consume,
-plus a format precise enough for a human reviewer to run the same
-checks by hand today.
+how the skills in this repository should activate and behave, plus a
+small harness (`harness/`) that can execute a representative subset of
+`behavior-cases.md` against a configured model and produce an
+inspectable report. The harness covers nine cases today, not the full
+specification — see [Automated behavior evaluation](#automated-behavior-evaluation)
+for exactly what it checks, what it doesn't, and how to run it.
 
 ## What's here
 
@@ -16,12 +16,15 @@ checks by hand today.
   activation testing and negative activation testing.
 - **`behavior-cases.md`** — detailed scenarios per skill describing
   expected behavior, forbidden behavior, and success criteria once a
-  skill has activated. Used for behavior-constraint testing.
+  skill has activated. Used for behavior-constraint testing, by hand
+  for the full specification and by `harness/` for the subset it runs.
 - **`finder-cases.csv`** — routing cases for the
   [Find Your Coach](../find-your-coach/) page: a declared answer path
   and the skill (or honest no-match outcome) it must reach. Unlike the
   two files above, these are executed today, not just specified — see
   [Finder routing cases](#finder-routing-cases).
+- **`harness/`** — the behavior-evaluation runner. See
+  [Automated behavior evaluation](#automated-behavior-evaluation).
 
 `activation-prompts.csv` and `behavior-cases.md` cover all eleven
 skills, including the two software-engineering workflow skills that
@@ -63,7 +66,7 @@ Every skill directory under `skills/` must have at least one
 `should_activate = true` row and at least one
 `should_activate = false` row in `activation-prompts.csv` — a skill
 with no negative cases has an untested activation boundary. Rows
-with `target_skill = none` remain allowed (they test that *no* skill
+with `target_skill = none` remain allowed (they test that _no_ skill
 engages) but don't count toward any skill's coverage.
 
 This rule, along with the CSV's shape, unique ids, and valid
@@ -87,7 +90,7 @@ mistake's root cause, and so on. These are the rules a human reviewer
 ## Finder routing cases
 
 `finder-cases.csv` tests a different thing from the two files above.
-Activation and behavior cases describe what a *model* should do;
+Activation and behavior cases describe what a _model_ should do;
 finder cases describe what the deterministic router in
 [`find-your-coach/`](../find-your-coach/) does. There is no model in
 that path at all — the page walks a declared tree in
@@ -137,11 +140,15 @@ The activation and behavior files double as a regression baseline. If a future c
 that used to correctly decline to activate now does, or a skill that
 used to withhold code now reveals it early — that's a regression, and
 the relevant case should be added to or checked against before merging
-the change.
+the change. For the harness's covered cases (see
+[Automated behavior evaluation](#automated-behavior-evaluation)),
+re-running it after a `SKILL.md` change is a direct way to check for
+this.
 
 ## Running these checks locally today
 
-Until an automated runner exists, a contributor can:
+For the 79 behavior cases the harness doesn't yet cover, and for every
+activation case, a contributor can still check by hand:
 
 1. Pick a row from `activation-prompts.csv`.
 2. Paste the `prompt` into an agent configured with this repository's
@@ -153,13 +160,113 @@ Until an automated runner exists, a contributor can:
    `expected behavior` items happen and the `forbidden behavior` items
    don't, across a short simulated exchange.
 
-## How a future automated runner could consume these files
+## Automated behavior evaluation
 
-`activation-prompts.csv` is plain, quoted CSV with a fixed column
-order (`id,target_skill,should_activate,prompt,reason`), so it can
-be loaded directly by any CSV reader and scored by checking which
-skill actually activated against the `target_skill` /
-`should_activate` columns. `behavior-cases.md` is structured
-consistently enough (fixed field labels per case) that a script could
-parse it into the same shape, but no such parser exists in this
-repository yet — see the roadmap in the main README.
+[`harness/`](./harness/) is a small runner that executes a
+representative subset of `behavior-cases.md`'s cases against a
+configured model and writes an inspectable Markdown report. It exists
+alongside the manual process above, not instead of it — 9 of the 88
+cases in `behavior-cases.md` are wired into the harness today; the
+rest are still checked by hand using the steps above until they're
+added to [`harness/case_config.json`](./harness/case_config.json).
+
+### What it checks
+
+For each configured case, the harness:
+
+1. Loads the target skill's actual `SKILL.md` (frontmatter stripped)
+   as the system prompt — the same file a person would copy into their
+   own agent.
+2. Replays any scripted prior turns needed to establish the
+   conversation state the case's `Relevant learner state` describes
+   (see `case_config.json`'s `setup_turns`), then sends the case's own
+   `Input`.
+3. Runs cheap, deterministic checks against the response: whether a
+   fenced code block appears, how many question marks are present, and
+   whether a named hard-stop phrase from `dsa-tutor`'s own circuit
+   breaker (e.g. "here's the solution") shows up.
+4. Optionally asks an LLM judge whether the response met the case's
+   `Expected behavior` / `Forbidden behavior`, and records the judge's
+   own reasoning alongside its opinion.
+5. Writes a Markdown report with the full transcript, both kinds of
+   check, and a verdict per case.
+
+### What it does not check
+
+- **It does not prove educational effectiveness.** It checks whether
+  one sampled response matches documented behavior in one turn (or
+  short scripted exchange) — not whether a learner using the skill
+  actually learns better.
+- **The LLM judge is an opinion, not a verdict.** A `likely_met` or
+  `likely_not_met` result reflects a judge model's classification of
+  one response, shown with its own stated reasoning so a human can
+  disagree with it. `needs_human_review` — the harness's default
+  outcome whenever no judge is configured, the judge itself was
+  unsure, or an automated check contradicts what the judge said — is
+  not a failure state; it is most cases' expected outcome.
+- **Automated checks are textual signals, not judgments.** A fenced
+  code block appearing doesn't always mean a solution was leaked (it
+  could be a small illustrative snippet after the reasoning was
+  already done), and its absence doesn't guarantee compliance (a
+  solution can be given entirely in prose). They exist to catch clear
+  violations cheaply and to flag anything a judge's "met" verdict
+  should be checked against — see `evaluate_case` in
+  [`harness/checks.py`](./harness/checks.py) for exactly how the two
+  are combined.
+- **It samples one response per case.** Model outputs vary; a single
+  run passing or failing a case is one data point, not a guarantee
+  about every future response to that input.
+
+### Running it
+
+The harness never requires a paid API call to run — the mocked path
+below is what CI and this repository's own tests use:
+
+```bash
+# Mocked: reads pre-recorded responses, no network access, no cost.
+python evals/harness/run_eval.py --fixtures evals/harness/fixtures/example_run.json
+
+# Live: calls the real Anthropic API. Requires the anthropic package,
+# installed into a virtual environment rather than the system Python,
+# and an API key.
+python3 -m venv .venv
+source .venv/bin/activate      # Windows: .venv\Scripts\activate
+pip install anthropic
+export ANTHROPIC_API_KEY=sk-...
+python evals/harness/run_eval.py --live --model claude-sonnet-4-6
+
+# Live, with an LLM judge opinion added to each case's report:
+python evals/harness/run_eval.py --live --model claude-sonnet-4-6 --judge
+
+# Run only specific cases:
+python evals/harness/run_eval.py --fixtures evals/harness/fixtures/example_run.json --cases DT-1 DT-2
+```
+
+Never commit an API key. `ANTHROPIC_API_KEY` should be set as an
+environment variable, and generated reports (which may reproduce
+transcript content from a live run) are excluded from version control
+via `.gitignore` — copy anything worth keeping into a reviewed
+location rather than relying on the default output path.
+
+### Reading a report
+
+Each report opens with a summary count by verdict, then one section
+per case: the case's own expected/forbidden behavior and success
+criteria (quoted directly from `behavior-cases.md`, never
+paraphrased into a competing description), the full transcript, the
+automated-check findings, and the judge's opinion if one was
+requested. A report is meant to be read, not just tallied — the
+verdict counts in the summary are a starting point for a human
+reviewer, not the harness's final word.
+
+### Extending it
+
+`harness/case_config.json` is the only file that needs an addition to
+cover a new case: name the case id (it must already exist in
+`behavior-cases.md`) and the skill to load, plus `setup_turns` if the
+case's `Relevant learner state` describes prior conversation turns
+that need to be scripted rather than a single-turn `Input`, or
+`input_override` if the case's `Input` is prose describing something
+(like a pasted Resume Pack) rather than literal text to send. See the
+comments in `case_config.json` and the docstrings in `harness/runner.py`
+for the exact contract.
